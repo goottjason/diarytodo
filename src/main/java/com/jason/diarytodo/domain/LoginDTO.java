@@ -2,13 +2,11 @@ package com.jason.diarytodo.domain;
 
 import lombok.*;
 
+@Data // getter/setter, toString, equals, hashCode
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Getter
-@Setter
-@ToString
 public class LoginDTO {
-  private String memberId;
-  private String memberPwd;
+  private String loginId;
+  private String password;
 }

@@ -1,15 +1,15 @@
 package com.jason.diarytodo.mapper;
 
-import com.jason.diarytodo.domain.Member;
+import com.jason.diarytodo.domain.MemberRespDTO;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
 @Mapper
 public interface MemberMapper {
-  @Insert("insert into member (memberId, memberPwd, memberName, mobile, email, memberImg, gender) values (#{memberId}, #{memberPwd}, #{memberName}, #{mobile}, #{email}, #{memberImg}, #{gender})")
-  int insertMemberByMember(Member member);
+  @Insert("INSERT INTO member (login_id, password, nickname, email, profile_image, gender) VALUES (#{loginId}, #{password}, #{nickname}, #{email}, #{profileImage}, #{gender})")
+  int insertMemberByMember(MemberRespDTO member);
 
-  @Select("select * from member where memberId = #{memberId]}")
-  Member findMemberById(String memberId);
+  @Select("select * from member where login_id = #{loginId}")
+  MemberRespDTO findMemberById(String loginId);
 }

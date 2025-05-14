@@ -12,6 +12,7 @@
 
   <link rel="icon" type="image/x-icon" th:href="@{/assets/favicon.ico}" />
   <link th:href="@{/css/styles.css}" rel="stylesheet" />
+  <th:block layout:fragment="style"><!-- 스타일 fragment 자리 --></th:block>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
   <!-- "여기 head 조각이 들어올 자리다"라는 의미 -->
   <th:block layout:fragment="head">
@@ -27,7 +28,7 @@
   <!-- 네비게이션 바의 내용을 중앙 정렬하는 컨테이너 -->
   <div class="container">
     <!-- 사이트/서비스의 로고 또는 브랜드명, 클릭 시 메인 페이지로 이동 -->
-    <a class="navbar-brand" href="/hboard/list">diarytodo</a>
+    <a class="navbar-brand" href="#">diarytodo</a>
     <!-- 모바일/작은 화면에서 메뉴를 접었다 펼칠 수 있는 토글 버튼 -->
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <!-- 햄버거 아이콘(≡) 표시 -->
@@ -40,14 +41,14 @@
         <!-- 네비게이션의 각 항목은 li.nav-item으로 구성 -->
         <li class="nav-item">
           <!-- 현재 페이지를 나타내는 링크, active 클래스와 aria-current 속성 사용 -->
-          <a class="nav-link active" aria-current="page" href="#">Home</a></li>
+          <a class="nav-link active" aria-current="page" href="/member/signup">Signup</a></li>
         <li class="nav-item">
           <!-- 일반 링크 항목 -->
-          <a class="nav-link" href="#">Login</a></li>
+          <a class="nav-link" href="/member/login">Login</a></li>
         <!-- 드롭다운 메뉴 항목 -->
         <li class="nav-item dropdown">
           <!-- 드롭다운을 여는 링크, data-bs-toggle="dropdown"으로 동작 제어 -->
-          <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">더보기</a>
+          <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">More</a>
           <!-- 드롭다운 메뉴, dropdown-menu-end로 오른쪽 정렬 -->
           <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
             <!-- 드롭다운 내 각각의 항목 -->

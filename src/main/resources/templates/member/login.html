@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org"
+      layout:decorate="~{layout/layout.html}">
+<head>
+  <th:block layout:fragment="head">
+    <title>login.html 로그인</title>
+  </th:block>
+  <th:block layout:fragment="style">
+    <style>
+      /* 컨테이너 스타일 */
+      .login-container {
+        max-width: 380px;
+        margin: 60px auto;
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 2px 16px rgba(40,60,90,0.08);
+        padding: 36px 32px 28px 32px;
+      }
+
+      /* 제목 스타일 */
+      .login-title {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #0f1d41;
+        margin-bottom: 28px;
+        text-align: center;
+      }
+
+      /* 에러 메시지 */
+      .login-error-msg {
+        background: #ffe6e6;
+        color: #d32f2f;
+        border-radius: 6px;
+        padding: 10px 14px;
+        margin-bottom: 18px;
+        font-size: 15px;
+        text-align: center;
+      }
+
+      /* 성공/알림 메시지 */
+      .login-info-msg {
+        background: #e8f0fe;
+        color: #0f1d41;
+        border-radius: 6px;
+        padding: 10px 14px;
+        margin-bottom: 18px;
+        font-size: 15px;
+        text-align: center;
+      }
+
+      /* 폼 그룹 */
+      .login-form-group {
+        margin-bottom: 18px;
+        text-align: left; /* 왼쪽 정렬 */
+      }
+
+      .login-form-label {
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 6px;
+        display: block;
+        text-align: left; /* 왼쪽 정렬 */
+      }
+
+      .login-form-input {
+        width: 100%;
+        padding: 10px 12px;
+        border: 1px solid #e0e4ea;
+        border-radius: 7px;
+        background: #f7f8fa;
+        font-size: 15px;
+        margin-top: 4px;
+        text-align: left; /* 입력값도 왼쪽 정렬 */
+      }
+
+      /* 비밀번호 입력 그룹만 margin-bottom 다름 */
+      .login-form-group-pwd {
+        margin-bottom: 22px;
+        text-align: left; /* 왼쪽 정렬 */
+      }
+
+      /* 버튼 그룹 */
+      .login-btn-group {
+        display: flex;
+        gap: 8px;
+        margin-top: 12px;
+      }
+
+      .login-btn-primary {
+        flex: 1;
+        background: #0f1d41;
+        color: #fff;
+        border: none;
+        border-radius: 6px;
+        padding: 10px 0;
+        font-size: 15px;
+        font-weight: 600;
+        cursor: pointer;
+      }
+      /* 추가: hover 시에도 색상 변화 없음 */
+      .login-btn-primary:hover {
+        background: #0f1d41;
+        color: #fff;
+      }
+
+      .login-btn-secondary {
+        flex: 1;
+        background: #e0e4ea;
+        color: #0f1d41;
+        border: none;
+        border-radius: 6px;
+        padding: 10px 0;
+        font-size: 15px;
+        font-weight: 600;
+        cursor: pointer;
+      }
+      /* 추가: hover 시에도 색상 변화 없음 */
+      .login-btn-secondary:hover {
+        background: #e0e4ea;
+        color: #0f1d41;
+      }
+    </style>
+  </th:block>
+</head>
+<body>
+<div layout:fragment="content">
+
+  <div class="container mt-5 login-container">
+    <div class="row" style="margin:0;">
+      <h1 class="login-title">로그인</h1>
+
+      <!-- 인증 실패 메시지 -->
+      <div th:if="${authFailMsg != null}" class="login-error-msg" th:text="${authFailMsg}"></div>
+      <!-- 인증 실패 메시지 세션에서 제거는 Spring Controller에서 처리 필요 -->
+
+      <!-- 회원가입 성공/상태 메시지 -->
+      <!--<div th:if="${signupStatus != null}" class="login-info-msg" th:text="${signupStatus}"></div>-->
+
+      <form th:action="@{/member/login}" method="post">
+        <div class="mb-3 mt-3 login-form-group">
+          <label th:for="loginId" class="form-label login-form-label">아이디</label>
+          <input type="text" id="loginId" name="loginId"
+                 class="form-control login-form-input" placeholder="아이디를 입력하세요">
+        </div>
+        <div class="mb-3 login-form-group-pwd">
+          <label th:for="password" class="form-label login-form-label">비밀번호</label>
+          <input type="password" id="password" name="password"
+                 class="form-control login-form-input" placeholder="비밀번호를 입력하세요">
+        </div>
+        <div class="login-btn-group">
+          <button type="submit" class="btn btn-primary login-btn-primary">로그인</button>
+          <button type="reset" class="btn btn-secondary login-btn-secondary">취소</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

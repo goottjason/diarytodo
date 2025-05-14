@@ -1,6 +1,6 @@
 package com.jason.diarytodo.interceptor;
 
-import com.jason.diarytodo.domain.Member;
+import com.jason.diarytodo.domain.MemberRespDTO;
 import com.jason.diarytodo.util.DestinationPath;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -23,7 +23,7 @@ public class AuthInterceptor implements HandlerInterceptor {
 
     // 로그인 여부를 검사
     HttpSession ses = request.getSession();
-    Member loginMember = (Member) ses.getAttribute("loginMember");
+    MemberRespDTO loginMember = (MemberRespDTO) ses.getAttribute("loginMember");
 
     if(loginMember == null) {
       log.info("로그인 하지 않은 사용자 -> 로그인 페이지로 이동");
