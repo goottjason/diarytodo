@@ -16,6 +16,7 @@ public class MemberReqDTO {
   private String loginId;                         // 로그인 아이디 (UK)
   private String password;                        // 비밀번호(암호화 저장)
   private String nickname;                        // 닉네임(선택)
+
   private String email;                           // 이메일 (UK)
   @Builder.Default
   private String profileImage = "avatar.png";     // 프로필 이미지 파일명 또는 URL (기본값, avatar.png)

@@ -112,37 +112,37 @@
     <form th:action="@{/member/signup}" method="post" style="width: 100%;">
       <!-- 아이디 -->
       <div class="mb-3 mt-3">
-        <label for="userid" class="form-label">아이디 :
+        <label for="loginId" class="form-label">아이디 :
           <span class="errorMsg"></span>
         </label>
         <div style="display: flex; gap: 10px;">
-          <input type="text" class="form-control" id="userid" placeholder="Enter ID" name="userid">
+          <input type="text" class="form-control" id="loginId" placeholder="Enter ID" name="loginId">
           <button type="button" class="btn btn-success" onclick="idCheck();" style="white-space: nowrap;">중복확인</button>
         </div>
         <input type="hidden" id="idValid" />
       </div>
       <!-- 비밀번호 -->
       <div class="mb-3">
-        <label for="userpwd1" class="form-label">비밀번호 :
+        <label for="password" class="form-label">비밀번호 :
           <span class="errorMsg"></span>
         </label>
-        <input type="password" class="form-control" id="userpwd1" placeholder="Enter password" name="userpwd">
+        <input type="password" class="form-control" id="password" placeholder="Enter password" name="password">
       </div>
       <!-- 비밀번호 재입력 -->
       <div class="mb-3">
-        <label for="userpwd2" class="form-label">비밀번호 재입력 :
+        <label for="passwordConfirm" class="form-label">비밀번호 재입력 :
           <span class="errorMsg"></span>
         </label>
-        <input type="password" class="form-control" id="userpwd2" placeholder="Enter password again">
+        <input type="password" class="form-control" id="passwordConfirm" placeholder="Enter password again" name="passwordConfirm">
         <input type="hidden" id="pwdValid" />
       </div>
       <!-- 이메일 -->
       <div class="mb-3 mt-3">
-        <label for="useremail" class="form-label">이메일 :
+        <label for="email" class="form-label">이메일 :
           <span class="errorMsg"></span>
         </label>
         <div style="display: flex; gap: 10px; margin-bottom: 10px;">
-          <input type="email" class="form-control" id="useremail" placeholder="Enter your email" name="useremail">
+          <input type="email" class="form-control" id="email" placeholder="Enter your email" name="email">
           <button type="button" class="btn btn-success" onclick="emailAuth();" id="emailAuthBtn" style="display:none; white-space: nowrap;">인증하기</button>
         </div>
         <div class="authDiv mt-2">
@@ -158,19 +158,31 @@
       </div>
       <!-- 이름 -->
       <div class="mb-3 mt-3">
-        <label for="username" class="form-label">이름 :
+        <label for="nickname" class="form-label">닉네임(선택) :
           <span class="errorMsg"></span>
         </label>
-        <input type="text" class="form-control" id="username" placeholder="Enter your name" name="username">
+        <input type="text" class="form-control" id="nickname" placeholder="Enter your nickname" name="nickname">
         <input type="hidden" id="nameValid" />
       </div>
-      <!-- 주소 -->
+      <!-- 성별 -->
       <div class="mb-3 mt-3" style="margin-bottom: 25px;">
-        <label for="useraddr" class="form-label">주소 :
+        <label class="form-label" for="gender">성별 :
           <span class="errorMsg"></span>
         </label>
-        <input type="text" class="form-control" id="useraddr" placeholder="Enter your address" name="useraddr">
-        <input type="hidden" id="addrValid" />
+        <div class="form-check form-check-inline">
+          <input class="form-check-input" type="radio" name="gender" id="inlineRadio1" value="option1">
+          <label class="form-check-label" for="inlineRadio1">선택안함</label>
+        </div>
+        <div class="form-check form-check-inline">
+          <input class="form-check-input" type="radio" name="gender" id="inlineRadio2" value="option2">
+          <label class="form-check-label" for="inlineRadio2">남</label>
+        </div>
+        <div class="form-check form-check-inline">
+          <input class="form-check-input" type="radio" name="gender" id="inlineRadio3" value="option3">
+          <label class="form-check-label" for="inlineRadio3">여</label>
+        </div>
+        <!--<input type="text" class="form-control" id="gender" placeholder="Enter your address" name="gender">-->
+        <input type="hidden" id="genderValid" />
       </div>
       <!-- 버튼 -->
       <div class="signup-btn-group">
@@ -188,65 +200,65 @@
   <script type="text/javascript">
     $(function() {
       // 비밀번호 체크 이벤트
-      $(document).on("blur", "#userpwd1", function () {
+      $(document).on("blur", "#password", function () {
         // 비밀번호 4~8자
-        let tmpPwd = $("#userpwd1").val();
+        let tmpPwd = $("#password").val();
         if (tmpPwd.length < 8 || tmpPwd.length > 20) {
-          outputError("비밀번호는 8~20자로 입력하세요!", $("#userpwd1"), "red");
+          outputError("비밀번호는 8~20자로 입력하세요!", $("#password"), "red");
           $("#pwdValid").val("");
         } else {
-          let tmpPwd1 = $("#userpwd1").val();
-          let tmpPwd2 = $("#userpwd2").val();
+          let tmpPwd1 = $("#password").val();
+          let tmpPwd2 = $("#passwordConfirm").val();
           if(tmpPwd2 == "") {
-            outputError("아래에 다시 한번 입력해주세요.", $("#userpwd1"), "orange");
+            outputError("아래에 다시 한번 입력해주세요.", $("#password"), "orange");
           } else {
             if(tmpPwd1 != tmpPwd2) {
-              outputError("비밀번호가 일치하지 않습니다.", $("#userpwd1"), "red");
-              outputError("", $("#userpwd2"), "red");
+              outputError("비밀번호가 일치하지 않습니다.", $("#password"), "red");
+              outputError("", $("#passwordConfirm"), "red");
               $("#pwdValid").val("");
             } else {
-              outputError("비밀번호 검증완료", $("#userpwd1"), "green");
-              outputError("비밀번호가 일치합니다.", $("#userpwd2"), "green");
+              outputError("비밀번호 검증완료", $("#password"), "green");
+              outputError("비밀번호가 일치합니다.", $("#passwordConfirm"), "green");
               $("#pwdValid").val("checked");
             }
           }
         }
       });
-      $(document).on("blur", "#userpwd2", function () {
-        let tmpPwd1 = $("#userpwd1").val();
-        let tmpPwd2 = $("#userpwd2").val();
+      $(document).on("blur", "#passwordConfirm", function () {
+        let tmpPwd1 = $("#password").val();
+        let tmpPwd2 = $("#passwordConfirm").val();
         if (tmpPwd1.length < 8 || tmpPwd1.length > 20) {
           return;
         }
         if(tmpPwd1 != tmpPwd2) { //
-          outputError("비밀번호가 일치하지 않습니다.", $("#userpwd1"), "red");
-          outputError("", $("#userpwd2"), "red");
+          outputError("비밀번호가 일치하지 않습니다.", $("#password"), "red");
+          outputError("", $("#passwordConfirm"), "red");
           $("#pwdValid").val("");
         } else {
-          outputError("비밀번호 검증완료", $("#userpwd1"), "green");
-          outputError("비밀번호가 일치합니다.", $("#userpwd2"), "green");
+          outputError("비밀번호 검증완료", $("#password"), "green");
+          outputError("비밀번호가 일치합니다.", $("#passwordConfirm"), "green");
           $("#pwdValid").val("checked");
         }
       });
 
       // 빈칸으로 블러했을 때에만, outputError(red)
-      $(document).on("blur", "#useremail", function () {
-        if($("#useremail").val().length == 0) {
-          outputError("이메일은 필수항목입니다.", $("#useremail"), "red");
+      $(document).on("blur", "#email", function () {
+        if($("#email").val().length == 0) {
+          outputError("이메일은 필수항목입니다.", $("#email"), "red");
         }
       });
       // 이메일을 입력하는 동안 주소 유효성 검증
-      $(document).on("keyup", "#useremail", function () {
-        let usermail = $("#useremail").val();
-        console.log(useremail);
-        if($("#useremail").val().length > 0) {
-          outputError("올바른 이메일 형식으로 입력해주세요.", $("#useremail"), "red");
-          let useremail = $("#useremail").val();
+      $(document).on("keyup", "#email", function () {
+        let usermail = $("#email").val();
+        console.log(email);
+        if($("#email").val().length > 0) {
+          outputError("올바른 이메일 형식으로 입력해주세요.", $("#email"), "red");
+          let email = $("#email").val();
           let emailRegExp = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-          if (!emailRegExp.test(useremail)) {
-            outputError("올바른 이메일 형식으로 입력해주세요.", $("#useremail"), "red");
+          if (!emailRegExp.test(email)) {
+            outputError("올바른 이메일 형식으로 입력해주세요.", $("#email"), "red");
           } else {
-            outputError("올바른 이메일 형식입니다.", $("#useremail"), "green");
+            outputError("올바른 이메일 형식입니다.", $("#email"), "green");
             // 유효성 검증 완료되면, 인증하기 버튼 활성화
             $("#emailAuthBtn").show();
           }
@@ -257,10 +269,10 @@
 
       });
 
-      $(document).on("blur", "#username", function () {
-        console.log($("#username").val());
-        if($("#username").val().length > 0) { //
-          outputError("사용가능", $("#username"), "green");
+      $(document).on("blur", "#nickname", function () {
+        console.log($("#nickname").val());
+        if($("#nickname").val().length > 0) { //
+          outputError("사용가능", $("#nickname"), "green");
           $("#nameValid").val("checked");
         } else {
           outputError("이름은 필수 입력입니다.", $("#memberName"), "red");
@@ -274,7 +286,7 @@
     // ▶▶▶▶▶ 이메일 관련 함수
 
     function uniqueEmailCheck() {
-      let userInputEmail = $("#useremail").val();
+      let userInputEmail = $("#email").val();
       $.ajax({
         url: "/user/uniqueEmailCheck", // 데이터가 송수신될 서버의 주소
         type: "POST", // 통신 방식 (GET, POST, PUT, DELETE)
@@ -317,14 +329,14 @@
         success: function (data) {
           console.log(data); // 데이터가 넘어오면 콘솔에 확인
           if (data == "success") {
-            outputError("인증완료", $("#useremail"), "blue");
+            outputError("인증완료", $("#email"), "blue");
             // 이메일인풋, 인증인풋, 인증하기 비활성화
 //	        $(".authDiv").remove();
             $(".authDiv").hide();
             $("#emailInputBtn").hide();
             $("#emailValid").val("checked");
           } else {
-            outputError("인증번호가 일치하지 않습니다. 다시 입력해주세요.", $("#useremail"), "red");
+            outputError("인증번호가 일치하지 않습니다. 다시 입력해주세요.", $("#email"), "red");
           }
 
         },
@@ -337,7 +349,7 @@
       $.ajax({
         url: "/user/callSendEmail", // 데이터가 송수신될 서버의 주소
         type: "POST", // 통신 방식 (GET, POST, PUT, DELETE)
-        data: {"useremail": $("#useremail").val()},
+        data: {"email": $("#email").val()},
         dataType: "text",
         success: function (data) {
           console.log(data); // 데이터가 넘어오면 콘솔에 확인
@@ -388,7 +400,7 @@
             console.log(data); // 데이터가 넘어오면 콘솔에 확인
             alert("인증시간이 만료. 인증메일을 다시 보냈으니, 확인해주세요.");
             callSendEmail();
-            outputError("", $("#useremail"), "blue");
+            outputError("", $("#email"), "blue");
             startTimer();
 //         $("#emailAuthBtn").show();
           },

@@ -1,6 +1,7 @@
 package com.jason.diarytodo.service;
 
 import com.jason.diarytodo.domain.LoginDTO;
+import com.jason.diarytodo.domain.MemberReqDTO;
 import com.jason.diarytodo.domain.MemberRespDTO;
 import com.jason.diarytodo.mapper.MemberMapper;
 import lombok.RequiredArgsConstructor;
@@ -17,11 +18,11 @@ public class MemberServiceImpl implements MemberService {
   private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
   @Override
-  public void register(MemberRespDTO member) {
-    String encryptedPwd = bCryptPasswordEncoder.encode(member.getPassword());
-    member.setPassword(encryptedPwd);
+  public int registerMember(MemberReqDTO memberReqDTO) {
+    String encryptedPwd = bCryptPasswordEncoder.encode(memberReqDTO.getPassword());
+    memberReqDTO.setPassword(encryptedPwd);
 
-    memberMapper.insertMemberByMember(member);
+    return memberMapper.insertMember(memberReqDTO);
   }
 
   @Override
