@@ -26,8 +26,13 @@ public class MemberServiceImpl implements MemberService {
   }
 
   @Override
+  public MemberRespDTO checkIdDuplication(String loginId) {
+    return memberMapper.selectMemberByLoginId(loginId);
+  }
+
+  @Override
   public MemberRespDTO login(LoginDTO loginDTO) {
-    MemberRespDTO member = memberMapper.findMemberById(loginDTO.getLoginId());
+    MemberRespDTO member = memberMapper.selectMemberByLoginId(loginDTO.getLoginId());
     if (member != null && bCryptPasswordEncoder.matches(loginDTO.getPassword(), member.getPassword())) {
       // log.info("member: {}", member);
       return member;

@@ -12,5 +12,7 @@ public interface MemberMapper {
   int insertMember(MemberReqDTO memberReqDTO);
 
   @Select("select * from member where login_id = #{loginId}")
-  MemberRespDTO findMemberById(String loginId);
+  MemberRespDTO selectMemberByLoginId(String loginId);
+
+
 }

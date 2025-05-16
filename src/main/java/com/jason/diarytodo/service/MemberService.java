@@ -6,8 +6,9 @@ import com.jason.diarytodo.domain.MemberRespDTO;
 
 public interface MemberService {
 
-  int registerMember(MemberReqDTO memberReqDTO);
-
   MemberRespDTO login(LoginDTO loginDTO);
 
+  int registerMember(MemberReqDTO memberReqDTO);
+
+  MemberRespDTO checkIdDuplication(String loginId);
 }
