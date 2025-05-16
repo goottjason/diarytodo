@@ -85,7 +85,6 @@
       }
       .timer { color: red }
       .authDiv {
-        display: none;
         margin-top: 10px;
       }
       .authDiv .timer {
@@ -147,11 +146,15 @@
         <label for="email" class="form-label">이메일 :
           <span class="errorMsg"></span>
         </label>
+
         <div style="display: flex; gap: 10px; margin-bottom: 10px;">
           <input type="email" class="form-control" id="email" placeholder="Enter your email" name="email">
+          <!-- 이메일형식 입력완료시, '인증하기' 버튼 show -->
           <button id="emailAuthBtn" type="button" class="btn btn-success" onclick="emailAuth();" style="display:none; white-space: nowrap;">인증하기</button>
         </div>
-        <div class="authDiv mt-2">
+
+        <!-- '인증하기' 버튼 클릭시, authDiv 요소 show -->
+        <div class="authDiv mt-2" style="display: none;">
           <div style="display: flex; gap: 10px; align-items: center;">
             <input type="text" class="form-control" id="authCodeInput" placeholder="인증번호를 입력하세요.">
             <div class="d-flex">
@@ -176,24 +179,22 @@
           <span class="errorMsg"></span>
         </label>
         <div class="form-check form-check-inline">
-          <input class="form-check-input" type="radio" name="gender" id="inlineRadio1" value="U">
-          <label class="form-check-label" for="inlineRadio1">선택안함</label>
+          <input class="form-check-input" type="radio" name="gender" id="radio1" value="U" checked>
+          <label class="form-check-label" for="radio1">선택안함</label>
         </div>
         <div class="form-check form-check-inline">
-          <input class="form-check-input" type="radio" name="gender" id="inlineRadio2" value="M">
-          <label class="form-check-label" for="inlineRadio2">남</label>
+          <input class="form-check-input" type="radio" name="gender" id="radio2" value="M">
+          <label class="form-check-label" for="radio2">남</label>
         </div>
         <div class="form-check form-check-inline">
-          <input class="form-check-input" type="radio" name="gender" id="inlineRadio3" value="F">
-          <label class="form-check-label" for="inlineRadio3">여</label>
+          <input class="form-check-input" type="radio" name="gender" id="radio3" value="F">
+          <label class="form-check-label" for="radio3">여</label>
         </div>
-        <!--<input type="text" class="form-control" id="gender" placeholder="Enter your address" name="gender">-->
-        <input type="hidden" id="genderValid" />
       </div>
       <!-- 버튼 -->
       <div class="signup-btn-group">
-        <button type="submit" class="btn btn-success"> <!--onclick="return isValid();"-->가입하기</button>
-        <button type="reset" class="btn btn-danger" onclick="resetCheck();">취소</button>
+        <button type="submit" class="btn btn-success" onclick="return isAllValid();">가입하기</button>
+        <button type="reset" class="btn btn-danger">취소</button>
       </div>
     </form>
   </div>
@@ -456,61 +457,12 @@
       $(".timer").html(remainTime);
     }
 
-
-
-
-    function idValid() {
+    function isAllValid() {
       let result = false;
-
-      if ($("#idValid").val() == "checked") {
+      if($("#idValid").val() == "checked" && $("#pwdValid").val() == "checked" && $("#emailValid").val() == "checked" && $("#nameValid").val() == "checked") {
         result = true;
       }
       return result;
-    }
-    function pwdValid() {
-      let result = false;
-      if ($("#pwdValid").val() == "checked") {
-        result = true;
-      }
-      return result;
-    }
-
-    function emailValid() {
-      let result = false;
-      if ($("#emailValid").val() == "checked") {
-        result = true;
-      }
-      return result;
-    }
-    function nameValid() {
-      let result = false;
-      if ($("#nameValid").val() == "checked") {
-        result = true;
-      }
-      return result;
-    }
-    function addrValid() {
-      let result = true;
-      return result;
-    }
-
-
-    function isValid() {
-      let result = false;
-      let idCheck = idValid();
-      let pwdCheck = pwdValid();
-      let emailCheck = emailValid();
-      let nameCheck = nameValid();
-      let addrCheck = addrValid();
-      console.log(idCheck, pwdCheck, emailCheck, nameCheck);
-      if (idCheck && pwdCheck && emailCheck && nameCheck) {
-        result = true;
-      }
-      return result;
-    }
-
-    function resetCheck() {
-      location.href = "../user/signup";
     }
   </script>
 </th:block>
