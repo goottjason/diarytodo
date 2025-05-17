@@ -1,0 +1,292 @@
+body {
+  font-family: 'Pretendard', 'Inter', sans-serif;
+}
+
+.table-box {
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px #eee;
+  padding: 16px;
+}
+.todo-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+.todo-table th, .todo-table td {
+  text-align: center;
+  padding: 8px 12px;
+  border-bottom: 1px solid #f0f0f0;
+}
+.todo-table .titleTd {
+  text-align: left;
+  cursor: pointer;
+}
+.todo-table .titleTd.completed {
+  text-decoration: line-through;
+  color: #aaa;
+}
+.todo-table .titleTd:hover,
+.todo-table .duedateTd:hover {
+  background: #E1E1E1;
+}
+.edit-input-title,
+.edit-input-duedate {
+  display: none;
+  border: none;
+  background: transparent;
+  width: 100%;
+}
+.moreBtn, .delBtn {
+  border-radius: 4px;
+  padding: 1px 6px;
+  background: #fff;
+  font-size: 12px;
+  cursor: pointer;
+}
+.moreBtn {
+  border: 1px solid #b1b1a8;
+  color: #777b7c;
+  margin-right: 2px;
+}
+.delBtn {
+  border: 1px solid #e57373;
+  color: #e57373;
+}
+#multiEditBtn, #multiDeleteBtn {
+  border-radius: 6px;
+  padding: 8px 18px;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+#multiEditBtn {
+  background: #fff;
+  color: #1976d2;
+  border: 2px solid #1976d2;
+  margin-right: 8px;
+}
+#multiEditBtn:hover {
+  background: #1976d2;
+  color: #fff;
+}
+#multiDeleteBtn {
+  background: #fff;
+  color: #e53935;
+  border: 2px solid #e53935;
+}
+#multiDeleteBtn:hover {
+  background: #e53935;
+  color: #fff;
+}
+
+/* 컨테이너 스타일 */
+.login-container {
+  max-width: 380px;
+  margin: 60px auto;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 16px rgba(40,60,90,0.08);
+  padding: 36px 32px 28px 32px;
+}
+
+/* 제목 스타일 */
+.login-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #0f1d41;
+  margin-bottom: 28px;
+  text-align: center;
+}
+
+/* 에러 메시지 */
+.login-error-msg {
+  background: #ffe6e6;
+  color: #d32f2f;
+  border-radius: 6px;
+  padding: 10px 14px;
+  margin-bottom: 18px;
+  font-size: 15px;
+  text-align: center;
+}
+
+/* 성공/알림 메시지 */
+.login-info-msg {
+  background: #e8f0fe;
+  color: #0f1d41;
+  border-radius: 6px;
+  padding: 10px 14px;
+  margin-bottom: 18px;
+  font-size: 15px;
+  text-align: center;
+}
+
+/* 폼 그룹 */
+.login-form-group {
+  margin-bottom: 18px;
+  text-align: left; /* 왼쪽 정렬 */
+}
+
+.login-form-label {
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 6px;
+  display: block;
+  text-align: left; /* 왼쪽 정렬 */
+}
+
+.login-form-input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #e0e4ea;
+  border-radius: 7px;
+  background: #f7f8fa;
+  font-size: 15px;
+  margin-top: 4px;
+  text-align: left; /* 입력값도 왼쪽 정렬 */
+}
+
+/* 비밀번호 입력 그룹만 margin-bottom 다름 */
+.login-form-group-pwd {
+  margin-bottom: 22px;
+  text-align: left; /* 왼쪽 정렬 */
+}
+
+/* 버튼 그룹 */
+.login-btn-group {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.login-btn-primary {
+  flex: 1;
+  background: #0f1d41;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 10px 0;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+/* 추가: hover 시에도 색상 변화 없음 */
+.login-btn-primary:hover {
+  background: #0f1d41;
+  color: #fff;
+}
+
+.login-btn-secondary {
+  flex: 1;
+  background: #e0e4ea;
+  color: #0f1d41;
+  border: none;
+  border-radius: 6px;
+  padding: 10px 0;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+/* 추가: hover 시에도 색상 변화 없음 */
+.login-btn-secondary:hover {
+  background: #e0e4ea;
+  color: #0f1d41;
+}
+
+/*■■■ signup.html ■■■*/
+
+.signup-container {
+  max-width: 550px;
+  margin: 0 auto;
+  padding: 30px;
+  background-color: #f8f9fa;
+  border-radius: 10px;
+  box-shadow: 0 0 15px rgba(0,0,0,0.1);
+}
+.signup-title {
+  text-align: center;
+  margin-bottom: 25px;
+  color: #0f1d41;
+  font-weight: 600;
+  padding-bottom: 15px;
+}
+.signup-status {
+  color: #dc3545;
+  font-size: 14px;
+  margin-bottom: 10px;
+}
+.mb-3, .mt-3 {
+  margin-bottom: 20px !important;
+  position: relative;
+}
+.form-label {
+  display: block;
+  font-weight: 500;
+  margin-bottom: 8px;
+  color: #333;
+  text-align: left; /* 항상 왼쪽 정렬 */
+}
+.errorMsg {
+  color: #dc3545;
+  font-size: 13px;
+}
+.bindingErrorMsg {
+  color: #dc3545;
+  font-size: 13px;
+}
+.form-control {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ced4da;
+  border-radius: 5px;
+  font-size: 14px;
+}
+.signup-btn-group {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin-top: 15px;
+}
+.btn-success {
+  background-color: #32691e;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 30px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.3s;
+}
+.btn-success:hover {
+  background-color: #285617;
+}
+.btn-danger {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 30px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.3s;
+}
+.btn-danger:hover {
+  background-color: #b52a37;
+}
+.timer { color: red }
+.authDiv {
+  margin-top: 10px;
+}
+.authDiv .timer {
+  color: #dc3545;
+  font-weight: 500;
+}
+.d-flex {
+  display: flex;
+  align-items: center;
+}
+.flex-row {
+  display: flex;
+  gap: 10px;
+}

@@ -1,90 +1,10 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-  <style>
-    .table-box {
-      background: #fff;
-      border-radius: 8px;
-      box-shadow: 0 2px 8px #eee;
-      padding: 16px;
-    }
-    .todo-table {
-      width: 100%;
-      border-collapse: collapse;
-      table-layout: fixed;
-    }
-    .todo-table th, .todo-table td {
-      text-align: center;
-      padding: 8px 12px;
-      border-bottom: 1px solid #f0f0f0;
-    }
-    .todo-table .titleTd {
-      text-align: left;
-      cursor: pointer;
-    }
-    .todo-table .titleTd.completed {
-      text-decoration: line-through;
-      color: #aaa;
-    }
-    .todo-table .titleTd:hover,
-    .todo-table .duedateTd:hover {
-      background: #E1E1E1;
-    }
-    .edit-input-title,
-    .edit-input-duedate {
-      display: none;
-      border: none;
-      background: transparent;
-      width: 100%;
-    }
-    .moreBtn, .delBtn {
-      border-radius: 4px;
-      padding: 1px 6px;
-      background: #fff;
-      font-size: 12px;
-      cursor: pointer;
-    }
-    .moreBtn {
-      border: 1px solid #b1b1a8;
-      color: #777b7c;
-      margin-right: 2px;
-    }
-    .delBtn {
-      border: 1px solid #e57373;
-      color: #e57373;
-    }
-    #multiEditBtn, #multiDeleteBtn {
-      border-radius: 6px;
-      padding: 8px 18px;
-      font-size: 15px;
-      font-weight: 500;
-      cursor: pointer;
-      transition: background 0.2s, color 0.2s;
-    }
-    #multiEditBtn {
-      background: #fff;
-      color: #1976d2;
-      border: 2px solid #1976d2;
-      margin-right: 8px;
-    }
-    #multiEditBtn:hover {
-      background: #1976d2;
-      color: #fff;
-    }
-    #multiDeleteBtn {
-      background: #fff;
-      color: #e53935;
-      border: 2px solid #e53935;
-    }
-    #multiDeleteBtn:hover {
-      background: #e53935;
-      color: #fff;
-    }
-  </style>
 </head>
 <body>
 <div th:fragment="todoTable">
-  <div class="todo-table-div" th:with="now=${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}">
+  <div class="todo-table-div">
     <table class="todo-table">
       <colgroup>
         <col style="width:5%">
@@ -134,7 +54,7 @@
             onmouseover="this.style.background='#E1E1E1';"
             onmouseout="this.style.background='#fff';">
           <span th:if="${todo.duedate != null}"
-                th:style="'color:' + (${todo.duedate} < now ? '#ec407a' : (${todo.duedate} == now ? '#0f1d41' : '#1976d2'))"
+                th:style="'color:' + (${todo.duedate} < ${now} ? '#ec407a' : (${todo.duedate} == ${now} ? '#0f1d41' : '#1976d2'))"
                 th:text="${todo.duedate}">
           </span>
           <span th:if="${todo.duedate == null}" style="color:#1976d2">-</span>

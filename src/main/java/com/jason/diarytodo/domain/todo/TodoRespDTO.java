@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Data
@@ -21,7 +22,7 @@ public class TodoRespDTO {
   private Boolean isFinished;  // 완료 여부
   private Boolean isImportant; // 중요 여부
   @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-  private LocalDateTime duedate; // 마감일
+  private LocalDate duedate; // 마감일
   @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
   private LocalDateTime createdAt; // 생성일시
   @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")

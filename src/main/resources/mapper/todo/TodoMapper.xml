@@ -27,6 +27,17 @@
       <if test="duedate != null">AND DATE(duedate) = DATE(#{duedate})</if>
       <if test="createdAt != null">AND DATE(created_at) = DATE(#{createdAt})</if>
       <if test="updatedAt != null">AND DATE(updated_at) = DATE(#{updatedAt})</if>
+      <!-- hasDuedate 조건 추가 -->
+      <if test="hasDuedate != null">
+        <choose>
+          <when test="hasDuedate == true">
+            AND duedate IS NOT NULL
+          </when>
+          <when test="hasDuedate == false">
+            AND duedate IS NULL
+          </when>
+        </choose>
+      </if>
     </where>
   </sql>
 
@@ -41,4 +52,28 @@
     </choose>
   </sql>
 
+  <update id="updateTodo" parameterType="TodoReqDTO">
+    UPDATE todo
+    <set>
+      <if test="title != null">
+        title = #{title},
+      </if>
+      <if test="content != null">
+        content = #{content},
+      </if>
+      <if test="location != null">
+        location = #{location},
+      </if>
+      <if test="isFinished != null">
+        is_finished = #{isFinished},
+      </if>
+      <if test="isImportant != null">
+        is_important = #{isImportant},
+      </if>
+      <if test="duedate != null">
+        duedate = #{duedate},
+      </if>
+    </set>
+    WHERE dno = #{dno}
+  </update>
 </mapper>

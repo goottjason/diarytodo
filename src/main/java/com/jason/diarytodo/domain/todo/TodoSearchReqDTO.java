@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Data
@@ -26,13 +27,25 @@ public class TodoSearchReqDTO {
   private String sortBy;           // 정렬 컬럼명 (ex: "duedate", "priority")
   private String sortDirection;    // "asc" or "desc"
 
+  /*
+  allList -> X
+  todayList -> duedate = LocalDate.now()
+  unfinishedList -> isFinished = false
+  importantList -> isImportant = true
+  hasDuedateList -> hasDuedate = true -> duedate is not null
+  noDuedateList -> hasDuedate = false -> duedate is null
+  calPickDuedateList -> duedate = duedate;
+   */
+  private String status;
+
   // 검색/필터 필드 (MySQL 컬럼명과 일치)
   private String title;            // 제목(부분일치)
   private String content;          // 내용(부분일치)
   private String writer;           // 작성자(정확히)
   private Boolean isFinished;      // 완료여부
   private Boolean isImportant;     // 중요여부
-  private LocalDateTime duedate;   // 마감일
+  private Boolean hasDuedate;
+  private LocalDate duedate;   // 마감일
   private LocalDateTime createdAt; // 생성일
   private LocalDateTime updatedAt; // 수정일
 

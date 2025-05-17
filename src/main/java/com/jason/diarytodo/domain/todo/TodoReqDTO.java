@@ -8,6 +8,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Data
@@ -33,5 +34,5 @@ public class TodoReqDTO {
   private Boolean isImportant; // 중요 여부 (null 허용)
 
   @FutureOrPresent(message = "마감일은 현재 또는 미래 날짜로 설정해주세요.")
-  private LocalDateTime duedate; // 마감일 (날짜 + 시간)
+  private LocalDate duedate; // 마감일 (날짜 + 시간)
 }

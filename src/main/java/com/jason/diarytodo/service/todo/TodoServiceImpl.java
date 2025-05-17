@@ -1,5 +1,6 @@
 package com.jason.diarytodo.service.todo;
 
+import com.jason.diarytodo.domain.todo.TodoReqDTO;
 import com.jason.diarytodo.domain.todo.TodoRespDTO;
 import com.jason.diarytodo.domain.todo.TodoSearchReqDTO;
 import com.jason.diarytodo.domain.todo.TodoSearchRespDTO;
@@ -8,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -18,6 +20,7 @@ public class TodoServiceImpl implements TodoService {
   @Override
   public TodoSearchRespDTO getTodos(TodoSearchReqDTO todoSearchReqDTO) {
 
+    // SQL injection 예방
     List<String> allowSortBy = List.of("title", "duedate", "created_at", "updated_at");
     if (!allowSortBy.contains(todoSearchReqDTO.getSortBy())) {
       throw new IllegalArgumentException("허용되지 않은 정렬 컬럼입니다.");
@@ -25,6 +28,32 @@ public class TodoServiceImpl implements TodoService {
     String sortDirection = todoSearchReqDTO.getSortDirection();
     if (!("ASC".equalsIgnoreCase(sortDirection) || "DESC".equalsIgnoreCase(sortDirection))) {
       throw new IllegalArgumentException("정렬 방향은 ASC 또는 DESC만 가능합니다.");
+    }
+
+    // 필터링
+    switch (todoSearchReqDTO.getStatus()) {
+      case "todayList":
+        todoSearchReqDTO.setDuedate(LocalDate.now());
+        break;
+      case "unfinishedList":
+        todoSearchReqDTO.setIsFinished(false);
+        break;
+      case "importantList":
+        todoSearchReqDTO.setIsImportant(true);
+        break;
+      case "hasDuedateList":
+        todoSearchReqDTO.setHasDuedate(true);
+        break;
+      case "noDuedateList":
+        todoSearchReqDTO.setHasDuedate(false);
+        break;
+      case "calPickDuedateList":
+        // 이미 값을 받아오므로 생략 가능
+        break;
+      case "allList":
+      default:
+        // 아무것도 세팅하지 않음
+        break;
     }
 
     int totalTodos = todoMapper.selectTotalTodos(todoSearchReqDTO);
@@ -36,5 +65,10 @@ public class TodoServiceImpl implements TodoService {
       .todoSearchReqDTO(todoSearchReqDTO)
       .todos(todos)
       .build();
+  }
+
+  @Override
+  public int modifyTodo(TodoReqDTO todoReqDTO) {
+    return todoMapper.updateTodo(todoReqDTO);
   }
 }
