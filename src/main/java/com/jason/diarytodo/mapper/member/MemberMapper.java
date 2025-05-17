@@ -1,7 +1,7 @@
-package com.jason.diarytodo.mapper;
+package com.jason.diarytodo.mapper.member;
 
-import com.jason.diarytodo.domain.MemberReqDTO;
-import com.jason.diarytodo.domain.MemberRespDTO;
+import com.jason.diarytodo.domain.member.MemberReqDTO;
+import com.jason.diarytodo.domain.member.MemberRespDTO;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;

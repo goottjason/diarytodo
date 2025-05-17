@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jason.diarytodo.mapper.todo.TodoMapper">
+
+  <select id="selectTodos" resultType="TodoRespDTO">
+    SELECT * FROM todo
+    <include refid="whereCondition" />
+    ORDER BY
+    <include refid="orderCondition" />
+    LIMIT #{offset}, #{pageSize}
+  </select>
+
+  <select id="selectTotalTodos" resultType="int">
+    SELECT COUNT(*) FROM todo
+    <include refid="whereCondition" />
+  </select>
+
+  <sql id="whereCondition">
+    <where>
+      <if test="title != null">AND title LIKE CONCAT('%', #{title}, '%')</if>
+      <if test="content != null">AND content LIKE CONCAT('%', #{content}, '%')</if>
+      <if test="writer != null">AND writer = #{writer}</if>
+      <if test="isFinished != null">AND is_finished = #{isFinished}</if>
+      <if test="isImportant != null">AND is_important = #{isImportant}</if>
+      <if test="duedate != null">AND DATE(duedate) = DATE(#{duedate})</if>
+      <if test="createdAt != null">AND DATE(created_at) = DATE(#{createdAt})</if>
+      <if test="updatedAt != null">AND DATE(updated_at) = DATE(#{updatedAt})</if>
+    </where>
+  </sql>
+
+  <sql id="orderCondition">
+    <choose>
+      <when test="sortBy != null and sortDirection != null">
+        ${sortBy} ${sortDirection}
+      </when>
+      <otherwise>
+        duedate DESC
+      </otherwise>
+    </choose>
+  </sql>
+
+</mapper>

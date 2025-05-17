@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <style>
+    .table-box {
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px #eee;
+      padding: 16px;
+    }
+    .todo-table {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+    }
+    .todo-table th, .todo-table td {
+      text-align: center;
+      padding: 8px 12px;
+      border-bottom: 1px solid #f0f0f0;
+    }
+    .todo-table .titleTd {
+      text-align: left;
+      cursor: pointer;
+    }
+    .todo-table .titleTd.completed {
+      text-decoration: line-through;
+      color: #aaa;
+    }
+    .todo-table .titleTd:hover,
+    .todo-table .duedateTd:hover {
+      background: #E1E1E1;
+    }
+    .edit-input-title,
+    .edit-input-duedate {
+      display: none;
+      border: none;
+      background: transparent;
+      width: 100%;
+    }
+    .moreBtn, .delBtn {
+      border-radius: 4px;
+      padding: 1px 6px;
+      background: #fff;
+      font-size: 12px;
+      cursor: pointer;
+    }
+    .moreBtn {
+      border: 1px solid #b1b1a8;
+      color: #777b7c;
+      margin-right: 2px;
+    }
+    .delBtn {
+      border: 1px solid #e57373;
+      color: #e57373;
+    }
+    #multiEditBtn, #multiDeleteBtn {
+      border-radius: 6px;
+      padding: 8px 18px;
+      font-size: 15px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s;
+    }
+    #multiEditBtn {
+      background: #fff;
+      color: #1976d2;
+      border: 2px solid #1976d2;
+      margin-right: 8px;
+    }
+    #multiEditBtn:hover {
+      background: #1976d2;
+      color: #fff;
+    }
+    #multiDeleteBtn {
+      background: #fff;
+      color: #e53935;
+      border: 2px solid #e53935;
+    }
+    #multiDeleteBtn:hover {
+      background: #e53935;
+      color: #fff;
+    }
+  </style>
+</head>
+<body>
+<div th:fragment="todoTable">
+  <div class="todo-table-div" th:with="now=${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}">
+    <table class="todo-table">
+      <colgroup>
+        <col style="width:5%">
+        <col style="width:8%">
+        <col style="width:55%">
+        <col style="width:19%">
+        <col style="width:14%">
+        <col style="width:14%">
+      </colgroup>
+      <thead>
+      <tr>
+        <th><input type="checkbox" id="selectAllCheckbox"/></th>
+        <th>완료</th>
+        <th>제목</th>
+        <th>기한</th>
+        <th>중요도</th>
+        <th>관리</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="todo : ${todos}">
+        <!-- 체크박스 -->
+        <td>
+          <input type="checkbox" class="rowCheckbox" th:data-dno="${todo.dno}" />
+        </td>
+        <!-- finished -->
+        <td>
+          <span style="color:#4b87c6;">
+            <i th:id="'dfinishedIcon-' + ${todo.dno}"
+               th:class="'finishedIcon fa-regular ' + (${todo.isFinished == 1} ? 'fa-circle-check' : 'fa-circle')"
+               th:data-dno="${todo.dno}" style="color:#1e3050"></i>
+          </span>
+        </td>
+        <!-- title -->
+        <td th:id="'dtitleTd-' + ${todo.dno}"
+            th:class="'titleTd' + (${todo.isFinished == 1} ? ' completed' : '')"
+            style="cursor:pointer"
+            onmouseover="this.style.background='#E1E1E1';"
+            onmouseout="this.style.background='#fff';">
+          <span th:id="'dtitlebtn-' + ${todo.dno}" class="titleSpan"
+                th:data-dno="${todo.dno}" th:text="${todo.title}"></span>
+          <input type="text" class="edit-input-title" th:data-dno="${todo.dno}" />
+        </td>
+        <!-- duedate -->
+        <td th:id="'dduedateTd-' + ${todo.dno}" class="duedateTd"
+            style="cursor:pointer"
+            onmouseover="this.style.background='#E1E1E1';"
+            onmouseout="this.style.background='#fff';">
+          <span th:if="${todo.duedate != null}"
+                th:style="'color:' + (${todo.duedate} < now ? '#ec407a' : (${todo.duedate} == now ? '#0f1d41' : '#1976d2'))"
+                th:text="${todo.duedate}">
+          </span>
+          <span th:if="${todo.duedate == null}" style="color:#1976d2">-</span>
+          <input type="date" class="edit-input-duedate" th:data-dno="${todo.dno}" />
+        </td>
+        <!-- star -->
+        <td>
+          <span style="color:#4b87c6;">
+            <i th:id="'dstar-' + ${todo.dno}"
+               th:class="'starIcon fa-regular fa-star' + (${todo.isImportant == 1} ? ' fa-solid' : '')"
+               th:data-dno="${todo.dno}" style="color:#1e3050"></i>
+          </span>
+        </td>
+        <!-- mod, del -->
+        <td>
+          <button class="moreBtn"
+                  th:data-dno="${todo.dno}">더보기</button>
+          <button class="delBtn"
+                  th:data-dno="${todo.dno}">삭제</button>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+    <div style="margin-top:20px; text-align:left;">
+      <button id="multiEditBtn">선택수정</button>
+      <button id="multiDeleteBtn">선택삭제</button>
+    </div>
+  </div>
+</div>
+</body>
+</html>

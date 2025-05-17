@@ -1,4 +1,4 @@
-package com.jason.diarytodo.domain;
+package com.jason.diarytodo.domain.member;
 
 import lombok.*;
 

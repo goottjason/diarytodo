@@ -1,8 +1,8 @@
 package com.jason.diarytodo.controller.member;
-import com.jason.diarytodo.domain.LoginDTO;
-import com.jason.diarytodo.domain.MemberReqDTO;
-import com.jason.diarytodo.domain.MemberRespDTO;
-import com.jason.diarytodo.service.MemberService;
+import com.jason.diarytodo.domain.member.LoginDTO;
+import com.jason.diarytodo.domain.member.MemberReqDTO;
+import com.jason.diarytodo.domain.member.MemberRespDTO;
+import com.jason.diarytodo.service.member.MemberService;
 import com.jason.diarytodo.util.EmailSender;
 import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpSession;
@@ -22,7 +22,6 @@ import java.security.SecureRandom;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 @Controller
 @Slf4j

@@ -133,10 +133,11 @@
 
       <!-- 인증 실패 메시지 -->
       <div th:if="${authFailMsg != null}" class="login-error-msg" th:text="${authFailMsg}"></div>
-      <!-- 인증 실패 메시지 세션에서 제거는 Spring Controller에서 처리 필요 -->
 
+      <!-- 회원가입 실패 메시지 -->
+      <div th:if="${signupFailMsg != null}" class="login-error-msg" th:text="${signupFailMsg}"></div>
       <!-- 회원가입 성공/상태 메시지 -->
-      <!--<div th:if="${signupStatus != null}" class="login-info-msg" th:text="${signupStatus}"></div>-->
+      <div th:if="${signupSuccessMsg != null}" class="login-info-msg" th:text="${signupSuccessMsg}"></div>
 
       <form th:action="@{/member/login}" method="post">
         <div class="mb-3 mt-3 login-form-group">

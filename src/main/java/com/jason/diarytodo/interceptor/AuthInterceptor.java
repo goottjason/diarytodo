@@ -1,6 +1,6 @@
 package com.jason.diarytodo.interceptor;
 
-import com.jason.diarytodo.domain.MemberRespDTO;
+import com.jason.diarytodo.domain.member.MemberRespDTO;
 import com.jason.diarytodo.util.DestinationPath;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

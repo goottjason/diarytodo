@@ -1,9 +1,9 @@
-package com.jason.diarytodo.service;
+package com.jason.diarytodo.service.member;
 
-import com.jason.diarytodo.domain.LoginDTO;
-import com.jason.diarytodo.domain.MemberReqDTO;
-import com.jason.diarytodo.domain.MemberRespDTO;
-import com.jason.diarytodo.mapper.MemberMapper;
+import com.jason.diarytodo.domain.member.LoginDTO;
+import com.jason.diarytodo.domain.member.MemberReqDTO;
+import com.jason.diarytodo.domain.member.MemberRespDTO;
+import com.jason.diarytodo.mapper.member.MemberMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
