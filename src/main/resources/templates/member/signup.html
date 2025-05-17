@@ -44,6 +44,10 @@
         color: #dc3545;
         font-size: 13px;
       }
+      .bindingErrorMsg {
+        color: #dc3545;
+        font-size: 13px;
+      }
       .form-control {
         width: 100%;
         padding: 10px;
@@ -110,16 +114,19 @@
 
     <h3 class="signup-title">회원가입</h3>
 
-    <form th:action="@{/member/signup}" method="post" style="width: 100%;">
+    <form th:action="@{/member/signup}" method="post"
+          th:object="${memberReqDTO}" style="width: 100%;">
 
       <!-- 아이디 -->
       <div class="mb-3 mt-3">
         <label for="loginId" class="form-label">아이디 :
           <span class="errorMsg"></span>
+          <span th:if="${errors?.containsKey('loginId')}"
+                th:text="${errors['loginId']}"
+                class="bindingErrorMsg"></span>
         </label>
-
         <div style="display: flex; gap: 10px;">
-          <input type="text" class="form-control" id="loginId" placeholder="Enter ID" name="loginId">
+          <input type="text" id="loginId" th:field="*{loginId}" class="form-control" placeholder="Enter ID">
           <button type="button" class="btn btn-success" onclick="idCheck();" style="white-space: nowrap;">중복확인</button>
         </div>
         <input type="hidden" id="idValid" />
@@ -129,15 +136,18 @@
       <div class="mb-3">
         <label for="password" class="form-label">비밀번호 :
           <span class="errorMsg"></span>
+          <span th:if="${errors?.containsKey('password')}"
+                th:text="${errors['password']}"
+                class="bindingErrorMsg"></span>
         </label>
-        <input type="password" class="form-control" id="password" placeholder="Enter password" name="password">
+        <input type="password" id="password" th:field="*{password}" class="form-control" placeholder="Enter password">
       </div>
       <!-- 비밀번호 재입력 -->
       <div class="mb-3">
         <label for="passwordConfirm" class="form-label">비밀번호 재입력 :
           <span class="errorMsg"></span>
         </label>
-        <input type="password" class="form-control" id="passwordConfirm" placeholder="Enter password again" name="passwordConfirm">
+        <input type="password" id="passwordConfirm" name="passwordConfirm" class="form-control" placeholder="Enter password again">
         <input type="hidden" id="pwdValid" />
       </div>
 
@@ -145,12 +155,15 @@
       <div class="mb-3 mt-3">
         <label for="email" class="form-label">이메일 :
           <span class="errorMsg"></span>
+          <span th:if="${errors?.containsKey('email')}"
+                th:text="${errors['email']}"
+                class="bindingErrorMsg"></span>
         </label>
 
         <div style="display: flex; gap: 10px; margin-bottom: 10px;">
-          <input type="email" class="form-control" id="email" placeholder="Enter your email" name="email">
+          <input type="email" id="email" th:field="*{email}" class="form-control" placeholder="Enter your email">
           <!-- 이메일형식 입력완료시, '인증하기' 버튼 show -->
-          <button id="emailAuthBtn" type="button" class="btn btn-success" onclick="emailAuth();" style="display:none; white-space: nowrap;">인증하기</button>
+          <button id="emailAuthBtn" type="button" class="btn btn-success" onclick="doEmailAuth();" style="display:none; white-space: nowrap;">인증하기</button>
         </div>
 
         <!-- '인증하기' 버튼 클릭시, authDiv 요소 show -->
@@ -161,39 +174,46 @@
               <span class="timer">3:00</span>
             </div>
           </div>
-          <button type="button" class="btn btn-success" onclick="emailInput();" id="emailInputBtn" style="display:none; margin-top: 10px;">입력완료</button>
+          <button type="button" class="btn btn-success" onclick="verifyEmail();" id="verifyEmailBtn" style="display:none; margin-top: 10px;">입력완료</button>
         </div>
         <input type="hidden" id="emailValid" />
       </div>
+
       <!-- 이름 -->
       <div class="mb-3 mt-3">
         <label for="nickname" class="form-label">닉네임(선택) :
           <span class="errorMsg"></span>
+          <span th:if="${errors?.containsKey('nickname')}"
+                th:text="${errors['nickname']}"
+                class="bindingErrorMsg"></span>
         </label>
-        <input type="text" class="form-control" id="nickname" placeholder="Enter your nickname" name="nickname">
+        <input type="text" id="nickname" th:field="*{nickname}" class="form-control"  placeholder="Enter your nickname">
         <input type="hidden" id="nameValid" />
       </div>
       <!-- 성별 -->
       <div class="mb-3 mt-3" style="margin-bottom: 25px;">
         <label class="form-label">성별 :
           <span class="errorMsg"></span>
+          <span th:if="${errors?.containsKey('gender')}"
+                th:text="${errors['gender']}"
+                class="bindingErrorMsg"></span>
         </label>
         <div class="form-check form-check-inline">
-          <input class="form-check-input" type="radio" name="gender" id="radio1" value="U" checked>
-          <label class="form-check-label" for="radio1">선택안함</label>
+          <input class="form-check-input" type="radio" th:field="*{gender}" id="genderU" value="U">
+          <label class="form-check-label" for="genderU">선택안함</label>
         </div>
         <div class="form-check form-check-inline">
-          <input class="form-check-input" type="radio" name="gender" id="radio2" value="M">
-          <label class="form-check-label" for="radio2">남</label>
+          <input class="form-check-input" type="radio" th:field="*{gender}" id="genderM" value="M">
+          <label class="form-check-label" for="genderM">남자</label>
         </div>
         <div class="form-check form-check-inline">
-          <input class="form-check-input" type="radio" name="gender" id="radio3" value="F">
-          <label class="form-check-label" for="radio3">여</label>
+          <input class="form-check-input" type="radio" th:field="*{gender}" id="genderF" value="F">
+          <label class="form-check-label" for="genderF">여자</label>
         </div>
       </div>
       <!-- 버튼 -->
       <div class="signup-btn-group">
-        <button type="submit" class="btn btn-success" onclick="return isAllValid();">가입하기</button>
+        <button type="submit" class="btn btn-success">가입하기</button> <!--onclick="return isAllValid();"-->
         <button type="reset" class="btn btn-danger">취소</button>
       </div>
     </form>
@@ -204,10 +224,10 @@
 <th:block layout:fragment="script">
   <!-- 모든 페이지에서 채워넣는 공간 -->
   <script type="text/javascript">
+
     $(function() {
       // 비밀번호 체크 이벤트
       $(document).on("blur", "#password", function () {
-
         // 비밀번호 4~8자
         let password = $("#password").val();
         let passwordConfirm = $("#passwordConfirm").val();
@@ -272,33 +292,30 @@
           }
         }
       });
-
-      $(document).on("blur", "#nickname", function () {
-        console.log($("#nickname").val());
-        if($("#nickname").val().length > 0) { //
-          outputError("사용가능", $("#nickname"), "green");
-          $("#nameValid").val("checked");
-        } else {
-          outputError("이름은 필수 입력입니다.", $("#memberName"), "red");
-          $("#nameValid").val("");
-        }
-      });
     });
 
+    function outputError(errorMsg, tagObj, color) {
+      // input요소 넘어오면, 그 이전 요소를 잡아준다. (span)
+      let errTag = $(tagObj).closest('.mb-3').find('.errorMsg');
+      $(errTag).html(errorMsg);
+      $(errTag).css("color", color); // 인라인으로 첨부됨
+      $(tagObj).css("border-color", color);
+    }
 
+    // 중복확인 버튼 클릭
     function idCheck() {
       let loginId = $("#loginId").val();
       $.ajax({
         url: "/member/checkId", // 데이터가 송수신될 서버의 주소
         type: "POST", // 통신 방식 (GET, POST, PUT, DELETE)
+        contentType: "application/json",
         data: JSON.stringify({ // 보낼 데이터
           "loginId": loginId
         }),
-        contentType: "application/json",
         dataType: "json", // 수신받을 데이터 타입 (서버에서 JSON형식으로 true, false boolean 값 반환)
-        success: function (data) {
-          console.log(data);
-          outputError(data.loginIdStatus, $("#loginId"), "green");
+        success: function (res) {
+          console.log(res);
+          outputError(res.loginIdStatus, $("#loginId"), "green");
           $("#idValid").val("checked");
         },
         error: function (xhr) {
@@ -310,89 +327,80 @@
       });
     }
 
-
-    function outputError(errorMsg, tagObj, color) {
-      // input요소 넘어오면, 그 이전 요소를 잡아준다. (span)
-      let errTag = $(tagObj).closest('.mb-3').find('.errorMsg');
-      $(errTag).html(errorMsg);
-      $(errTag).css("color", color); // 인라인으로 첨부됨
-      $(tagObj).css("border-color", color);
-    }
-
-
-
     // ▶▶▶▶▶ 이메일 관련 함수
 
-    function uniqueEmailCheck() {
-      let userInputEmail = $("#email").val();
-      $.ajax({
-        url: "/member/uniqueEmailCheck", // 데이터가 송수신될 서버의 주소
-        type: "POST", // 통신 방식 (GET, POST, PUT, DELETE)
-        data: { "userInputEmail": userInputEmail },
-        dataType: "text",
-        async: false,
-        success: function (data) {
-          console.log(data); // 데이터가 넘어오면 콘솔에 확인
-          if (data == 1) {
-            alert("중복된 이메일이 존재합니다. 다른 이메일을 입력해주세요.");
-
-          } else {
-            callSendEmail();
-          }
-
-        },
-        error: function () {},
-        complete: function () {},
-      });
-    }
-
     // "인증하기" 버튼 클릭시 작동
-    function emailAuth() {
-      uniqueEmailCheck();
-    }
-
-    function emailInput() {
-      let userAuthCode = $("#authCodeInput").val();
+    function doEmailAuth() {
+      let email = $("#email").val();
       $.ajax({
-        url: "/user/checkAuthCode", // 데이터가 송수신될 서버의 주소
+        url: "/member/checkEmail", // 데이터가 송수신될 서버의 주소
         type: "POST", // 통신 방식 (GET, POST, PUT, DELETE)
-        data: { "userAuthCode": userAuthCode },
-        dataType: "text",
-        success: function (data) {
-          console.log(data); // 데이터가 넘어오면 콘솔에 확인
-          if (data == "success") {
-            outputError("인증완료", $("#email"), "blue");
-            // 이메일인풋, 인증인풋, 인증하기 비활성화
-//	        $(".authDiv").remove();
-            $(".authDiv").hide();
-            $("#emailInputBtn").hide();
-            $("#emailValid").val("checked");
-          } else {
-            outputError("인증번호가 일치하지 않습니다. 다시 입력해주세요.", $("#email"), "red");
-          }
-
+        contentType: "application/json",
+        data: JSON.stringify({
+          "email": email
+        }),
+        dataType: "json",
+        success: function (res) {
+          console.log(res);
+          outputError(res.loginIdStatus, $("#loginId"), "green");
+          callSendEmail();
         },
-        error: function () {},
+        error: function (xhr) {
+          let data = JSON.parse(xhr.responseText);
+          outputError(data.emailStatus, $("#email"), "red");
+          $("#emailValid").val("");
+        },
         complete: function () {},
       });
     }
 
     function callSendEmail() {
+      let email = $("#email").val();
       $.ajax({
-        url: "/user/callSendEmail", // 데이터가 송수신될 서버의 주소
+        url: "/member/callSendEmail", // 데이터가 송수신될 서버의 주소
         type: "POST", // 통신 방식 (GET, POST, PUT, DELETE)
-        data: {"email": $("#email").val()},
+        contentType: "application/json",
+        data: JSON.stringify({
+          "email": email
+        }),
+        dataType: "text",
+        success: function (data) {
+          $(".authDiv").show();
+          startTimer();
+          $("#doEmailAuth").hide();
+          $("#verifyEmailBtn").show();
+        },
+        error: function (xhr) {
+          let data = JSON.parse(xhr.responseText);
+          console.log(data);
+        },
+        complete: function () {},
+      });
+    }
+
+    function verifyEmail() {
+      let userAuthCode = $("#authCodeInput").val();
+      $.ajax({
+        url: "/member/checkAuthCode", // 데이터가 송수신될 서버의 주소
+        type: "POST",
+        // contentType: "x-www-form-urlencoded",
+        data: {"userAuthCode": userAuthCode},
         dataType: "text",
         success: function (data) {
           console.log(data); // 데이터가 넘어오면 콘솔에 확인
-          if (data == "success") {
-            $(".authDiv").show();
-            startTimer(); // 타이머 동작을 호출
-            $("#emailAuthBtn").hide();
-            $("#emailInputBtn").show();
-          }
+          outputError("인증완료", $("#email"), "blue");
+          // 이메일인풋, 인증인풋, 인증하기 비활성화
+          $(".authDiv").hide();
+          $("#emailAuthBtn").hide();
+          $("#emailInputBtn").hide();
+          $("#emailValid").val("checked");
         },
-        error: function () {},
+        error: function (xhr) {
+          console.log(xhr);
+          console.log(xhr.responseText); // fail
+          outputError("인증번호가 일치하지 않습니다. 다시 입력해주세요.", $("#email"), "red");
+
+        },
         complete: function () {},
       });
     }
@@ -456,6 +464,12 @@
       let remainTime = min + ":" + sec;
       $(".timer").html(remainTime);
     }
+
+
+
+
+
+
 
     function isAllValid() {
       let result = false;

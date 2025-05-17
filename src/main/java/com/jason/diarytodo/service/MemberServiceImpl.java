@@ -31,6 +31,11 @@ public class MemberServiceImpl implements MemberService {
   }
 
   @Override
+  public MemberRespDTO checkEmailUnique(String email) {
+    return memberMapper.selectMemberByEmail(email);
+  }
+
+  @Override
   public MemberRespDTO login(LoginDTO loginDTO) {
     MemberRespDTO member = memberMapper.selectMemberByLoginId(loginDTO.getLoginId());
     if (member != null && bCryptPasswordEncoder.matches(loginDTO.getPassword(), member.getPassword())) {

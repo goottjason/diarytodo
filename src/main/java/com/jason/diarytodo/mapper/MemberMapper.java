@@ -14,5 +14,6 @@ public interface MemberMapper {
   @Select("select * from member where login_id = #{loginId}")
   MemberRespDTO selectMemberByLoginId(String loginId);
 
-
+  @Select("select * from member where email = #{email}")
+  MemberRespDTO selectMemberByEmail(String email);
 }

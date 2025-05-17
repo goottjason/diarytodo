@@ -27,6 +27,7 @@ public class MemberReqDTO {
   @Size(min = 2, max = 20, message = "닉네임은 2~20자로 작성해주세요.")
   private String nickname;                        // 닉네임(선택)
 
+  @NotBlank(message = "이메일은 필수입니다.")
   @Email(message = "이메일 형식으로 작성해주세요.")
   private String email;                           // 이메일 (UK)
 
