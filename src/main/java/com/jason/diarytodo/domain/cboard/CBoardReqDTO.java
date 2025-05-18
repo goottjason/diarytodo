@@ -11,6 +11,7 @@ import lombok.*;
 @Setter
 @ToString
 public class CBoardReqDTO {
+
   private int boardNo;
 
   @NotBlank(message = "제목은 필수입니다.")

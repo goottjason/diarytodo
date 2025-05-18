@@ -15,7 +15,7 @@ public class CBoardRespDTO {
   private String content;
   private String writer;
   private Timestamp postDate;
-  private int readCount;
+  private int viewCount;
   private int ref;
   private int step;
   private int refOrder;

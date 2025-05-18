@@ -46,36 +46,20 @@
     </button>
     <!-- 접히는 영역: 메뉴 항목들을 감싸는 div, id로 토글 버튼과 연결 -->
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <!-- 오른쪽 정렬(ms-auto), 하단 마진 조정(mb-2, mb-lg-0) -->
-      <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-        <!-- 네비게이션의 각 항목은 li.nav-item으로 구성 -->
-        <li class="nav-item">
-          <!-- 현재 페이지를 나타내는 링크, active 클래스와 aria-current 속성 사용 -->
-          <a class="nav-link active" aria-current="page" href="/member/signup">Signup</a></li>
-        <li class="nav-item">
-          <!-- 일반 링크 항목 -->
-          <a class="nav-link" href="/member/login">Login</a></li>
-        <li class="nav-item">
-          <!-- 일반 링크 항목 -->
-          <a class="nav-link" href="/todo">todo</a></li>
-        <li class="nav-item">
-          <!-- 일반 링크 항목 -->
-          <a class="nav-link" href="/cboard">cboard</a></li>
-        <!-- 드롭다운 메뉴 항목 -->
-        <li class="nav-item dropdown">
-          <!-- 드롭다운을 여는 링크, data-bs-toggle="dropdown"으로 동작 제어 -->
-          <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">More</a>
-          <!-- 드롭다운 메뉴, dropdown-menu-end로 오른쪽 정렬 -->
-          <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-            <!-- 드롭다운 내 각각의 항목 -->
-            <li><a class="dropdown-item" href="#">Action</a></li>
-            <li><a class="dropdown-item" href="#">Another action</a></li>
-            <!-- 구분선 -->
-            <li><hr class="dropdown-divider" /></li>
-            <li><a class="dropdown-item" href="#">Something else here</a></li>
-          </ul>
-        </li>
-      </ul>
+      <div class="d-flex ms-auto align-items-center text-white gap-4">
+        <div th:if="${session.loginMember == null}" class="d-flex gap-4">
+          <a class="nav-link text-white" aria-current="page" href="/member/signup">Signup</a>
+          <a class="nav-link text-white" href="/member/login">Login</a>
+          <a class="nav-link text-white" href="/cboard">cboard</a>
+        </div>
+        <div th:if="${session.loginMember != null}" class="d-flex align-items-center gap-4">
+          <span class="me-2 text-white" th:text="|${session.loginMember.loginId}님|"></span>
+          <a class="nav-link text-white" aria-current="page" href="/member/logout">Logout</a>
+          <a class="nav-link text-white" href="/member/mypage">mypage</a>
+          <a class="nav-link text-white" href="/todo">todo</a>
+          <a class="nav-link text-white" href="/cboard">cboard</a>
+        </div>
+      </div>
     </div> <!-- /.collapse navbar-collapse -->
   </div> <!-- /.container -->
 </nav>

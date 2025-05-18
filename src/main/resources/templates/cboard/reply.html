@@ -1,10 +1,94 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Title</title>
-</head>
-<body>
+<html lang="ko"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org"
+      layout:decorate="~{/layout/layout.html}">
+<th:block layout:fragment="head-extra">
+  <!-- 추가적인 헤드가 있다면, 추가할 수 있음 -->
+  <title>cboard - write</title>
+  <!-- 이곳에만 페이지별 추가 스타일/스크립트 작성 -->
+  <link th:href="@{/css/cboard-reply.css}" rel="stylesheet" />
+  <script th:src="@{/js/cboard-reply.js}"></script>
+</th:block>
 
+<body>
+<!-- 전체 콘텐츠 fragment -->
+<div layout:fragment="content">
+  <div class="container py-4">
+    <h1>reply.html</h1>
+
+    <form th:action="@{/cboard/reply}" method="post" th:object="${cBoardReqDTO}">
+      <!--
+      - th:action="@{/cboard/register}" : 폼을 제출할 때 데이터를 보낼 URL을 지정
+      - th:object="${cBoardRequestDTO}"
+          1. GET요청 : 컨트롤러에서 cBoardRequestDTO 객체(빈 객체)를 모델에 담아 뷰로 전달
+          2. 폼 렌더링시: 전달받은 객체의 필드에 폼의 입력필드 값이 연결됨
+            - 자바 객체의 필드와 폼의 입력필드가 연결되기 위해서는  입력필드 태그에 th:field="*{title}" 를 입력함으로써 연결됨
+            - id="title", name="title", value="cBoardRequestDTO 객체의 title의 값(빈 객체이므로 null)"
+          3. 폼 제출(POST) : 입력필드에 입력한 값이 객체에 자동 바인딩(자바객체에 채워짐)되어 컨트롤러에 전달됨
+      -->
+
+      <div class="text-center" style="min-height: 1.5em;">
+        <span th:if="${#fields.hasErrors('title')}" th:errors="*{title}" class="text-center text-danger"></span>
+        <span th:if="${#fields.hasErrors('content')}" th:errors="*{content}" class="text-center text-danger"></span>
+        <!--
+        1. title 필드에 대한 유효성 검증 수행
+        2. 에러가 있으면 컨트롤러에서 BindingResult에 에러메시지 저장
+        3. 컨트롤러에서 return "/cboard/register" : 서버에서 바로 뷰를 만들어서 응답하는데, 이 때 BindingResult 객체를 함께 반환
+        4. #fields.hasErrors('title') : Spring의 BindingResult에 title 필드와 관련된 에러가 하나라도 있으면 true를 반환
+        5. th:errors="*{title}" : title 필드에 연결된 모든 에러 메시지를 태그 안에 출력
+        -->
+      </div>
+      <table class="table">
+        <tbody>
+        <tr>
+          <th style="width: 80px;">제목</th>
+          <td colspan="5" class="text-start">
+            <input type="text" th:field="*{title}" class="form-control">
+          </td>
+        </tr>
+        <tr>
+          <th style="width: 80px;">작성자</th>
+          <input type="hidden" name="writer" th:value="${session.loginMember.loginId}">
+          <td colspan="5" class="text-start" style="width: 120px;" th:text="${session.loginMember.loginId}">
+          </td>
+        </tr>
+        </tbody>
+      </table>
+
+      <textarea th:field="*{content}" class="form-control p-3 mb-3" rows="15"></textarea>
+
+      <input type="hidden" th:field="*{ref}" />
+      <input type="hidden" th:field="*{step}" />
+      <input type="hidden" th:field="*{refOrder}" />
+      <input type="hidden" name="pageNo" th:value="${pageCBoardReqDTO.pageNo}">
+      <input type="hidden" name="pagingSize" th:value="${pageCBoardReqDTO.pageSize}">
+
+      <table class="table table-bordered align-middle mb-4">
+        <thead class="table-light">
+        <tr>
+          <th style="width: 120px;">미리보기</th>
+          <th>파일명</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+          <td>
+            <img src="https://via.placeholder.com/80x80?text=Preview" style="max-width:80px; max-height:80px;">
+          </td>
+          <td>
+            <a href="#">파일명.pdf</a>
+          </td>
+        </tr>
+        <!-- 파일이 여러 개라면 tr을 추가하세요 -->
+        </tbody>
+      </table>
+      <div class="d-flex justify-content-end gap-2">
+        <button type="submit" class="btn btn-secondary">글쓰기</button>
+        <button type="reset" class="btn btn-danger">취소</button>
+      </div>
+    </form>
+  </div>
+</div>
 </body>
 </html>

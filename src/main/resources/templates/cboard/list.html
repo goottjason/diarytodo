@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org"
+      layout:decorate="~{/layout/layout.html}">
+<th:block layout:fragment="head-extra">
+  <!-- 추가적인 헤드가 있다면, 추가할 수 있음 -->
+  <title>cboard</title>
+  <!-- 이곳에만 페이지별 추가 스타일/스크립트 작성 -->
+  <link th:href="@{/css/cboard-index.css}" rel="stylesheet" />
+  <script th:src="@{/js/cboard-index.js}"></script>
+</th:block>
+
+<body>
+<!-- 전체 콘텐츠 fragment -->
+<div layout:fragment="content">
+  <div class="container py-4">
+    <!-- ◆◆◆ 검색창 ◆◆◆ -->
+    <div class="container my-4">
+      <form class="row justify-content-center" method="get" action="/cboard/list" style="max-width:600px; margin:auto;">
+        <div class="col-auto">
+          <select class="form-select" name="type">
+            <option value="t" th:selected="${pageCBoardReqDTO.type == 't'}">제목</option>
+            <option value="c" th:selected="${pageCBoardReqDTO.type == 'c'}">내용</option>
+            <option value="w" th:selected="${pageCBoardReqDTO.type == 'w'}">작성자</option>
+            <option value="tc" th:selected="${pageCBoardReqDTO.type == 'tc'}">제목+내용</option>
+            <option value="tcw" th:selected="${pageCBoardReqDTO.type == 'tcw'}">제목+내용+작성자</option>
+          </select>
+        </div>
+        <div class="col-auto">
+          <input type="text" class="form-control" name="keyword" th:value="${pageCBoardReqDTO.keyword}" placeholder="검색어를 입력하세요">
+        </div>
+        <div class="col-auto">
+          <button type="submit" class="btn btn-secondary" style="background-color: #0f1d41">검색</button>
+        </div>
+      </form>
+    </div>
+
+
+    <!-- ◆◆◆ 글쓰기 버튼 ◆◆◆ -->
+    <div class="text-end mb-3">
+      <a href="/cboard/write" class="btn btn-secondary" style="background-color: #0f1d41">글쓰기</a>
+    </div>
+
+
+
+    <!-- ◆◆◆ 테이블 ◆◆◆ -->
+    <table class="table table-hover">
+
+      <thead>
+      <tr style="background-color: #BAC7E6">
+        <th>글번호</th>
+        <th>제목</th>
+        <th>작성자</th>
+        <th>작성일</th>
+        <th>조회수</th>
+      </tr>
+      </thead>
+
+      <tbody>
+
+      <tr th:each="post : ${pageCBoardRespDTO.respDTOS}"> <!-- 뷰가 컨트롤러에게 pageRespDTO를 요청 -->
+        <!-- ◆ 글번호 ◆ -->
+        <td th:text="${post.boardNo}">글번호</td>
+
+        <!-- ◆ 제목 ◆ -->
+        <td class="text-start">
+          <!-- step 값에 따라 마진을 주어 들여쓰기 -->
+          <div th:style="|margin-left:calc(${post.step} * 20px)|">
+            <!-- step이 있으면(답글) 화살표 표시 -->
+            <span th:if="${post.step > 0}">↳</span>
+            <span th:if="${post.status == 'D'}" style="color:gray;">삭제된 글입니다</span>
+            <!-- 제목 클릭시, 파라미터를 추가하여 detail GET 요청 -->
+            <a th:if="${post.status != 'D'}" th:href="|@{/cboard/detail(boardNo=${post.boardNo})}&${pageCBoardReqDTO.params}|" th:text="${post.title}">제목</a>
+          </div>
+        </td>
+        <!-- ◆ 작성자 ◆ -->
+        <td th:text="${post.writer}">작성자</td>
+        <!-- ◆ 작성일 ◆ -->
+        <td th:text="${#dates.format(post.postDate, 'yy-MM-dd HH:mm')}">작성일</td>
+        <!-- ◆ 조회수 ◆ -->
+        <td th:text="${post.viewCount}">조회수</td>
+      </tr>
+      </tbody>
+    </table>
+
+    <!-- ◆◆◆ 페이지네이션 ◆◆◆ -->
+    <div>
+      <ul class="pagination justify-content-center">
+        <!-- ◆ First ◆ -->
+        <li class="page-item" th:if="${pageCBoardRespDTO.pageNo != 1}">
+          <a class="page-link text-dark" th:href="@{/cboard/list(pageNo=1, pageSize=${pageCBoardRespDTO.pageSize})}">First</a></li>
+
+        <!-- ◆ Prev ◆ -->
+        <li class="page-item" th:classappend="${!pageCBoardRespDTO.showPrevBlockButton} ? 'disabled'">
+          <a class="page-link text-dark"
+             th:href="@{/cboard/list(pageNo=${pageCBoardRespDTO.blockStartPage - 1}, pageSize=${pageCBoardRespDTO.pageSize})}">Prev</a>
+        </li>
+
+        <li th:each="i : ${#numbers.sequence(pageCBoardRespDTO.blockStartPage, pageCBoardRespDTO.blockEndPage)}"
+            class="page-item">
+          <a th:text="${i}" th:href="|@{/cboard/list(pageNo=${i}, pageSize=${pageCBoardRespDTO.pageSize})}&${pageCBoardReqDTO.getTypeKeyword()}|" class="page-link text-dark"
+             th:classappend="${i eq pageCBoardRespDTO.pageNo} ? 'active bg-secondary text-white' : ''">i</a>
+        </li>
+
+        <li th:class="page-item" th:if="${pageCBoardRespDTO.showNextBlockButton}">
+          <a class="page-link text-dark"
+             th:href="@{/cboard/list(pageNo=${pageCBoardRespDTO.blockEndPage+1}, pageSize=${pageCBoardRespDTO.pageSize})}">Next</a>
+        </li>
+        <!-- ◆ Last ◆ -->
+        <li class="page-item" th:if="${pageCBoardRespDTO.pageNo != pageCBoardRespDTO.lastPage}">
+          <a class="page-link text-dark" th:href="|@{/cboard/list(pageNo=${pageCBoardRespDTO.lastPage})}&pageSize=${pageCBoardReqDTO.pageSize}|">Last</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+</body>
+</html>

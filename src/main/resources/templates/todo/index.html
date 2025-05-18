@@ -17,6 +17,7 @@
 
   <!-- ■ 전체 레이아웃 ■ -->
   <div class="todo-layout">
+    <input type="hidden" th:value="${session.loginMember.loginId}" id="login-id" />
     <!-- 좌측: 사이드바 -->
     <aside class="sidebar">
       <ul class="sidebar-menu" th:object="${todoCount}">

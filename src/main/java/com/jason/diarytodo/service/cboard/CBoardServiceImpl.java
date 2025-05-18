@@ -66,7 +66,7 @@ public class CBoardServiceImpl implements CBoardService {
     // DB에서 조회수 1 증가
     cBoardMapper.incrementReadCount(boardNo);
     // 증가된 조회수를 hBoardRespDTO에 set하기
-    hBoardRespDTO.setReadCount(hBoardRespDTO.getReadCount() + 1);
+    hBoardRespDTO.setViewCount(hBoardRespDTO.getViewCount() + 1);
 
     // 과정을 거친 후, 게시글 반환
     return cBoardMapper.selectPostByboardNo(boardNo);

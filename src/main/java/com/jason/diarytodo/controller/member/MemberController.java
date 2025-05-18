@@ -1,10 +1,12 @@
 package com.jason.diarytodo.controller.member;
-import com.jason.diarytodo.domain.member.LoginDTO;
+import com.jason.diarytodo.domain.member.LoginReqDTO;
 import com.jason.diarytodo.domain.member.MemberReqDTO;
 import com.jason.diarytodo.domain.member.MemberRespDTO;
 import com.jason.diarytodo.service.member.MemberService;
 import com.jason.diarytodo.util.EmailSender;
 import jakarta.mail.MessagingException;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,9 +21,11 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.security.SecureRandom;
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 @Controller
 @Slf4j
@@ -31,7 +35,6 @@ public class MemberController {
   private final MemberService memberService;
   private final EmailSender emailSender;
 
-
   // ==============================================================
   // ----- 로그인
   // ==============================================================
@@ -40,23 +43,64 @@ public class MemberController {
     return "member/login";
   }
   @PostMapping("/member/login")
-  public String login(LoginDTO loginDTO,
-                    HttpSession session,
-                    RedirectAttributes redirectAttributes) {
+  public String login(LoginReqDTO loginReqDTO,
+                      @RequestParam(required = false, defaultValue = "false") boolean autoLogin,
+                      HttpSession session,
+                      HttpServletResponse response,
+                      RedirectAttributes redirectAttributes) {
+    // 로그인 처리
+    MemberRespDTO loginMember = memberService.login(loginReqDTO);
 
-    MemberRespDTO loginMember = memberService.login(loginDTO);
+    // 자동 로그인 선택 시
+    if(autoLogin) {
+      // 1. 고유 세션 ID 생성
+      String autoLoginSessionId = UUID.randomUUID().toString();
+
+      // 2. 쿠키 설정 (180일 유지)
+      Cookie autoLoginCookie = new Cookie("autoLoginSessionId", autoLoginSessionId);
+      autoLoginCookie.setMaxAge(60 * 60 * 24 * 180); // 초 단위
+      autoLoginCookie.setPath("/");
+      autoLoginCookie.setHttpOnly(true); // HTTP 환경일 경우
+      // autoLoginCookie.setSecure(true); // HTTPS 환경일 경우
+      response.addCookie(autoLoginCookie);
+
+      // 3. DB에 세션 정보 저장
+      LocalDateTime autoLoginLimit = LocalDateTime.now().plusDays(180);
+      memberService.updateAutoLoginInfo(loginMember.getLoginId(), autoLoginSessionId,autoLoginLimit);
+    }
 
     if (loginMember != null) {
-      log.info("[[Controller]] login success... loginDTO: {}", loginDTO);
       session.setAttribute("loginMember", loginMember);
-      return "redirect:/";
+      // 저장된 목적지 경로 가져오기
+      String destPath = (String) session.getAttribute("destPath");
+      session.removeAttribute("destPath"); // 사용 후 삭제
+      return "redirect:" + (destPath != null ? destPath : "/");
     } else {
-      log.info("[[Controller]] login failure...");
       redirectAttributes.addFlashAttribute(
         "authFailMsg",
         "아이디 또는 비밀번호가 올바르지 않습니다.");
       return "redirect:/member/login";
     }
+  }
+
+  @GetMapping("/member/logout")
+  public String logout(HttpSession session, HttpServletResponse response) {
+
+    MemberRespDTO loginMember = (MemberRespDTO) session.getAttribute("loginMember");
+
+    if(loginMember != null) {
+      // 자동로그인 쿠키 삭제
+      Cookie cookie = new Cookie("autoLoginSessionId", null);
+      cookie.setPath("/");
+      cookie.setMaxAge(0);
+      response.addCookie(cookie);
+      memberService.clearAuthLoginInfo(loginMember.getLoginId());
+
+      session.removeAttribute("loginMember");
+      session.removeAttribute("destPath");
+      session.invalidate(); // 세션 무효화 (새로운 세션 생성되도록 함)
+    };
+    return "redirect:/";
   }
 
   // ==============================================================

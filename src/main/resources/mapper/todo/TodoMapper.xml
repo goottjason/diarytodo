@@ -39,7 +39,7 @@
         </choose>
       </if>
     </where>
-    AND writer = 'goottjason'
+    AND writer = #{writer}
   </sql>
 
   <sql id="orderCondition">
@@ -87,7 +87,7 @@
     SUM(CASE WHEN duedate IS NOT NULL THEN 1 ELSE 0 END) AS hasDuedateListCnt,
     SUM(CASE WHEN duedate IS NULL THEN 1 ELSE 0 END) AS noDuedateListCnt
     FROM todo
-    WHERE writer = 'goottjason'
+    WHERE writer = #{writer}
   </select>
 
   <insert id="insertTodo" parameterType="TodoReqDTO">
@@ -106,7 +106,7 @@
       <if test="title != null">#{title},</if>
       <if test="content != null">#{content},</if>
       <if test="location != null">#{location},</if>
-      'goottjason',
+      #{writer},
       <if test="isFinished != null">#{isFinished},</if>
       <if test="isImportant != null">#{isImportant},</if>
       <if test="duedate != null">#{duedate},</if>

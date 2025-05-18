@@ -308,6 +308,7 @@ function initialList() {
 }
 
 function doList() {
+  let loginId = $("#login-id").val();
   let sortBy = sessionStorage.getItem("sortBy");
   let sortDirection = sessionStorage.getItem("sortDirection");
   let status = sessionStorage.getItem("status");
@@ -323,7 +324,7 @@ function doList() {
     sortDirection: sortDirection,
     status: status,
     duedate: duedate,
-    writer: "goottjason"
+    writer: loginId
   });
 
   callAjax('todo/getTodos', 'POST', data, 'html', function(html) {
@@ -371,13 +372,14 @@ function addTodo() {
   let important = $("#important-btn").hasClass("fa-solid") ? true : false;
   let location = $("#todo-location-input").val();
   let content = $("#todo-content-input").val();
-
+  let loginId = $("#login-id").val();
   let data = JSON.stringify({
     title: title,
     duedate: duedate,
     important: important,
     location: location,
-    content: content
+    content: content,
+    writer: loginId
   });
   callAjax('/todo/addTodo', 'POST', data, 'text', function(text) {
     if (text == "success") {

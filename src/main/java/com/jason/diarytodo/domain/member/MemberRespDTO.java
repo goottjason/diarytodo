@@ -22,4 +22,6 @@ public class MemberRespDTO {
   private int point = 100;                        // 포인트 점수 (기본값, 100)
   @Builder.Default
   private String gender = "U";                    // 성별 ('M', 'F', 'U')
+  private String sessionId;
+  private LocalDateTime autoLoginLimit;
 }

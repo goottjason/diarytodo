@@ -3,7 +3,7 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.jason.hboard.mapper.HBoardMapper">
+<mapper namespace="com.jason.diarytodo.mapper.cboard.CBoardMapper">
 
   <sql id="search">
     <where>
@@ -25,14 +25,14 @@
     </where>
   </sql>
 
-  <select id="selectPostsByPage" resultType="HBoardRespDTO">
-  SELECT * FROM selfhboard
+  <select id="selectPostsByPage" resultType="CBoardRespDTO">
+  SELECT * FROM cboard
   <include refid="search" />
-  ORDER BY ref DESC, refOrder ASC LIMIT #{offset}, #{pageSize}
+  ORDER BY ref DESC, ref_order ASC LIMIT #{offset}, #{pageSize}
   </select>
 
   <select id="selectTotalPostsCount" resultType="int">
-  SELECT count(*) FROM selfhboard
+  SELECT count(*) FROM cboard
   <include refid="search" />
   </select>
 </mapper>
