@@ -39,6 +39,7 @@
         </choose>
       </if>
     </where>
+    AND writer = 'goottjason'
   </sql>
 
   <sql id="orderCondition">
@@ -76,4 +77,40 @@
     </set>
     WHERE dno = #{dno}
   </update>
+
+  <select id="selectTodoCount" resultType="TodoStatusCountDTO">
+    SELECT
+    SUM(CASE WHEN duedate = #{today} THEN 1 ELSE 0 END) AS todayListCnt,
+    COUNT(*) AS allListCnt,
+    SUM(CASE WHEN is_finished = 0 THEN 1 ELSE 0 END) AS unfinishedListCnt,
+    SUM(CASE WHEN is_important = 1 THEN 1 ELSE 0 END) AS importantListCnt,
+    SUM(CASE WHEN duedate IS NOT NULL THEN 1 ELSE 0 END) AS hasDuedateListCnt,
+    SUM(CASE WHEN duedate IS NULL THEN 1 ELSE 0 END) AS noDuedateListCnt
+    FROM todo
+    WHERE writer = 'goottjason'
+  </select>
+
+  <insert id="insertTodo" parameterType="TodoReqDTO">
+    INSERT INTO todo
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="title != null">title,</if>
+      <if test="content != null">content,</if>
+      <if test="location != null">location,</if>
+      writer,
+      <if test="isFinished != null">is_finished,</if>
+      <if test="isImportant != null">is_important,</if>
+      <if test="duedate != null">duedate,</if>
+    </trim>
+    VALUES
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="title != null">#{title},</if>
+      <if test="content != null">#{content},</if>
+      <if test="location != null">#{location},</if>
+      'goottjason',
+      <if test="isFinished != null">#{isFinished},</if>
+      <if test="isImportant != null">#{isImportant},</if>
+      <if test="duedate != null">#{duedate},</if>
+    </trim>
+  </insert>
+
 </mapper>

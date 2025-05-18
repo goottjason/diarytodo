@@ -1,7 +1,5 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-</head>
 <body>
 <div th:fragment="todoTable">
   <div class="todo-table-div">
@@ -60,11 +58,11 @@
           <span th:if="${todo.duedate == null}" style="color:#1976d2">-</span>
           <input type="date" class="edit-input-duedate" th:data-dno="${todo.dno}" />
         </td>
-        <!-- star -->
+        <!-- important -->
         <td>
           <span style="color:#4b87c6;">
-            <i th:id="'dstar-' + ${todo.dno}"
-               th:class="'starIcon fa-regular fa-star' + (${todo.isImportant == 1} ? ' fa-solid' : '')"
+            <i th:id="'dimportant-' + ${todo.dno}"
+               th:class="'importantIcon fa-regular fa-important' + (${todo.isImportant == 1} ? ' fa-solid' : '')"
                th:data-dno="${todo.dno}" style="color:#1e3050"></i>
           </span>
         </td>

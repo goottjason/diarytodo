@@ -1,9 +1,6 @@
 package com.jason.diarytodo.service.todo;
 
-import com.jason.diarytodo.domain.todo.TodoReqDTO;
-import com.jason.diarytodo.domain.todo.TodoRespDTO;
-import com.jason.diarytodo.domain.todo.TodoSearchReqDTO;
-import com.jason.diarytodo.domain.todo.TodoSearchRespDTO;
+import com.jason.diarytodo.domain.todo.*;
 import com.jason.diarytodo.mapper.todo.TodoMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,9 +16,9 @@ public class TodoServiceImpl implements TodoService {
   private final TodoMapper todoMapper;
   @Override
   public TodoSearchRespDTO getTodos(TodoSearchReqDTO todoSearchReqDTO) {
-
+    log.info(todoSearchReqDTO.toString());
     // SQL injection 예방
-    List<String> allowSortBy = List.of("title", "duedate", "created_at", "updated_at");
+    List<String> allowSortBy = List.of("dno", "title", "duedate", "created_at", "updated_at");
     if (!allowSortBy.contains(todoSearchReqDTO.getSortBy())) {
       throw new IllegalArgumentException("허용되지 않은 정렬 컬럼입니다.");
     }
@@ -70,5 +67,16 @@ public class TodoServiceImpl implements TodoService {
   @Override
   public int modifyTodo(TodoReqDTO todoReqDTO) {
     return todoMapper.updateTodo(todoReqDTO);
+  }
+
+  @Override
+  public TodoStatusCountDTO getTodoCount() {
+    LocalDate today = LocalDate.now();
+    return todoMapper.selectTodoCount(today);
+  }
+
+  @Override
+  public int addTodo(TodoReqDTO todoReqDTO) {
+    return todoMapper.insertTodo(todoReqDTO);
   }
 }

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.jason.hboard.mapper.HBoardMapper">
+
+  <sql id="search">
+    <where>
+      <if test="types != null and types.size > 0">
+        <foreach item="type" collection="types" separator=" OR ">
+          <choose>
+            <when test="type == 't'.toString()">
+              title like concat('%', #{keyword}, '%')
+            </when>
+            <when test="type == 'c'.toString()">
+              content like concat('%', #{keyword}, '%')
+            </when>
+            <when test="type == 'w'.toString()">
+              writer like concat('%', #{keyword}, '%')
+            </when>
+          </choose>
+        </foreach>
+      </if>
+    </where>
+  </sql>
+
+  <select id="selectPostsByPage" resultType="HBoardRespDTO">
+  SELECT * FROM selfhboard
+  <include refid="search" />
+  ORDER BY ref DESC, refOrder ASC LIMIT #{offset}, #{pageSize}
+  </select>
+
+  <select id="selectTotalPostsCount" resultType="int">
+  SELECT count(*) FROM selfhboard
+  <include refid="search" />
+  </select>
+</mapper>

@@ -9,20 +9,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
 
   <!-- style, favicon, flatpickr, simple-jscalendar, font -->
-  <link th:href="@{/css/styles.css}" rel="stylesheet" />
-  <link th:href="@{/css/custom.css}" rel="stylesheet" />
   <link rel="icon" type="image/x-icon" th:href="@{/assets/favicon.ico}" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/simple-jscalendar@1.4.5/source/jsCalendar.min.css">
   <link href="https://fonts.googleapis.com/css?family=Nunito:400,700&display=swap" rel="stylesheet">
+  <link th:href="@{/css/styles.css}" rel="stylesheet" />
+  <link th:href="@{/css/custom.css}" rel="stylesheet" />
 
   <!-- script, bootstrap, jquery, fontawesome, easepick, simple-jscalender -->
   <script th:src="@{/js/scripts.js}"></script>
   <script th:src="@{/js/custom.js}"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-  <script src="https://kit.fontawesome.com/9bef4b10f4.js" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/@easepick/bundle@1.2.1/dist/index.umd.min.js"></script>
+  <script src="https://kit.fontawesome.com/9bef4b10f4.js" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/simple-jscalendar@1.4.5/source/jsCalendar.min.js"></script>
 
   <th:block layout:fragment="head-extra"><!-- 헤드 fragment 자리 --></th:block>
@@ -34,11 +34,11 @@
 
 <!-- 네비게이션 바 전체를 감싸는 nav 태그, Bootstrap 클래스 적용 (어두운 테마, 반응형 확장) -->
 <nav class="navbar navbar-expand-lg navbar-dark"
-     style="background-color: #dc4c3e;">
+     style="background-color: #0f1d41;">
   <!-- 네비게이션 바의 내용을 중앙 정렬하는 컨테이너 -->
   <div class="container">
     <!-- 사이트/서비스의 로고 또는 브랜드명, 클릭 시 메인 페이지로 이동 -->
-    <a class="navbar-brand" href="#">diarytodo</a>
+    <a class="navbar-brand" href="/">diarytodo</a>
     <!-- 모바일/작은 화면에서 메뉴를 접었다 펼칠 수 있는 토글 버튼 -->
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <!-- 햄버거 아이콘(≡) 표시 -->
@@ -55,6 +55,12 @@
         <li class="nav-item">
           <!-- 일반 링크 항목 -->
           <a class="nav-link" href="/member/login">Login</a></li>
+        <li class="nav-item">
+          <!-- 일반 링크 항목 -->
+          <a class="nav-link" href="/todo">todo</a></li>
+        <li class="nav-item">
+          <!-- 일반 링크 항목 -->
+          <a class="nav-link" href="/cboard">cboard</a></li>
         <!-- 드롭다운 메뉴 항목 -->
         <li class="nav-item dropdown">
           <!-- 드롭다운을 여는 링크, data-bs-toggle="dropdown"으로 동작 제어 -->

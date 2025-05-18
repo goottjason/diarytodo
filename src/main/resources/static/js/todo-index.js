@@ -1,9 +1,9 @@
 
 $(document).ready(function() {
-
+  let picker; // 전역 변수로 선언
   // 페이지 로드시 리스트/카운트 초기화
   initialList();
-  countTodo();
+  // showTodoLeft();
 
   // 오늘 날짜 표시
   let today = new Date().toLocaleDateString();
@@ -19,10 +19,30 @@ $(document).ready(function() {
     doList();
   });
   updateCalHighlights();
+  // 캘린더 리프레시
+  function updateCalHighlights() {
+    let highlightedDates = listDuedate();
+    highlightSpecialDatesOnCal(highlightedDates);
+    myCalendar.refresh();
+  }
 
+  // 캘린더: 특수 날짜 강조 함수
+  function highlightSpecialDatesOnCal(highlightedDates) {
+    myCalendar.onDateRender(function(date, element, info) {
+      let yyyy = date.getFullYear();
+      let mm = String(date.getMonth() + 1).padStart(2, '0');
+      let dd = String(date.getDate()).padStart(2, '0');
+      let value = yyyy + '-' + mm + '-' + dd;
+      if(highlightedDates.includes(value)){ // highlightedDates 해당하는 경우, 강조
+        element.style.fontWeight = 'bold';
+        element.style.color = '#0f1d41';
+        element.style.fontSize = '16px';
+      }
+    });
+  }
 
-  /*// 데이트피커(마감일 입력)
-  let picker = new easepick.create({
+  // 데이트피커(마감일 입력)
+  picker = new easepick.create({
     element: "#todo-duedate-input",
     css: ["https://cdn.jsdelivr.net/npm/@easepick/bundle@1.2.1/dist/index.css"],
     zIndex: 10,
@@ -32,7 +52,7 @@ $(document).ready(function() {
         $('#date-hint').html(`${selectedDate}에 할일이 추가됩니다`).show();
       });
     },
-  });*/
+  });
 
   // sortDirection 버튼 클릭 이벤트
   $("#sort-btn").on("click", function() {
@@ -51,16 +71,20 @@ $(document).ready(function() {
 
   // 할일 입력창: 엔터로 추가
   $('#todo-title-input').on('keydown', function(e) {
-    if (e.key == "Enter") register();
+    if (e.key == "Enter") {
+      console.log("엔터 침")
+      addTodo();
+    }
   });
 
   // 마감일 아이콘 클릭시 데이트피커 포커스
   $("#duedate-btn").on("click", function() {
-    $("#todo-duedate-input").focus();
+    console.log("focus");
+    $("#todo-duedate-input").show();
   });
 
   // 중요도 아이콘 클릭시 클래스 변경
-  $("#star-btn").on("click", function() {
+  $("#important-btn").on("click", function() {
     $(this).toggleClass("fa-solid fa-regular");
   });
 
@@ -93,7 +117,7 @@ $(document).ready(function() {
       dno: dno,
       finished: finished
     });
-    callAjaxText('/todo/modifyTodo', 'POST', data, function(text) {
+    callAjax('/todo/modifyTodo', 'POST', data, 'text', function(text) {
       if (text == "success") {
         $("#finished-icon-" + dno).toggleClass("fa-circle fa-circle-check");
         $("#title-cell-" + dno).toggleClass("completed", checked);
@@ -164,14 +188,14 @@ $(document).ready(function() {
   });
 
   // 중요도 아이콘 클릭시 상태 변경
-  $(document).on("click", ".star-icon", function() {
+  $(document).on("click", ".important-icon", function() {
     let dno = $(this).data("dno");
     let solid = $(this).hasClass("fa-solid");
-    let star = solid ? 0 : 1;
-    let data = { "dno": dno, "star": star };
-    let result = ajaxFunc("/todolist/updateStar", data, "text");
+    let important = solid ? 0 : 1;
+    let data = { "dno": dno, "important": important };
+    let result = ajaxFunc("/todolist/updateimportant", data, "text");
     if (result == "success") {
-      $("#star-icon-" + dno).toggleClass("fa-solid");
+      $("#important-icon-" + dno).toggleClass("fa-solid");
       doList();
       countTodo();
     }
@@ -213,10 +237,10 @@ $(document).ready(function() {
   $(document).on('submit','#form-edit-multi', function(e) {
     e.preventDefault();
     let finished = $('input[name="finished"]:checked').val() ?? '';
-    let star = $('input[name="star"]:checked').val() ?? '';
+    let important = $('input[name="important"]:checked').val() ?? '';
     let duedate = $('input[name="duedate"]').val() ?? '';
     let selectedArr = $('.row-checkbox:checked').map(function(){ return $(this).data('dno'); }).get();
-    updateSelectedAll(selectedArr, finished, star, duedate);
+    updateSelectedAll(selectedArr, finished, important, duedate);
     $('#modal-edit-overlay').fadeOut(150);
   });
 
@@ -245,11 +269,11 @@ $(document).ready(function() {
     let dno      = $(this).data("dno");
     let title    = $("#detail-title-" + dno).val();
     let duedate  = $("#detail-duedate-" + dno).val();
-    let memo     = $("#detail-memo-" + dno).val();
+    let content     = $("#detail-content-" + dno).val();
     let location = $("#detail-location-" + dno).val();
     let data = {
       dno: dno, title: title,
-      duedate: duedate, memo: memo, location: location
+      duedate: duedate, content: content, location: location
     };
     let result = ajaxFunc("/todolist/updateDetail", data, "text");
     let nowUpdateTime = new Date().toLocaleString();
@@ -279,6 +303,7 @@ function initialList() {
   sessionStorage.setItem("sortBy", "duedate"); // 정렬기준 마감일순
   sessionStorage.setItem("sortDirection", "ASC"); // 정렬방식 오름차순
   sessionStorage.setItem("status", "allList"); // 모든 리스트 가져오기
+  $("#header-title").html(sessionStorage.getItem("status"));
   doList();
 }
 
@@ -301,46 +326,12 @@ function doList() {
     writer: "goottjason"
   });
 
-  callAjaxHtml('todo/getTodos', 'POST', data, function(html) {
+  callAjax('todo/getTodos', 'POST', data, 'html', function(html) {
     $('#todo-list-area').html(html);
   });
 }
 
-// 캘린더 리프레시
-function updateCalHighlights() {
-  let highlightedDates = listDuedate();
-  highlightSpecialDatesOnCal(highlightedDates);
-  myCalendar.refresh();
-}
 
-// 캘린더: 특수 날짜 강조 함수
-function highlightSpecialDatesOnCal(highlightedDates) {
-  myCalendar.onDateRender(function(date, element, info) {
-    let yyyy = date.getFullYear();
-    let mm = String(date.getMonth() + 1).padStart(2, '0');
-    let dd = String(date.getDate()).padStart(2, '0');
-    let value = yyyy + '-' + mm + '-' + dd;
-    if(highlightedDates.includes(value)){ // highlightedDates 해당하는 경우, 강조
-      element.style.fontWeight = 'bold';
-      element.style.color = '#0f1d41';
-      element.style.fontSize = '16px';
-    }
-  });
-}
-
-// 카운트(사이드바 숫자) 갱신
-function countTodo() {
-  let today = new Date().toISOString().substring(0, 10);
-  let data = { today : today }
-  let result = ajaxFunc("/todolist/todoCnt", data, "text");
-  let info = jQuery('<div>').html(result);
-  $("#count-today").html(info.find("#spanTodayCnt").html());
-  $("#count-all").html(info.find("#spanAllCnt").html());
-  $("#count-unfinished").html(info.find("#spanUnfinishedCnt").html());
-  $("#count-star").html(info.find("#spanStarCnt").html());
-  $("#count-duedate").html(info.find("#spanIsDuedateCnt").html());
-  $("#count-no-duedate").html(info.find("#spanIsNotDuedateCnt").html());
-}
 // 마감일 있는 날짜 리스트
 function listDuedate() {
   let result = ajaxFunc("/todolist/listDuedate", null, "text");
@@ -355,6 +346,7 @@ function listDuedate() {
 // 메뉴 클릭시 상태 변경
 function selectWhere(status) {
   sessionStorage.setItem("status", status);
+  $("#header-title").html(sessionStorage.getItem("status"));
   doList();
 }
 // 검색
@@ -373,25 +365,29 @@ function doSearch(searchTypes, searchWord) {
   $("#todo-list").html(contents);
 }
 // 할일 등록
-function register() {
+function addTodo() {
   let title = $("#todo-title-input").val();
   let duedate = $("#todo-duedate-input").val();
-  let star = $("#star-btn").hasClass("fa-solid") ? 1 : 0;
+  let important = $("#important-btn").hasClass("fa-solid") ? true : false;
   let location = $("#todo-location-input").val();
-  let memo = $("#todo-memo-input").val();
+  let content = $("#todo-content-input").val();
+
   let data = JSON.stringify({
     title: title,
     duedate: duedate,
-    star:star,
-    location:location,
-    memo:memo
+    important: important,
+    location: location,
+    content: content
   });
-  let result = ajaxFunc2('/todolist/insertTodo', 'application/json', 'text', data);
-  if (result == "success") {
-    $("#todo-title-input").val("");
-    doList();
-    countTodo();
-  }
+  callAjax('/todo/addTodo', 'POST', data, 'text', function(text) {
+    if (text == "success") {
+      $("#todo-title-input").val(""); // 추가되었으니까, input 비워둠
+      doList();
+      // refreshCountTodo();
+    }
+  });
+
+
 }
 // 제목 수정
 function titleModify(dno, modValue) {
@@ -412,11 +408,11 @@ function duedateModify(dno, modValue) {
   }
 }
 // 선택 수정
-function updateSelectedAll(selectedArr, finished, star, duedate) {
+function updateSelectedAll(selectedArr, finished, important, duedate) {
   let data = JSON.stringify({
     selectedArr: selectedArr,
     finished: finished,
-    star: star,
+    important: important,
     duedate: duedate
   });
   let result = ajaxFunc2('/todolist/updateSelectedAll', 'application/json', 'text', data);
@@ -443,13 +439,13 @@ function deleteSelectedAll(selectedArr) {
 
 
 
-function callAjaxHtml(url, type, data, callback) {
+function callAjax(url, type, data, dataType, callback) {
   $.ajax({
     url: url,
     type: type,
-    data: data,
     contentType: 'application/json', /*'application/x-www-form-urlencoded'*/
-    dataType: 'html', // 서버에서 HTML fragment를 응답받을 때
+    data: data,
+    dataType: dataType, // 서버에서 HTML fragment를 응답받을 때
     success: function(response) {
       callback(response); // 결과값을 콜백에 전달
     },
@@ -459,6 +455,7 @@ function callAjaxHtml(url, type, data, callback) {
     }
   });
 }
+
 
 function ajaxFunc(url, data, dataType=null) {
   let result = "";

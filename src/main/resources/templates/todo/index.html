@@ -19,63 +19,63 @@
   <div class="todo-layout">
     <!-- 좌측: 사이드바 -->
     <aside class="sidebar">
-      <ul class="sidebar-menu">
+      <ul class="sidebar-menu" th:object="${todoCount}">
         <!-- 오늘 To-Do 메뉴 -->
         <li class="sidebar-menu-item">
-          <a href="javascript:void(0);" class="sidebar-menu-link" onclick="selectWhere('onlyTodayList');">
+          <a href="#" class="sidebar-menu-link" onclick="selectWhere('todayList');">
             <i class="fa-solid fa-calendar-plus"></i>
             <span>오늘 To-Do</span>
           </a>
-          <span id="count-today" class="sidebar-count"></span>
+          <span id="count-today" class="sidebar-count" th:text="*{todayListCnt}"></span>
         </li>
         <!-- 모든 To-Do 메뉴 -->
         <li class="sidebar-menu-item">
-          <a href="javascript:void(0);" class="sidebar-menu-link" onclick="selectWhere('allList');">
+          <a href="#" class="sidebar-menu-link" onclick="selectWhere('allList');">
             <i class="fa-solid fa-box"></i>
             <span>모든 To-Do</span>
           </a>
-          <span id="count-all" class="sidebar-count"></span>
+          <span id="count-all" class="sidebar-count" th:text="*{allListCnt}"></span>
         </li>
         <!-- 미완료 메뉴 -->
         <li class="sidebar-menu-item">
-          <a href="javascript:void(0);" class="sidebar-menu-link" onclick="selectWhere('unfinishedList');">
+          <a href="#" class="sidebar-menu-link" onclick="selectWhere('unfinishedList');">
             <i class="fa-regular fa-circle"></i>
             <span>미완료된 To-Do</span>
           </a>
-          <span id="count-unfinished" class="sidebar-count"></span>
+          <span id="count-unfinished" class="sidebar-count" th:text="*{unfinishedListCnt}"></span>
         </li>
         <!-- 중요 메뉴 -->
         <li class="sidebar-menu-item">
-          <a href="javascript:void(0);" class="sidebar-menu-link" onclick="selectWhere('starList');">
-            <i class="fa-solid fa-star"></i>
+          <a href="#" class="sidebar-menu-link" onclick="selectWhere('importantList');">
+            <i class="fa-solid fa-important"></i>
             <span>중요한 To-Do</span>
           </a>
-          <span id="count-star" class="sidebar-count"></span>
+          <span id="count-important" class="sidebar-count" th:text="*{importantListCnt}"></span>
         </li>
         <!-- 기한 있는 메뉴 -->
         <li class="sidebar-menu-item">
-          <a href="javascript:void(0);" class="sidebar-menu-link" onclick="selectWhere('isNotNullDuedateList');">
+          <a href="#" class="sidebar-menu-link" onclick="selectWhere('hasDuedateList');">
             <i class="fa-solid fa-timeline"></i>
             <span>기한이 있는 To-Do</span>
           </a>
-          <span id="count-duedate" class="sidebar-count"></span>
+          <span id="count-has-duedate" class="sidebar-count" th:text="*{hasDuedateListCnt}"></span>
         </li>
         <!-- 기한 없는 메뉴 -->
         <li class="sidebar-menu-item">
-          <a href="javascript:void(0);" class="sidebar-menu-link" onclick="selectWhere('isNullDuedateList');">
+          <a href="#" class="sidebar-menu-link" onclick="selectWhere('noDuedateList');">
             <i class="fa-solid fa-bars-staggered"></i>
             <span>기한이 없는 To-Do</span>
           </a>
-          <span id="count-no-duedate" class="sidebar-count"></span>
+          <span id="count-no-duedate" class="sidebar-count" th:text="*{noDuedateListCnt}"></span>
         </li>
       </ul>
+
       <!-- 캘린더 영역 -->
       <div class="calendar-container">
         <div id="calendar"></div>
         <input type="hidden" id="selected-date" readonly>
       </div>
     </aside>
-
     <!-- 중앙: 메인 콘텐츠 -->
     <main class="main-content">
       <!-- 상단 헤더 -->
@@ -107,14 +107,14 @@
           <div class="todo-actions">
             <!-- 마감일 아이콘/입력 -->
             <span>
-              <input type="date" id="todo-duedate-input" class="hidden-date-input">
+              <input type="text" id="todo-duedate-input" class="hidden-date-input">
               <label for="todo-duedate-input">
                 <i id="duedate-btn" class="fa-solid fa-calendar-days action-icon"></i>
               </label>
             </span>
             <!-- 중요도 아이콘 -->
             <span>
-              <i id="star-btn" class="fa-regular fa-star action-icon"></i>
+              <i id="important-btn" class="fa-regular fa-important action-icon"></i>
             </span>
             <!-- 추가입력(위치, 메모) 토글 -->
             <span>
@@ -124,7 +124,7 @@
             <span id="date-hint" class="date-hint"></span>
           </div>
           <!-- 추가 버튼 -->
-          <button id="add-todo-btn" class="add-btn" onclick="register();">추가</button>
+          <button id="add-todo-btn" class="add-btn" onclick="addTodo();">추가</button>
         </div>
         <!-- 위치/메모 추가입력 -->
         <div id="extra-inputs" class="extra-inputs">
@@ -134,7 +134,7 @@
           </div>
           <div class="extra-input-group">
             <span class="extra-input-label">메모</span>
-            <input type="text" id="todo-memo-input" class="extra-input">
+            <input type="text" id="todo-content-input" class="extra-input">
           </div>
         </div>
       </section>
@@ -164,9 +164,9 @@
         </div>
         <div class="modal-row">
           <label>중요도</label>
-          <label><input type="radio" name="star" value="1"> 중요로 변경</label>
-          <label><input type="radio" name="star" value="0"> 중요 해제</label>
-          <label><input type="radio" name="star" value="9" checked> 그대로 두기</label>
+          <label><input type="radio" name="important" value="1"> 중요로 변경</label>
+          <label><input type="radio" name="important" value="0"> 중요 해제</label>
+          <label><input type="radio" name="important" value="9" checked> 그대로 두기</label>
         </div>
         <div class="modal-row">
           <label>마감일</label>

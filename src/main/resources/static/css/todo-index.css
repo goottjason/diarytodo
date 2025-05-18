@@ -1,13 +1,35 @@
 /*■■■ todo > index.html ■■■*/
 /* 전체 레이아웃: 좌측(사이드바), 중앙(메인), 우측(디테일) */
+html, body {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  overflow-x: hidden;  /* 가로 스크롤 방지 */
+}
+
+/* 모든 자식 요소들이 부모 영역을 초과하지 않도록 설정 */
+.main-content > * {
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+/* 테이블 등 넓은 요소 처리 */
+table, img, iframe {
+  max-width: 100%;
+}
+
 .todo-layout {
   display: flex; /* flex로 좌우 배치 */
-  width: 100%;
-  min-height: 80vh;
+  height: 100vh;   /* 뷰포트 전체 높이 */
+  width: 100vw;    /* 뷰포트 전체 너비 */
+  /*min-height: 80vh;*/
+  min-height: 0;   /* flex overflow 방지 */
+  box-sizing: border-box;  /* 패딩이나 테두리가 크기에 포함되도록 */
+  padding-bottom: 0;       /* 하단 여백 제거 */
 }
 /* 좌측 사이드바 스타일 */
 .sidebar {
-  width: 260px;
+  width: 360px;
   background: #fff;
   border-radius: 8px;
   box-shadow: 0 1px 4px rgba(44, 62, 80, 0.07);
@@ -16,7 +38,23 @@
   margin-right: 32px;
   display: flex;
   flex-direction: column;
-  align-items: stretch;
+  /*align-items: stretch;*/
+  min-height: 0;
+}
+/* 우측 상세 패널 */
+.detail-panel {
+  /*width: 340px;
+  margin-left: 32px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 1px 4px rgba(44, 62, 80, 0.07);
+  border: 1px solid #f2f4f6;
+  min-height: 400px;
+  padding: 18px;*/
+  width: 360px;        /* 상세 패널 고정(필요시) */
+  background: #fff;
+  box-shadow: -1px 0 4px #eee;
+  min-height: 0;
 }
 /* 사이드바 메뉴 리스트 */
 .sidebar-menu {
@@ -53,9 +91,15 @@
 }
 /* 메인 콘텐츠 영역(중앙) */
 .main-content {
-  flex: 1;
+  /*flex: 1;
+  display: flex;
+  flex-direction: column;*/
+  flex: 1 1 0;
+  min-width: 0;        /* flexbox overflow 방지 */
+  background: #fafafa;
   display: flex;
   flex-direction: column;
+  min-height: 0;
 }
 /* 상단 헤더(메뉴명, 날짜, 정렬) */
 .todo-header {
@@ -210,17 +254,7 @@
 .todo-list-container {
   margin-top: 16px;
 }
-/* 우측 상세 패널 */
-.detail-panel {
-  width: 340px;
-  margin-left: 32px;
-  background: #fff;
-  border-radius: 8px;
-  box-shadow: 0 1px 4px rgba(44, 62, 80, 0.07);
-  border: 1px solid #f2f4f6;
-  min-height: 400px;
-  padding: 18px;
-}
+
 /* 모달 오버레이(배경) */
 .modal-overlay {
   display: none;
