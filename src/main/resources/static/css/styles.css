@@ -247,7 +247,7 @@ sup {
 
 a {
   text-decoration: none;
-  font-weight: bold;
+  /*font-weight: bold;*/
   color: #222;
 
   /*color: var(--bs-link-color);*/
@@ -256,7 +256,7 @@ a:hover {
   /*color: var(--bs-link-hover-color);*/
   text-decoration: none; /* 밑줄은 유지하거나 없앨 수 있음 */
   font-weight: bold;
-  color: #057b00;
+  /*color: #057b00;*/
 }
 
 a:not([href]):not([class]), a:not([href]):not([class]):hover {
@@ -4521,7 +4521,7 @@ textarea.form-control-lg {
   --bs-pagination-focus-box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
   --bs-pagination-active-color: #fff;
   --bs-pagination-active-bg: #0d6efd;
-  --bs-pagination-active-border-color: #0d6efd;
+  --bs-pagination-active-border-color: transparent; /*#0d6efd;*/
   --bs-pagination-disabled-color: #6c757d;
   --bs-pagination-disabled-bg: #fff;
   --bs-pagination-disabled-border-color: #dee2e6;

@@ -61,7 +61,7 @@ public interface CBoardMapper {
   @Update("update cboard set view_count = view_count + 1 where board_no = #{boardNo}")
   int incrementReadCount(int boardNo);
 
-  @Update("update cboardlog set read_when = now() where read_who = #{readWho} and board_no = #{boardNo}")
+  @Update("update cboard_log set read_when = now() where read_who = #{readWho} and board_no = #{boardNo}")
   void updateLog(@Param("readWho") String readWho, @Param("boardNo") int boardNo);
 
   @Insert("insert into cboard_log (read_who, board_no) values(#{readWho}, #{boardNo})")
@@ -70,6 +70,6 @@ public interface CBoardMapper {
   @Update("update cboard set title = #{title}, content = #{content} where board_no = #{boardNo}")
   void updatePost(CBoardReqDTO cBoardReqDTO);
 
-  @Delete("update cboard set status = 'D', title = '', content = '' where board_no = #{boardNo}")
+  @Delete("update cboard set deleted_flag = 1, title = '', content = '' where board_no = #{boardNo}")
   void deletePost(int boardNo);
 }

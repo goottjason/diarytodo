@@ -1,7 +1,9 @@
 package com.jason.diarytodo.controller.todo;
 
+import com.jason.diarytodo.domain.member.MemberRespDTO;
 import com.jason.diarytodo.domain.todo.*;
 import com.jason.diarytodo.service.todo.TodoService;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -22,10 +24,13 @@ public class TodoController {
   private final TodoService todoService;
 
   @GetMapping("/todo")
-  public String index(Model model) {
+  public String index(Model model, HttpSession session) {
     /*TodoSearchRespDTO todoSearchRespDTO = todoService.getTodos(todoSearchReqDTO);
     model.addAttribute("todoSearchRespDTO", todoSearchRespDTO);*/
-    TodoStatusCountDTO todoCount = todoService.getTodoCount();
+    MemberRespDTO loginMember = (MemberRespDTO) session.getAttribute("loginMember");
+
+    TodoStatusCountDTO todoCount = todoService.getTodoCount(loginMember.getLoginId());
+    log.info("todoCount: {}", todoCount);
     model.addAttribute("todoCount", todoCount);
     return "todo/index";
   }
@@ -59,5 +64,11 @@ public class TodoController {
       return "success";
     }
     return "failure";
+  }
+  @PostMapping("/todo/getDetailInfos")
+  public String getDetailInfos(@RequestBody int dno, Model model) {
+    TodoRespDTO todoRespDTO = todoService.getDetailInfos(dno);
+    model.addAttribute("todoRespDTO", todoRespDTO);
+    return "todo/todo-right :: todoRight";
   }
 }

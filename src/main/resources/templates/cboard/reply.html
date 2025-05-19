@@ -15,8 +15,6 @@
 <!-- 전체 콘텐츠 fragment -->
 <div layout:fragment="content">
   <div class="container py-4">
-    <h1>reply.html</h1>
-
     <form th:action="@{/cboard/reply}" method="post" th:object="${cBoardReqDTO}">
       <!--
       - th:action="@{/cboard/register}" : 폼을 제출할 때 데이터를 보낼 URL을 지정
@@ -85,7 +83,7 @@
       </table>
       <div class="d-flex justify-content-end gap-2">
         <button type="submit" class="btn btn-secondary">글쓰기</button>
-        <button type="reset" class="btn btn-danger">취소</button>
+        <button type="reset" class="btn btn-secondary">취소</button>
       </div>
     </form>
   </div>

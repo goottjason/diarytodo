@@ -19,5 +19,5 @@ public class CBoardRespDTO {
   private int ref;
   private int step;
   private int refOrder;
-  private String status;
+  private boolean deletedFlag;
 }

@@ -37,19 +37,19 @@ body {
   background: transparent;
   width: 100%;
 }
-.moreBtn, .delBtn {
+.more-btn, .delete-btn {
   border-radius: 4px;
   padding: 1px 6px;
   background: #fff;
   font-size: 12px;
   cursor: pointer;
 }
-.moreBtn {
+.more-btn {
   border: 1px solid #b1b1a8;
   color: #777b7c;
   margin-right: 2px;
 }
-.delBtn {
+.delete-btn {
   border: 1px solid #e57373;
   color: #e57373;
 }
@@ -248,7 +248,7 @@ body {
   justify-content: center;
   margin-top: 15px;
 }
-.btn-success {
+/*.btn-success {
   background-color: #32691e;
   color: white;
   border: none;
@@ -273,7 +273,7 @@ body {
 }
 .btn-danger:hover {
   background-color: #b52a37;
-}
+}*/
 .timer { color: red }
 .authDiv {
   margin-top: 10px;

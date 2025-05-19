@@ -7,8 +7,8 @@
   <!-- 추가적인 헤드가 있다면, 추가할 수 있음 -->
   <title>cboard</title>
   <!-- 이곳에만 페이지별 추가 스타일/스크립트 작성 -->
-  <link th:href="@{/css/cboard-index.css}" rel="stylesheet" />
-  <script th:src="@{/js/cboard-index.js}"></script>
+  <link th:href="@{/css/cboard-list.css}" rel="stylesheet" />
+  <script th:src="@{/js/cboard-list.js}"></script>
 </th:block>
 
 <body>
@@ -46,9 +46,8 @@
 
     <!-- ◆◆◆ 테이블 ◆◆◆ -->
     <table class="table table-hover">
-
       <thead>
-      <tr style="background-color: #BAC7E6">
+      <tr style="background-color: #daebfa">
         <th>글번호</th>
         <th>제목</th>
         <th>작성자</th>
@@ -69,9 +68,9 @@
           <div th:style="|margin-left:calc(${post.step} * 20px)|">
             <!-- step이 있으면(답글) 화살표 표시 -->
             <span th:if="${post.step > 0}">↳</span>
-            <span th:if="${post.status == 'D'}" style="color:gray;">삭제된 글입니다</span>
+            <span th:if="${post.deletedFlag}" style="color:gray;">삭제된 글입니다</span>
             <!-- 제목 클릭시, 파라미터를 추가하여 detail GET 요청 -->
-            <a th:if="${post.status != 'D'}" th:href="|@{/cboard/detail(boardNo=${post.boardNo})}&${pageCBoardReqDTO.params}|" th:text="${post.title}">제목</a>
+            <a th:if="${!post.deletedFlag}" th:href="|@{/cboard/detail(boardNo=${post.boardNo})}&${pageCBoardReqDTO.pageParams}&${pageCBoardReqDTO.searchParams}|" th:text="${post.title}">제목</a>
           </div>
         </td>
         <!-- ◆ 작성자 ◆ -->
@@ -99,7 +98,7 @@
 
         <li th:each="i : ${#numbers.sequence(pageCBoardRespDTO.blockStartPage, pageCBoardRespDTO.blockEndPage)}"
             class="page-item">
-          <a th:text="${i}" th:href="|@{/cboard/list(pageNo=${i}, pageSize=${pageCBoardRespDTO.pageSize})}&${pageCBoardReqDTO.getTypeKeyword()}|" class="page-link text-dark"
+          <a th:text="${i}" th:href="|@{/cboard/list(pageNo=${i}, pageSize=${pageCBoardRespDTO.pageSize})}&${pageCBoardReqDTO.searchParams}|" class="page-link text-dark"
              th:classappend="${i eq pageCBoardRespDTO.pageNo} ? 'active bg-secondary text-white' : ''">i</a>
         </li>
 

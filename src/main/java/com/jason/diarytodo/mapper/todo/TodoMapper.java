@@ -2,6 +2,7 @@ package com.jason.diarytodo.mapper.todo;
 
 import com.jason.diarytodo.domain.todo.*;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
@@ -21,8 +22,11 @@ public interface TodoMapper {
   int updateTodo(TodoReqDTO todoReqDTO);
 
   // TodoMapper.xml
-  TodoStatusCountDTO selectTodoCount(LocalDate today);
+  TodoStatusCountDTO selectTodoCount(@Param("today") LocalDate today, @Param("writer") String writer);
 
   // TodoMapper.xml
   int insertTodo(TodoReqDTO todoReqDTO);
+
+  @Select("select * from todo where dno = #{dno}")
+  TodoRespDTO selectTodoByDno(int dno);
 }

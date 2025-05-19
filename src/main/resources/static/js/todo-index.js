@@ -204,11 +204,10 @@ $(document).ready(function() {
   // 상세 보기 버튼 클릭시
   $(document).on("click", ".more-btn", function() {
     let dno = $(this).data("dno");
-    let data = {"dno": dno};
-    let result = ajaxFunc("/todolist/selectone", data, null);
-    let html = jQuery('<div>').html(result);
-    let contents = html.find("div#ajaxTodoDetail").html();
-    $("#todo-detail").html(contents);
+    let data = JSON.stringify(dno);
+    callAjax('/todo/getDetailInfos', 'POST', data, 'html', function(html) {
+      $("#todo-detail").html(html);
+    });
   });
 
   // 삭제 버튼 클릭시
@@ -384,6 +383,8 @@ function addTodo() {
   callAjax('/todo/addTodo', 'POST', data, 'text', function(text) {
     if (text == "success") {
       $("#todo-title-input").val(""); // 추가되었으니까, input 비워둠
+      $("#todo-location-input").val("");
+      $("#todo-content-input").val("");
       doList();
       // refreshCountTodo();
     }

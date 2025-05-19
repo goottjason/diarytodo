@@ -36,12 +36,17 @@ public class CommentServiceImpl implements CommentService {
   }
 
   @Override
-  public CommentRespDTO getCommentByCommentNo(Integer commentNo) {
-    return commentMapper.selectCommentByCommentNo(commentNo);
+  public CommentRespDTO getCommentByCommentId(Integer commentId) {
+    return commentMapper.selectCommentByCommentId(commentId);
   }
 
   @Override
   public int editComment(CommentReqDTO commentReqDTO) {
     return commentMapper.updateComment(commentReqDTO);
+  }
+
+  @Override
+  public int removeComment(Integer commentId) {
+    return commentMapper.deleteComment(commentId);
   }
 }

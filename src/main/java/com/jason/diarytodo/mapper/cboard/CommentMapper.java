@@ -3,10 +3,7 @@ package com.jason.diarytodo.mapper.cboard;
 import com.jason.diarytodo.domain.cboard.CommentReqDTO;
 import com.jason.diarytodo.domain.cboard.CommentRespDTO;
 import com.jason.diarytodo.domain.cboard.PageCBoardReqDTO;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
@@ -26,9 +23,12 @@ public interface CommentMapper {
   @Insert("insert into comments (commenter, content, board_no) values (#{commenter}, #{content}, #{boardNo})")
   int insertComment(CommentReqDTO commentReqDTO);
 
-  @Select("select * from comments where comment_id = #{commentNo}")
-  CommentRespDTO selectCommentByCommentNo(Integer commentNo);
+  @Select("select * from comments where comment_id = #{commentId}")
+  CommentRespDTO selectCommentByCommentId(Integer commentId);
 
   @Update("update comments set content = #{content} where comment_id = #{commentId}")
   int updateComment(CommentReqDTO commentReqDTO);
+
+  @Delete("delete from comments where comment_id = ${commentId}")
+  int deleteComment(Integer commentId);
 }

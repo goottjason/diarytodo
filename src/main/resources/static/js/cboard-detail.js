@@ -191,8 +191,7 @@ function displayAllComments(commentData) {
 }
 
 function editComment(commentId, content) {
-  alert("!");
-  const commentItem = $("#comment-" + commentId);
+  const liTagCommentById = $("#comment-" + commentId);
   let output = `
     <div class="flex-grow-1">
       <input type="text" class="form-control" value="${content}" id="edit-content-${commentId}"></input>
@@ -202,29 +201,29 @@ function editComment(commentId, content) {
       <button type="button" class="btn btn-secondary" onclick="cancelEditComment()">취소</button>
     </div>
   `;
-  commentItem.html(output);
+  liTagCommentById.html(output);
 }
 
 function submitEditComment(commentId) {
-  const modifiedContent = $("edit-content-" + commentId).val();
+  const modifiedContent = $("#edit-content-" + commentId).val();
+  console.log("modifiedContent : ", modifiedContent);
   if(modifiedContent == "") {
-    alert("내용을 입력하세요...");
+    console.log("");
+    //alert("내용을 입력하세요..."); /*★ toast로 수정*/
     return;
   }
   axios.patch(`/comment/${commentId}`, {
-    content: newContent,
+    content: modifiedContent,
   })
     .then(function (response) {
       console.log(response);
-      if(response.data.resultMessage == "SUCCESS") {
-        alert("<UNK>", pageNo);
-        getAllComments(currentPageNo);
+      getAllComments(currentPageNo);
 
-      }
     })
     .catch(function (error) {
       if(error.response.data.resultMessage == "FAIL") {
-        alert("수정실패");
+        //alert("수정실패");
+        console.log(error);
       }
       console.log(error);
     });
@@ -242,13 +241,14 @@ function removeComment(commentId) {
       .then(function (response) {
         console.log(response);
         if(response.data.resultMessage == "SUCCESS") {
-          alert("댓글 삭제 완료");
+          /*alert("댓글 삭제 완료");*/ /*알림 토스트 메서드 만들기 ★*/
           getAllComments(currentPageNo);
         }
       })
       .catch(function (error) {
         if(error.response.data.resultMessage == "FAIL") {
-          alert("댓글 삭제 실패");
+          // alert("댓글 삭제 실패");
+          console.log(error);
         }
         console.log(error);
       });

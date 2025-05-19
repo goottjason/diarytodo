@@ -10,7 +10,9 @@ public interface CommentService {
 
   int writeComment(CommentReqDTO commentReqDTO);
 
-  CommentRespDTO getCommentByCommentNo(Integer commentNo);
+  CommentRespDTO getCommentByCommentId(Integer commentId);
 
   int editComment(CommentReqDTO commentReqDTO);
+
+  int removeComment(Integer commentId);
 }

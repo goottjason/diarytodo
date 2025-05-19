@@ -139,7 +139,7 @@ public class CBoardController {
     // 글 등록
     cBoardService.registerReply(cBoardReqDTO);
 
-    return "redirect:/cboard/detail?boardNo=" + cBoardReqDTO.getBoardNo() + "&" + pageCBoardReqDTO.getNoSize();
+    return "redirect:/cboard/detail?boardNo=" + cBoardReqDTO.getBoardNo() + "&" + pageCBoardReqDTO.getPageParams() + "&" + pageCBoardReqDTO.getSearchParams();
   }
 
 
@@ -169,7 +169,7 @@ public class CBoardController {
 
     cBoardService.modifyPost(cBoardReqDTO);
     log.info(":::::::::::::::::::::::::::::{}", cBoardReqDTO.getBoardNo());
-    return "redirect:/cboard/detail?boardNo=" + cBoardReqDTO.getBoardNo()+ "&" + pageCBoardReqDTO.getNoSize();
+    return "redirect:/cboard/detail?boardNo=" + cBoardReqDTO.getBoardNo() + "&" + pageCBoardReqDTO.getPageParams() + "&" + pageCBoardReqDTO.getSearchParams();
   }
 
   @PostMapping("/cboard/remove")
@@ -180,7 +180,7 @@ public class CBoardController {
 
     cBoardService.removePost(boardNo);
 
-    return "redirect:/cboard/list?" + pageCBoardReqDTO.getNoSize();
+    return "redirect:/cboard/list?" + "&" + pageCBoardReqDTO.getPageParams() + "&" + pageCBoardReqDTO.getSearchParams();
   }
 
 }

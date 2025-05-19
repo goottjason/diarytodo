@@ -26,7 +26,7 @@ public class CBoardServiceImpl implements CBoardService {
     int totalPosts = cBoardMapper.selectTotalPostsCount(pageCBoardReqDTO);
 
     // pageNo를 토대로 만들어진 offset과 pageSize로 posts를 리스트에 담음
-    List<CBoardRespDTO> hBoardRespDTOS = cBoardMapper.selectPostsByPage(pageCBoardReqDTO);
+    List<CBoardRespDTO> cBoardRespDTOS = cBoardMapper.selectPostsByPage(pageCBoardReqDTO);
 
     /* 요청할 당시의 pageHBoardRequestDTO의 값이 필요한 이유?
     blockEndPage, blockStartPage, lastPage, showPrevBlockButton, showNextBlockButton의 값을 응답할 때
@@ -36,7 +36,7 @@ public class CBoardServiceImpl implements CBoardService {
     // 커스텀 빌더메서드
     return PageCBoardRespDTO.<CBoardRespDTO>withPageInfo()
       .pageHBoardReqDTO(pageCBoardReqDTO)
-      .respDTOS(hBoardRespDTOS)
+      .respDTOS(cBoardRespDTOS)
       .totalPosts(totalPosts)
       .build();
   }
@@ -46,7 +46,7 @@ public class CBoardServiceImpl implements CBoardService {
   public CBoardRespDTO getPostByBoardNoWithIp(int boardNo, String ipAddr) {
 
     // 1. 게시글 불러오기
-    CBoardRespDTO hBoardRespDTO= cBoardMapper.selectPostByboardNo(boardNo);
+    CBoardRespDTO cBoardRespDTO= cBoardMapper.selectPostByboardNo(boardNo);
 
     // 2. selfhboardlog 테이블에서 ipAddr 유저가 boardNo 글의 최근읽은시점의 현재시점과 차이값을 시간으로 구하기
     /*
@@ -58,15 +58,18 @@ public class CBoardServiceImpl implements CBoardService {
     if(dateDiff == -1) {
       // 3. 최초 조회면 로그 추가
       cBoardMapper.insertLog(ipAddr, boardNo);
+      // DB에서 조회수 1 증가
+      cBoardMapper.incrementReadCount(boardNo);
+      // 증가된 조회수를 cBoardRespDTO에 set하기
+      cBoardRespDTO.setViewCount(cBoardRespDTO.getViewCount() + 1);
     } else if (dateDiff >= 24) {
       // 3. 최근읽은 시점으로부터 24시간이 넘은 경우, 로그의 readWhen을 현재시점으로 업데이트
       cBoardMapper.updateLog(ipAddr, boardNo);
+      // DB에서 조회수 1 증가
+      cBoardMapper.incrementReadCount(boardNo);
+      // 증가된 조회수를 cBoardRespDTO에 set하기
+      cBoardRespDTO.setViewCount(cBoardRespDTO.getViewCount() + 1);
     }
-
-    // DB에서 조회수 1 증가
-    cBoardMapper.incrementReadCount(boardNo);
-    // 증가된 조회수를 hBoardRespDTO에 set하기
-    hBoardRespDTO.setViewCount(hBoardRespDTO.getViewCount() + 1);
 
     // 과정을 거친 후, 게시글 반환
     return cBoardMapper.selectPostByboardNo(boardNo);

@@ -70,13 +70,18 @@ public class TodoServiceImpl implements TodoService {
   }
 
   @Override
-  public TodoStatusCountDTO getTodoCount() {
+  public TodoStatusCountDTO getTodoCount(String writer) {
     LocalDate today = LocalDate.now();
-    return todoMapper.selectTodoCount(today);
+    return todoMapper.selectTodoCount(today, writer);
   }
 
   @Override
   public int addTodo(TodoReqDTO todoReqDTO) {
     return todoMapper.insertTodo(todoReqDTO);
+  }
+
+  @Override
+  public TodoRespDTO getDetailInfos(int dno) {
+    return todoMapper.selectTodoByDno(dno);
   }
 }

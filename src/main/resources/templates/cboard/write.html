@@ -47,8 +47,8 @@
         </tr>
         <tr>
           <th style="width: 80px;">작성자</th>
-          <td colspan="5" class="text-start" style="width: 120px;">
-            <input type="text" th:field="*{writer}" class="form-control">
+          <input type="hidden" name="writer" th:value="${session.loginMember.loginId}">
+          <td colspan="5" class="text-start" style="width: 120px;" th:text="${session.loginMember.loginId}">
           </td>
         </tr>
         </tbody>

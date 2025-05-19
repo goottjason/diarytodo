@@ -7,7 +7,9 @@ public interface TodoService {
 
   int modifyTodo(TodoReqDTO todoReqDTO);
 
-  TodoStatusCountDTO getTodoCount();
+  TodoStatusCountDTO getTodoCount(String writer);
 
   int addTodo(TodoReqDTO todoReqDTO);
+
+  TodoRespDTO getDetailInfos(int dno);
 }

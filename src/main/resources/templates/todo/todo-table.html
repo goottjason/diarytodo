@@ -61,16 +61,16 @@
         <!-- important -->
         <td>
           <span style="color:#4b87c6;">
-            <i th:id="'dimportant-' + ${todo.dno}"
-               th:class="'importantIcon fa-regular fa-important' + (${todo.isImportant == 1} ? ' fa-solid' : '')"
-               th:data-dno="${todo.dno}" style="color:#1e3050"></i>
+            <i th:id="'important-icon-' + ${todo.dno}"
+               th:class="'important-icon fa-regular fa-star' + (${todo.isImportant == 1} ? ' fa-solid' : '')"
+               th:data-dno="${todo.dno}" style="color:#1e3050;cursor: pointer"></i>
           </span>
         </td>
         <!-- mod, del -->
         <td>
-          <button class="moreBtn"
+          <button class="more-btn"
                   th:data-dno="${todo.dno}">더보기</button>
-          <button class="delBtn"
+          <button class="delete-btn"
                   th:data-dno="${todo.dno}">삭제</button>
         </td>
       </tr>

@@ -35,9 +35,6 @@ public class PageCBoardReqDTO {
   private String type;
   private String keyword;
 
-
-  private String params;
-
   @Valid
   private List<CBoardReqDTO> hBoardReqDTOS;
 
@@ -55,15 +52,15 @@ public class PageCBoardReqDTO {
   }
 
 
-  public String getNoSize() {
-    return generateNoSize();
+  public String getPageParams() {
+    return generatePageParams();
   }
 
-  public String getTypeKeyword() {
-    return generateTypeKeyword();
+  public String getSearchParams() {
+    return generateSearchParams();
   }
 
-  private String generateNoSize() {
+  private String generatePageParams() {
 
     /*
     String은 불변 객체라서 문자열을 합치거나 수정할 때마다 새로운 객체가 생성
@@ -78,7 +75,7 @@ public class PageCBoardReqDTO {
     return params.toString();
   }
 
-  private String generateTypeKeyword() {
+  private String generateSearchParams() {
     StringBuilder params = new StringBuilder();
     if(type != null && !type.isBlank()) {
       params.append("type=").append(type).append("&");

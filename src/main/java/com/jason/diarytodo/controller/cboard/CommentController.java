@@ -59,14 +59,14 @@ public class CommentController {
     return ResponseEntity.ok(MyResponseWithData.success());
   }
 
-  @PatchMapping(value="/{commentNo}")
-  public ResponseEntity<MyResponseWithoutData> editComment(@PathVariable("commentNo") Integer commentNo, @RequestBody CommentReqDTO commentReqDTO, HttpSession session) {
-    log.info("댓글 수정 요청: commentNo={}, commentDTO={}", commentNo, commentReqDTO);
+  @PatchMapping(value="/comment/{commentId}")
+  public ResponseEntity<MyResponseWithoutData> editComment(@PathVariable("commentId") Integer commentId, @RequestBody CommentReqDTO commentReqDTO, HttpSession session) {
+    log.info("댓글 수정 요청: commentNo={}, commentReqDTO={}", commentId, commentReqDTO);
     MemberRespDTO loginMember = (MemberRespDTO) session.getAttribute("loginMember");
     if (loginMember == null) {
       return ResponseEntity.ok(new MyResponseWithoutData(401, null, "NOT_LOGGED_IN"));
     }
-    CommentRespDTO commentRespDTO = commentService.getCommentByCommentNo(commentNo);
+    CommentRespDTO commentRespDTO = commentService.getCommentByCommentId(commentId);
 
     if (commentRespDTO == null) {
       return ResponseEntity.ok(new MyResponseWithoutData(404, null, "NOT_EXIST"));
@@ -76,12 +76,24 @@ public class CommentController {
       return ResponseEntity.ok(new MyResponseWithoutData(403, null, "FORBIDDEN"));
     }
     try {
-      commentReqDTO.setCommentId(commentNo);
+      commentReqDTO.setCommentId(commentId);
       commentService.editComment(commentReqDTO);
       return ResponseEntity.ok(new MyResponseWithoutData(200, null, "SUCCESS"));
     } catch (Exception e) {
       return ResponseEntity.internalServerError().body(new MyResponseWithoutData(400, null, "FAIL"));
     }
+  }
+
+  @DeleteMapping("/comment/{commentId}")
+  public ResponseEntity<MyResponseWithData> removeComment(@PathVariable("commentId") Integer commentId, HttpSession session) {
+    log.info("댓글 삭제 요청: commentId={}", commentId);
+    int result = commentService.removeComment(commentId);
+    if (result == 1) {
+      return ResponseEntity.ok(MyResponseWithData.success());
+    } else {
+      return ResponseEntity.ok(MyResponseWithData.fail());
+    }
+
   }
 
 

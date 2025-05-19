@@ -84,11 +84,11 @@
 
 
 
-      <div class="d-flex justify-content-end gap-2">
-        <a th:href="|@{/cboard/list}?${pageCBoardReqDTO.params}|" class="btn btn-secondary">목록으로</a>
-        <a th:href="|@{/cboard/reply}?ref=${cBoardRespDTO.ref}&step=${cBoardRespDTO.step}&refOrder=${cBoardRespDTO.refOrder}&${pageCBoardReqDTO.params}|" class="btn btn-warning">답글작성</a>
-        <a th:href="|@{/cboard/edit}?boardNo=${cBoardRespDTO.boardNo}&${pageCBoardReqDTO.params}|" class="btn btn-primary">수정</a>
-        <button id="post-remove-btn" class="btn btn-danger">삭제</button>
+      <div class="d-flex justify-content-end gap-2 my-4">
+        <a th:href="|@{/cboard/list}?${pageCBoardReqDTO.pageParams}|" class="btn btn-secondary">목록으로</a>
+        <a th:href="|@{/cboard/reply}?ref=${cBoardRespDTO.ref}&step=${cBoardRespDTO.step}&refOrder=${cBoardRespDTO.refOrder}&${pageCBoardReqDTO.pageParams}|" class="btn btn-secondary">답글작성</a>
+        <a th:href="|@{/cboard/edit}?boardNo=${cBoardRespDTO.boardNo}&${pageCBoardReqDTO.pageParams}|" class="btn btn-secondary">수정</a>
+        <button id="post-remove-btn" class="btn btn-secondary">삭제</button>
       </div>
     </div>
 
@@ -99,6 +99,7 @@
         <div class="modal-content">
           <form th:action="@{/cboard/remove}" method="post">
             <input type="hidden" name="boardNo" th:value="${cBoardRespDTO.boardNo}">
+            <input type="hidden" name="pageNo" th:value="${pageCBoardReqDTO.pageNo}">
             <div class="modal-header">
               <h5 class="modal-title">알림</h5>
               <button id="close-modal-btn" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>

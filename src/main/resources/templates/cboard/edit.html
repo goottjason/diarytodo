@@ -68,8 +68,8 @@
         </tbody>
       </table>
       <div class="d-flex justify-content-end gap-2">
-        <button type="submit" class="btn btn-primary btn-lg">수정완료</button>
-        <a th:href="|@{/cboard/detail}?boarNo=${cBoardRespDTO.boardNo}&${pageCBoardReqDTO.params}|" class="btn btn-secondary btn-lg">취소</a>
+        <button type="submit" class="btn btn-secondary">수정완료</button>
+        <a th:href="|@{/cboard/detail}?boarNo=${cBoardRespDTO.boardNo}&${pageCBoardReqDTO.pageParams}|" class="btn btn-secondary">취소</a>
       </div>
     </form>
   </div>
