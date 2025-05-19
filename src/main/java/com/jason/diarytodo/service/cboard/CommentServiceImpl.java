@@ -1,5 +1,6 @@
 package com.jason.diarytodo.service.cboard;
 
+import com.jason.diarytodo.domain.cboard.CommentReqDTO;
 import com.jason.diarytodo.domain.cboard.CommentRespDTO;
 import com.jason.diarytodo.domain.cboard.PageCBoardReqDTO;
 import com.jason.diarytodo.domain.cboard.PageCBoardRespDTO;
@@ -27,5 +28,20 @@ public class CommentServiceImpl implements CommentService {
       .totalPosts(total)
       .respDTOS(commentRespDTOS)
       .build();
+  }
+
+  @Override
+  public int writeComment(CommentReqDTO commentReqDTO) {
+    return commentMapper.insertComment(commentReqDTO);
+  }
+
+  @Override
+  public CommentRespDTO getCommentByCommentNo(Integer commentNo) {
+    return commentMapper.selectCommentByCommentNo(commentNo);
+  }
+
+  @Override
+  public int editComment(CommentReqDTO commentReqDTO) {
+    return commentMapper.updateComment(commentReqDTO);
   }
 }

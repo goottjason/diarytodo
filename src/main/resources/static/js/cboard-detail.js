@@ -1,41 +1,48 @@
 
+// 전역변수 설정
+let pageNo = 1;
+let currentPageNo = 1;
+/* let status = [[${param.status}]]; */
+
 
 $(function() {
-  let boardNo = $("#boardNo").val(); /*[[${param.boardNo[0]}]];*/
-  let pageNo = 1;
-  console.log(boardNo, pageNo);
-  /* let status = [[${param.status}]]; */
-  // boardNo의 pageNo의 댓글을 모두 호출
-  // -> 응답받은 데이터로 displayAllComments, displayPaginaation
-  getAllComments(pageNo);
 
-  $("#remove-btn").on("click", function(e) {
-    e.preventDefault();
-    $("#delete-modal").show();
+  getAllComments(currentPageNo); // 댓글 호출 (with Page)
 
-  });
-  $("#closeModalBtn").on("click", function(e) {
+  // 페이지번호 클릭시
+  $(document).on("click", ".page-btn", function(e) {
     e.preventDefault();
-    $("#delete-modal").hide();
+    let pageNo = $(this).data("page");
+    getAllComments(pageNo);
   })
 
-  /* 삭제예정
-  $("#modifyBtn").on("click", function(e) {
-    e.preventDefault();
-    const boardNo = $(this).data("boardno");
-    let link = $(this).data("link");
-    let url = "/board/modify?boardNo=" + boardNo;
-    if(link) {
-      url += `&${link}`;
-    }
-    location.href = url;
-  });*/
+  // 좋아요 클릭시,
+  $("#heart-icon").click(function() {
+    let isLiked = $(this).hasClass("fa-solid");
+    let doesLike = isLiked ? 'dislike' : 'like';
 
+    sendBoardLike(doesLike);
+  });
+
+  // ========================= 게시글 삭제 관련 =========================
+  // 게시글 삭제 버튼 클릭시 (아래와 병합 가능한지 체크)
+  $("#post-remove-btn").on("click", function(e) {
+    e.preventDefault();
+    $("#post-delete-modal").show();
+
+  });
+  // 삭제확인모달의 취소 버튼 클릭시 (cf. 삭제확인모달의 삭제 버튼은 submit 폼전송)
+  $(".modal-reset-btn").on("click", function(e) {
+    e.preventDefault();
+    $("#post-delete-modal").hide();
+  })
+
+  // ========================= 게시글 수정 관련 =========================
+  // ========================= 알림 토스트 처리 =========================
   // 현재 페이지의 URL 쿼리스트링(예: ?status=success)을 파싱할 수 있는 객체 생성
   const urlSearchParams = new URLSearchParams(window.location.search);
   // 쿼리스트링에서 'status' 파라미터의 값을 가져옴 (예: "success", "failure", "authFail" 등)
   const status = urlSearchParams.get("status");
-  console.log(status);
   if(status == "success") {
     $(".toast-body").html("수정완료");
     $("#toastMessage").show();
@@ -57,31 +64,53 @@ $(function() {
       $("#toastMessage").fadeOut();
     }, 3000);
   }
+
+  // 댓글 인풋 엔터
+  $('#commentContent').on('keydown', function(e) {
+    if (e.key == "Enter") {
+      saveComment();
+    }
+  });
 });
 
 
 
-function ajaxtest() {
-  $.ajax({
-    url: `/ajaxtest`,
-    type: "post",
-    /*contentType: "application/json;charset=UTF-8",
-    data: JSON.stringify(commentData),*/
-    dataType: "json",
-    success: function (res) {
-      console.log(res);
-    },
-    error: function (res) {
-      console.log(res);
-      if (res.status == 401) {
-        location.href = `/member/login?boardNo=${boardNo}`;
+function sendBoardLike(doesLike) {
+  let who = "user01";
+  let boardNo = $("#boardNo").val();
+  // boardNo = $("#boardNo").data("boardNo");
+  console.log(who, boardNo, doesLike);
+  axios.post("/commboard/boardlike", null, { /*★*/
+    params: {
+      "who": who,
+      "boardNo": boardNo,
+      "like": doesLike}
+  })
+    .then(function (response) {
+      console.log(response);
+      if(response == "success") {
+        loadLikeStatus();
       }
-    },
-    complete: function (res) {
-    }
-  });
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
 }
 
+function loadLikeStatus() {
+  let boardNo = $("#boardNo").val();
+  axios.get(`/commboard/boardlike/status/${boardNo}`) /*★*/
+    .then(function (response) {
+      console.log(response);
+      if(response == "success") {
+      }
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+}
+
+// 댓글의 '방금전, 몇분전, 몇시간전 등'
 function proccessPostDate(regDate) {
   // 현재 시간을 구함
   const now = new Date();
@@ -113,7 +142,12 @@ function proccessPostDate(regDate) {
   return "방금전";
 }
 
-function displayAllComments(commentList) {
+// 데이터로부터 댓글 출력하는 output
+function displayAllComments(commentData) {
+  let commentList = commentData.pageCBoardRespDTO.respDTOS;
+  let loginIdByLoginMember = commentData.loginIdByLoginMember;
+  console.log(commentData.respDTOS);
+
   // 댓글 리스트를 감쌀 ul 생성
   let output = `<ul class="list-group">`;
   if(!commentList || commentList.length == 0 ) {
@@ -125,7 +159,7 @@ function displayAllComments(commentList) {
       output += `
         <li class="list-group-item">
           <!-- 아바타 이미지 -->
-          <img src="/images/avatar.png" style="width:50px; height:50px; border-radius: 50px;margin-right:15px;">
+          <img src="/assets/images/avatar.png" style="width:50px; height:50px; border-radius: 50px;margin-right:15px;">
           <div class="flex-grow-1">
             <!-- 댓글 내용 -->
             <div class="fw-bold mb-1">${comment.content}</div>
@@ -133,11 +167,15 @@ function displayAllComments(commentList) {
             <div class="small">${proccessPostDate(comment.regDate)}</div>
           </div>
           <div class="text-end">
-            <div>
+            <!-- 로그인 한 유저이자 작성자인 경우, 버튼 보이도록 -->
+            ${(loginIdByLoginMember == comment.commenter) ? 
+            `<div>
               <!-- 수정/삭제 버튼(아직 동작은 안함) -->
-              <span style="cursor: pointer">수정</span>
-              <span style="cursor: pointer">삭제</span>
-            </div>
+              <span style="cursor: pointer" 
+              onclick="editComment(${comment.commentId}, '${comment.content}');">수정</span>
+              <span style="cursor: pointer"
+              onclick="removeComment(${comment.commentId});">삭제</span>
+            </div>`:''}
             <div class="small text-secondary">
               <!-- 댓글 작성자 -->
               ${comment.commenter}
@@ -152,11 +190,107 @@ function displayAllComments(commentList) {
   $("#commentList").html(output);
 }
 
-function displayPaginaation(data) {
-
+function editComment(commentId, content) {
+  alert("!");
+  const commentItem = $("#comment-" + commentId);
+  let output = `
+    <div class="flex-grow-1">
+      <input type="text" class="form-control" value="${content}" id="edit-content-${commentId}"></input>
+    </div>
+    <div class="text-end">
+      <button type="button" class="btn btn-success" onclick="submitEditComment(${commentId})">저장</button>
+      <button type="button" class="btn btn-secondary" onclick="cancelEditComment()">취소</button>
+    </div>
+  `;
+  commentItem.html(output);
 }
 
+function submitEditComment(commentId) {
+  const modifiedContent = $("edit-content-" + commentId).val();
+  if(modifiedContent == "") {
+    alert("내용을 입력하세요...");
+    return;
+  }
+  axios.patch(`/comment/${commentId}`, {
+    content: newContent,
+  })
+    .then(function (response) {
+      console.log(response);
+      if(response.data.resultMessage == "SUCCESS") {
+        alert("<UNK>", pageNo);
+        getAllComments(currentPageNo);
+
+      }
+    })
+    .catch(function (error) {
+      if(error.response.data.resultMessage == "FAIL") {
+        alert("수정실패");
+      }
+      console.log(error);
+    });
+}
+
+function cancelEditComment() {
+  getAllComments(currentPageNo);
+}
+
+function removeComment(commentId) {
+  if (!confirm("정말 이 댓글을 삭제하시겠습니까?")) {
+    return;
+  } else {
+    axios.delete(`/comment/${commentId}`)
+      .then(function (response) {
+        console.log(response);
+        if(response.data.resultMessage == "SUCCESS") {
+          alert("댓글 삭제 완료");
+          getAllComments(currentPageNo);
+        }
+      })
+      .catch(function (error) {
+        if(error.response.data.resultMessage == "FAIL") {
+          alert("댓글 삭제 실패");
+        }
+        console.log(error);
+      });
+  }
+}
+
+
+// 데이터로부터 페이지네이션 출력하는 output
+function displayPagination(pageData) {
+  console.log(pageData);
+  // 댓글이 없는 경우
+  if(pageData.totalPosts == 0) {
+    $("#comment-pagination").html("");
+    return;
+  }
+  let output = `<ul class="pagination justify-content-center" style="margin:20px 0">`;
+  let prevPage = pageData.pageNo > 1 ? pageData.pageNo - 1 : 1;
+  // prev 버튼
+  output += `
+    <li class="page-item ${pageData.pageNo == 1? 'disabled': ''}">
+      <a class="page-link page-btn" href="#" data-page="${prevPage}">Prev</a>
+    </li>`;
+  // 페이지 번호 버튼
+  for (let i = pageData.blockStartPage; i <= pageData.blockEndPage; i++) {
+    let active = pageData.pageNo == i ? "active" : "";
+    output += `
+      <li class="page-item ${active}">
+        <a class="page-link page-btn" href="#" data-page="${i}">${i}</a>
+      </li>`;
+  }
+  // next 버튼
+  let nextPage = pageData.pageNo < pageData.blockEndPage ? pageData.pageNo + 1 : pageData.lastPage;
+  output += `
+    <li class="page-item ${pageData.pageNo == pageData.lastPage ? 'disabled': ''}">
+      <a class="page-link page-btn" href="#" data-page="${nextPage}">Next</a>
+    </li></ul>`;
+  $("#comment-pagination").html(output);
+}
+
+// 해당 페이지의 댓글 데이터 호출
 function getAllComments(pageNo) {
+  currentPageNo = pageNo;
   let boardNo = $("#boardNo").val();
   $.ajax({
     url: `/comment/all/${boardNo}/${pageNo}`, // 댓글 목록 요청 URL
@@ -167,10 +301,11 @@ function getAllComments(pageNo) {
       console.log(data);
       console.log(data.resultMessage);
       if (data.resultMessage == "SUCCESS") {
+        console.log(data.data);
         // 댓글 목록 표시
-        displayAllComments(data.data.respDTOS);
+        displayAllComments(data.data);
         // 페이지네이션 표시
-        displayPaginaation(data.data);
+        displayPagination(data.data.pageCBoardRespDTO);
       }
     },
     error: function (data) {
@@ -184,46 +319,19 @@ function getAllComments(pageNo) {
   });
 }
 
-// 댓글 저장, 수정, 삭제 시 로그인 인증
-function preAuth() {
-  // Thymeleaf에서 세션 로그인 멤버를 JS 변수로 받음
-  /*let commenter = [[${session.loginMember}]];*/
-
-
-  /*if (commenter == null) {
-    // 로그인 안 되어 있으면 로그인 페이지로 이동 (리다이렉트)
-    location.href = `/member/login?redirectUrl=commboard/viewBoard&boardNo=${boardNo}`;
-
-    // 입력한 댓글 내용이 있으면 로컬스토리지에 임시 저장
-    let commentContent = $("#commentContent").val();
-    if (commentContent != '') {
-      localStorage.setItem("commentContent", commentContent);
-    }
-    return null; // 인증 실패
-  } else {
-    // 로그인된 사용자면 ID 반환
-    console.log("로그인된 사용자 ID", commenter.memberId);
-    return commenter.memberId;
-  }*/
-}
-
+// 댓글 작성 요청 ajax
 function saveComment() {
-  // 댓글 작성자 인증
-  let commenter = preAuth();
-  // 댓글 내용 가져오기
-  let content=$("#commentContent").val();
-  console.log(boardNo + "저장하자");
 
-  if (commenter == null) {
-    // 인증 실패 시 함수 종료
-    return;
-  }
+  // 댓글 내용 가져오기
+  let boardNo = $("#boardNo").val();
+  let content = $("#commentContent").val();
+  console.log(boardNo + "저장하자");
 
   // 서버로 보낼 데이터 객체 생성
   let commentData = {
-    content : content,
-    commenter: commenter
+    content : content
   };
+  console.log(commentData);
 
   // AJAX로 댓글 저장 요청
   $.ajax({
@@ -238,7 +346,7 @@ function saveComment() {
       if (res.resultMessage == "SUCCESS") {
         // 입력창 비우고, 댓글 목록 새로고침
         $("#commentContent").val("");
-        getAllComments(pageNo);
+        getAllComments(currentPageNo);
       }
     },
     error: function (res) {

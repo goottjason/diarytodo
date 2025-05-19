@@ -3,6 +3,7 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       xmlns:th="http://www.thymeleaf.org"
       layout:decorate="~{/layout/layout.html}">
+
 <th:block layout:fragment="head-extra">
   <!-- 추가적인 헤드가 있다면, 추가할 수 있음 -->
   <title>cboard - write</title>
@@ -12,12 +13,18 @@
 </th:block>
 
 <body>
+
 <!-- 전체 콘텐츠 fragment -->
 <div layout:fragment="content">
+
+  <!--여백을 주기 위해 container div 안에 요소들 배치-->
   <div class="container py-4">
+
+
     <div th:object="${cBoardRespDTO}">
       <table class="table">
         <input type="hidden" id="boardNo" th:value="${cBoardRespDTO.boardNo}">
+        <!--<input type="hidden" id="loginId" th:value="${loginMember.loginId}">-->
         <tbody>
         <tr>
           <th style="width: 80px;">제목</th>
@@ -58,27 +65,36 @@
       </table>
     </div>
 
+    <!-- 좋아요 -->
+    <div class="mb-2">
+      <i id="heart-icon" class="fa-regular fa-heart" style="cursor: pointer; color:red;"></i>
+      <span id="like-count">0</span>
+    </div>
+    <div id="like-people"></div>
 
-    <div th:onclick="ajaxtest()">ajaxtest</div>
+
+
     <!-- 댓글 작성란 -->
     <div class="commentInputArea py-4" >
       <input type="text" class="form-control" id="commentContent" placeholder="댓글을 입력하세요">
       <img th:src="@{/assets/images/saveComment.png}" th:onclick="saveComment()" style="cursor: pointer; width:40px">
     </div>
     <div id="commentList"></div>
+    <div id="comment-pagination"></div>
+
 
 
       <div class="d-flex justify-content-end gap-2">
         <a th:href="|@{/cboard/list}?${pageCBoardReqDTO.params}|" class="btn btn-secondary">목록으로</a>
         <a th:href="|@{/cboard/reply}?ref=${cBoardRespDTO.ref}&step=${cBoardRespDTO.step}&refOrder=${cBoardRespDTO.refOrder}&${pageCBoardReqDTO.params}|" class="btn btn-warning">답글작성</a>
         <a th:href="|@{/cboard/edit}?boardNo=${cBoardRespDTO.boardNo}&${pageCBoardReqDTO.params}|" class="btn btn-primary">수정</a>
-        <button id="remove-btn" class="btn btn-danger" onclick="openDeleteModal();">삭제</button>
+        <button id="post-remove-btn" class="btn btn-danger">삭제</button>
       </div>
     </div>
 
     <!-- 삭제 확인 모달 -->
     <!-- Modal -->
-    <div id="delete-modal" class="modal" tabindex="-1">
+    <div id="post-delete-modal" class="modal" tabindex="-1">
       <div class="modal-dialog">
         <div class="modal-content">
           <form th:action="@{/cboard/remove}" method="post">
@@ -93,7 +109,7 @@
             <div class="modal-footer">
 
               <button type="submit" class="btn btn-danger">삭제</button>
-              <button type="button" class="btn btn-secondary closeModalBtn" data-bs-dismiss="modal">취소</button>
+              <button type="button" class="btn btn-secondary modal-reset-btn" data-bs-dismiss="modal">취소</button>
             </div>
           </form>
         </div>
