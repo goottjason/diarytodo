@@ -157,14 +157,14 @@ function displayAllComments(commentData) {
     // 댓글이 있으면 각각 li로 출력
     commentList.forEach(function (comment) {
       output += `
-        <li class="list-group-item">
+        <li class="list-group-item" id="comment-${comment.commentId}">
           <!-- 아바타 이미지 -->
           <img src="/assets/images/avatar.png" style="width:50px; height:50px; border-radius: 50px;margin-right:15px;">
           <div class="flex-grow-1">
             <!-- 댓글 내용 -->
             <div class="fw-bold mb-1">${comment.content}</div>
             <!-- 댓글 작성일 (n분전 등) -->
-            <div class="small">${proccessPostDate(comment.regDate)}</div>
+            <div class="small">${proccessPostDate(comment.createdAt)}</div>
           </div>
           <div class="text-end">
             <!-- 로그인 한 유저이자 작성자인 경우, 버튼 보이도록 -->
