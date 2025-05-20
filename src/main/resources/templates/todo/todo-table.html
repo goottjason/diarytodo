@@ -4,6 +4,7 @@
 <div th:fragment="todoTable">
   <div class="todo-table-div">
     <table class="todo-table">
+
       <colgroup>
         <col style="width:5%">
         <col style="width:8%">
@@ -12,73 +13,75 @@
         <col style="width:14%">
         <col style="width:14%">
       </colgroup>
+
       <thead>
-      <tr>
-        <th><input type="checkbox" id="select-all-checkbox"/></th>
-        <th>완료</th>
-        <th>제목</th>
-        <th>기한</th>
-        <th>중요도</th>
-        <th>관리</th>
-      </tr>
+        <tr>
+          <th><input type="checkbox" id="select-all-checkbox"/></th>
+          <th>완료</th>
+          <th>제목</th>
+          <th>기한</th>
+          <th>중요도</th>
+          <th>관리</th>
+        </tr>
       </thead>
+
       <tbody>
-      <tr th:each="todo : ${todos}">
-        <!-- 체크박스 -->
-        <td>
-          <input type="checkbox" class="row-checkbox" th:data-dno="${todo.dno}" />
-        </td>
-        <!-- finished -->
-        <td>
-          <span style="color:#4b87c6;">
-            <i th:id="'dfinishedIcon-' + ${todo.dno}"
-               th:class="'finished-icon fa-regular ' + (${todo.isFinished == 1} ? 'fa-circle-check' : 'fa-circle')"
-               th:data-dno="${todo.dno}" style="color:#1e3050"></i>
-          </span>
-        </td>
-        <!-- title -->
-        <td th:id="'title-cell-' + ${todo.dno}"
-            th:class="'titleTd' + (${todo.isFinished == 1} ? ' completed' : '')"
-            style="cursor:pointer"
-            onmouseover="this.style.background='#E1E1E1';"
-            onmouseout="this.style.background='#fff';">
-          <span th:id="'dtitlebtn-' + ${todo.dno}" class="titleSpan"
-                th:data-dno="${todo.dno}" th:text="${todo.title}"></span>
-          <input type="text" class="edit-input-title" th:data-dno="${todo.dno}" />
-        </td>
-        <!-- duedate -->
-        <td th:id="'dduedateTd-' + ${todo.dno}" class="duedateTd"
-            style="cursor:pointer"
-            onmouseover="this.style.background='#E1E1E1';"
-            onmouseout="this.style.background='#fff';">
-          <span th:if="${todo.duedate != null}"
-                th:style="'color:' + (${todo.duedate} < ${now} ? '#ec407a' : (${todo.duedate} == ${now} ? '#0f1d41' : '#1976d2'))"
-                th:text="${todo.duedate}">
-          </span>
-          <span th:if="${todo.duedate == null}" style="color:#1976d2">-</span>
-          <input type="date" class="edit-input-duedate" th:data-dno="${todo.dno}" />
-        </td>
-        <!-- important -->
-        <td>
-          <span style="color:#4b87c6;">
-            <i th:id="'important-icon-' + ${todo.dno}"
-               th:class="'important-icon fa-regular fa-star' + (${todo.isImportant == 1} ? ' fa-solid' : '')"
-               th:data-dno="${todo.dno}" style="color:#1e3050;cursor: pointer"></i>
-          </span>
-        </td>
-        <!-- mod, del -->
-        <td>
-          <button class="more-btn"
-                  th:data-dno="${todo.dno}">더보기</button>
-          <button class="delete-btn"
-                  th:data-dno="${todo.dno}">삭제</button>
-        </td>
-      </tr>
+        <tr th:each="todo : ${todos}">
+          <!-- 체크박스 -->
+          <td class="checkbox-td">
+            <input type="checkbox" class="checkbox-input" th:data-dno="${todo.dno}" />
+          </td>
+          <!-- finished -->
+          <td class="finished-td">
+            <span style="color:#4b87c6;">
+              <i th:id="'finished-cell' + ${todo.dno}"
+                 th:class="'finished-icon fa-regular ' + (${todo.isFinished == 1} ? 'fa-circle-check' : 'fa-circle')"
+                 th:data-dno="${todo.dno}" style="color:#1e3050"></i>
+            </span>
+          </td>
+          <!-- title -->
+          <td th:id="'title-cell-' + ${todo.dno}"
+              th:class="'titleTd' + (${todo.isFinished == 1} ? ' completed' : '')"
+              style="cursor:pointer"
+              onmouseover="this.style.background='#E1E1E1';"
+              onmouseout="this.style.background='#fff';">
+            <span th:id="'dtitlebtn-' + ${todo.dno}" class="titleSpan"
+                  th:data-dno="${todo.dno}" th:text="${todo.title}"></span>
+            <input type="text" class="edit-input-title" th:data-dno="${todo.dno}" />
+          </td>
+          <!-- duedate -->
+          <td th:id="'dduedateTd-' + ${todo.dno}" class="duedateTd"
+              style="cursor:pointer"
+              onmouseover="this.style.background='#E1E1E1';"
+              onmouseout="this.style.background='#fff';">
+            <span th:if="${todo.duedate != null}"
+                  th:style="'color:' + (${todo.duedate} < ${now} ? '#ec407a' : (${todo.duedate} == ${now} ? '#0f1d41' : '#1976d2'))"
+                  th:text="${todo.duedate}">
+            </span>
+            <span th:if="${todo.duedate == null}" style="color:#1976d2">-</span>
+            <input type="date" class="edit-input-duedate" th:data-dno="${todo.dno}" />
+          </td>
+          <!-- important -->
+          <td>
+            <span style="color:#4b87c6;">
+              <i th:id="'important-icon-' + ${todo.dno}"
+                 th:class="'important-icon fa-regular fa-star' + (${todo.isImportant == 1} ? ' fa-solid' : '')"
+                 th:data-dno="${todo.dno}" style="color:#1e3050;cursor: pointer"></i>
+            </span>
+          </td>
+          <!-- mod, del -->
+          <td>
+            <button class="more-btn"
+                    th:data-dno="${todo.dno}">더보기</button>
+            <button class="delete-btn"
+                    th:data-dno="${todo.dno}">삭제</button>
+          </td>
+        </tr>
       </tbody>
     </table>
     <div style="margin-top:20px; text-align:left;">
-      <button id="multiEditBtn">선택수정</button>
-      <button id="multiDeleteBtn">선택삭제</button>
+      <button id="multi-edit-btn">선택수정</button>
+      <button id="multi-delete-btn">선택삭제</button>
     </div>
   </div>
 </div>
