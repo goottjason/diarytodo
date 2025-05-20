@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -13,6 +14,7 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Slf4j
 public class TodoSearchReqDTO {
   @Builder.Default
   @Min(value = 1)
@@ -26,6 +28,13 @@ public class TodoSearchReqDTO {
 
   private String sortBy;           // 정렬 컬럼명 (ex: "duedate", "priority")
   private String sortDirection;    // "asc" or "desc"
+
+  public int getOffset() {
+    // ex. 3페이지의 offset (3 - 1) x 15 = 30
+    log.info("pageNo : {}", pageNo);
+    log.info("getOffset{}: ", (pageNo - 1) * pageSize);
+    return (pageNo - 1) * pageSize;
+  }
 
   /*
   allList -> X

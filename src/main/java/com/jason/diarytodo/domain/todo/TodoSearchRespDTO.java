@@ -4,13 +4,14 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
 
 @Data
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Slf4j
 public class TodoSearchRespDTO {
 
   private int pageNo;
@@ -28,8 +29,8 @@ public class TodoSearchRespDTO {
 
   @Builder(builderMethodName = "withPageInfo")
   public TodoSearchRespDTO(int totalTodos, TodoSearchReqDTO todoSearchReqDTO, List<TodoRespDTO> todos) {
-
     this.totalTodos = totalTodos;
+
     this.pageNo = todoSearchReqDTO.getPageNo();
     this.pageSize = todoSearchReqDTO.getPageSize();
     this.todos = todos;

@@ -30,6 +30,6 @@ public interface TodoMapper {
   @Select("select * from todo where dno = #{dno}")
   TodoRespDTO selectTodoByDno(int dno);
 
-  @Select("select * from todo where duedate is not null")
-  List<TodoRespDTO> selectListForCal();
+  @Select("select * from todo where duedate is not null and writer = #{writer}")
+  List<TodoRespDTO> selectListForCal(String writer);
 }

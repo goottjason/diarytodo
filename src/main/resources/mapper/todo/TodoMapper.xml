@@ -21,7 +21,6 @@
     <where>
       <if test="title != null">AND title LIKE CONCAT('%', #{title}, '%')</if>
       <if test="content != null">AND content LIKE CONCAT('%', #{content}, '%')</if>
-      <if test="writer != null">AND writer = #{writer}</if>
       <if test="isFinished != null">AND is_finished = #{isFinished}</if>
       <if test="isImportant != null">AND is_important = #{isImportant}</if>
       <if test="duedate != null">AND DATE(duedate) = DATE(#{duedate})</if>
@@ -38,8 +37,8 @@
           </when>
         </choose>
       </if>
+      AND writer = #{writer}
     </where>
-    AND writer = #{writer}
   </sql>
 
   <sql id="orderCondition">

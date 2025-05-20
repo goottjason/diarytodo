@@ -1,0 +1,95 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="todoRight">
+  <div class="detail-div mx-4">
+    <table style="width:100%; border-collapse:collapse; table-layout:fixed;">
+      <tbody>
+      <tr>
+        <!-- finished -->
+        <td style="width:20%">
+		          <span style="color:#4b87c6;">
+                <i th:id="'detail-finished-icon-' + ${todoRespDTO.dno}"
+                   class="finished-icon fa-regular"
+                   th:classappend="${todoRespDTO.isFinished == 1} ? ' fa-circle-check' : ' fa-circle'"
+                   th:data-dno="${todoRespDTO.dno}"
+                   style="color:#1e3050; font-size:24px;"></i>
+              </span>
+        </td>
+
+        <!-- title -->
+        <td style="width:60%;background: #faf9f8;">
+          <input type="text"
+                 th:id="'detail-title-' + ${todoRespDTO.dno}"
+                 class="form-control"
+                 name="detail-title"
+                 th:value="${todoRespDTO.title}">
+        </td>
+
+        <!-- star -->
+        <td class="detail-star-div" style="width:20%; text-align:right; vertical-align:center;background: #faf9f8;">
+		          <span style="color:#4b87c6;">
+                <i th:id="'detail-star-' + ${todoRespDTO.dno}"
+                   class="star-icon fa-regular fa-star"
+                   th:classappend="${todoRespDTO.isImportant == 1} ? ' fa-solid' : ''"
+                   th:data-dno="${todoRespDTO.dno}"
+                   style="color:#1e3050; font-size:24px;"></i>
+              </span>
+        </td>
+      </tr>
+
+      <tr>
+        <td>기한</td>
+        <td class="duedate-td" colspan="2">
+          <input type="date"
+                 th:id="'detail-duedate-' + ${todoRespDTO.dno}"
+                 class="form-control"
+                 name="detail-duedate"
+                 th:value="${todoRespDTO.duedate}">
+        </td>
+      </tr>
+      <tr>
+        <td>위치</td>
+        <td class="location-td" colspan="2">
+          <input type="text"
+                 th:id="'detail-location-' + ${todoRespDTO.dno}"
+                 class="form-control"
+                 name="detail-location"
+                 th:value="${todoRespDTO.location}">
+        </td>
+      </tr>
+
+      <tr>
+        <td>메모</td>
+        <td class="location-td" colspan="2">
+              <textarea th:id="'detail-memo-' + ${todoRespDTO.dno}"
+                        class="form-control"
+                        name="detail-memo"
+                        th:text="${todoRespDTO.content}"></textarea>
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <!-- mod, del -->
+        <td colspan="2">
+          <button class="detail-mod-btn"
+                  th:data-dno="${todoRespDTO.dno}"
+                  style="border:1px solid #b1b1a8; border-radius:4px; padding:5px 30px; background:#fff; color:#4b87c6; margin-right:2px; cursor:pointer; font-size:12px;">수정</button>
+          <button class="detail-del-btn"
+                  th:data-dno="${todoRespDTO.dno}"
+                  style="border:1px solid #e57373; border-radius:4px; padding:5px 30px; background:#fff; color:#e57373; cursor:pointer; font-size:12px;">삭제</button>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="3">
+          <div id="update-time-view">
+            업데이트 됨 : <span id="now-update-time"></span>
+          </div>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>
+</body>
+</html>

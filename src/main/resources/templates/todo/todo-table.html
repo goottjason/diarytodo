@@ -1,88 +1,129 @@
-<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <body>
 <div th:fragment="todoTable">
-  <div class="todo-table-div">
+  <!-- 할일 테이블 영역 -->
+  <div id="ajaxList" class="table-box">
     <table class="todo-table">
-
+      <!-- 열 비율 -->
       <colgroup>
-        <col style="width:5%">
-        <col style="width:8%">
-        <col style="width:55%">
-        <col style="width:19%">
-        <col style="width:14%">
-        <col style="width:14%">
+        <col style="width:5%;">
+        <col style="width:8%;">
+        <col style="width:55%;">
+        <col style="width:19%;">
+        <col style="width:14%;">
+        <col style="width:14%;">
       </colgroup>
-
+      <!-- 컬럼명 -->
       <thead>
-        <tr>
-          <th><input type="checkbox" id="select-all-checkbox"/></th>
-          <th>완료</th>
-          <th>제목</th>
-          <th>기한</th>
-          <th>중요도</th>
-          <th>관리</th>
-        </tr>
+      <tr class="table-header-row">
+        <th class="th-checkbox">
+          <input type="checkbox" id="selectAllCheckbox" />
+        </th>
+        <th class="th-center">완료</th>
+        <th class="th-center">제목</th>
+        <th class="th-center">기한</th>
+        <th class="th-center">중요도</th>
+        <th class="th-center">관리</th>
+      </tr>
       </thead>
-
+      <!-- 튜플 -->
       <tbody>
-        <tr th:each="todo : ${todos}">
-          <!-- 체크박스 -->
-          <td class="checkbox-td">
-            <input type="checkbox" class="checkbox-input" th:data-dno="${todo.dno}" />
-          </td>
-          <!-- finished -->
-          <td class="finished-td">
-            <span style="color:#4b87c6;">
-              <i th:id="'finished-cell' + ${todo.dno}"
-                 th:class="'finished-icon fa-regular ' + (${todo.isFinished == 1} ? 'fa-circle-check' : 'fa-circle')"
-                 th:data-dno="${todo.dno}" style="color:#1e3050"></i>
-            </span>
-          </td>
-          <!-- title -->
-          <td th:id="'title-cell-' + ${todo.dno}"
-              th:class="'titleTd' + (${todo.isFinished == 1} ? ' completed' : '')"
-              style="cursor:pointer"
-              onmouseover="this.style.background='#E1E1E1';"
-              onmouseout="this.style.background='#fff';">
-            <span th:id="'dtitlebtn-' + ${todo.dno}" class="titleSpan"
-                  th:data-dno="${todo.dno}" th:text="${todo.title}"></span>
-            <input type="text" class="edit-input-title" th:data-dno="${todo.dno}" />
-          </td>
-          <!-- duedate -->
-          <td th:id="'dduedateTd-' + ${todo.dno}" class="duedateTd"
-              style="cursor:pointer"
-              onmouseover="this.style.background='#E1E1E1';"
-              onmouseout="this.style.background='#fff';">
-            <span th:if="${todo.duedate != null}"
-                  th:style="'color:' + (${todo.duedate} < ${now} ? '#ec407a' : (${todo.duedate} == ${now} ? '#0f1d41' : '#1976d2'))"
-                  th:text="${todo.duedate}">
-            </span>
-            <span th:if="${todo.duedate == null}" style="color:#1976d2">-</span>
-            <input type="date" class="edit-input-duedate" th:data-dno="${todo.dno}" />
-          </td>
-          <!-- important -->
-          <td>
-            <span style="color:#4b87c6;">
-              <i th:id="'important-icon-' + ${todo.dno}"
-                 th:class="'important-icon fa-regular fa-star' + (${todo.isImportant == 1} ? ' fa-solid' : '')"
-                 th:data-dno="${todo.dno}" style="color:#1e3050;cursor: pointer"></i>
-            </span>
-          </td>
-          <!-- mod, del -->
-          <td>
-            <button class="more-btn"
-                    th:data-dno="${todo.dno}">더보기</button>
-            <button class="delete-btn"
-                    th:data-dno="${todo.dno}">삭제</button>
-          </td>
-        </tr>
+      <tr th:each="todo : ${todos}">
+        <!-- 체크박스 -->
+        <td class="td-center">
+          <input type="checkbox" class="rowCheckbox" th:attr="data-dno=${todo.dno}" />
+        </td>
+        <!-- finished -->
+        <td class="td-center">
+          <span class="finished-icon-span">
+            <i th:id="'dfinishedIcon-' + ${todo.dno}"
+               class="finishedIcon fa-regular"
+               th:classappend="${todo.isFinished == 1} ? ' fa-circle-check' : ' fa-circle'"
+               th:attr="data-dno=${todo.dno}"></i>
+          </span>
+        </td>
+        <!-- title -->
+        <td th:id="'dtitleTd-' + ${todo.dno}"
+            class="titleTd"
+            th:classappend="${todo.isFinished == 1} ? ' completed' : ''"
+            onmouseover="this.classList.add('hovered-row')"
+            onmouseout="this.classList.remove('hovered-row')">
+          <span th:id="'dtitlebtn-' + ${todo.dno}" class="titleSpan"
+                th:attr="data-dno=${todo.dno}"
+                th:attrappend="value=${todo.title}"
+                th:text="${todo.title}"></span>
+          <input type="text" class="edit-input-title" th:attr="data-dno=${todo.dno}" />
+        </td>
+        <!-- duedate -->
+        <td th:id="'dduedateTd-' + ${todo.dno}" class="duedateTd"
+            onmouseover="this.classList.add('hovered-row')"
+            onmouseout="this.classList.remove('hovered-row')">
+          <span th:id="'dduedatebtn-' + ${todo.dno}" class="duedateSpan"
+                th:attr="data-dno=${todo.dno}"
+                th:attrappend="value=${todo.duedate}"
+                th:text="${todo.duedate}"></span>
+          <input type="date" class="edit-input-duedate" th:attr="data-dno=${todo.dno}" />
+        </td>
+        <!-- star -->
+        <td class="td-center">
+          <span class="finished-icon-span">
+            <i th:id="'dstar-' + ${todo.dno}" class="starIcon fa-regular fa-star"
+               th:classappend="${todo.isImportant == 1} ? ' fa-solid' : ''"
+               th:attr="data-dno=${todo.dno}"></i>
+          </span>
+        </td>
+        <!-- mod, del -->
+        <td class="td-center">
+          <button class="moreBtn table-btn"
+                  th:attr="data-dno=${todo.dno}">더보기</button>
+          <button class="delBtn table-btn del"
+                  th:attr="data-dno=${todo.dno}">삭제</button>
+        </td>
+      </tr>
       </tbody>
     </table>
-    <div style="margin-top:20px; text-align:left;">
-      <button id="multi-edit-btn">선택수정</button>
-      <button id="multi-delete-btn">선택삭제</button>
+
+    <div class="table-footer">
+      <button id="multiEditBtn" class="footer-btn edit"
+              onmouseover="this.classList.add('footer-btn-hover-edit')"
+              onmouseout="this.classList.remove('footer-btn-hover-edit')"
+      >선택수정</button>
+
+      <button id="multiDeleteBtn" class="footer-btn delete"
+              onmouseover="this.classList.add('footer-btn-hover-delete')"
+              onmouseout="this.classList.remove('footer-btn-hover-delete')"
+      >선택삭제</button>
     </div>
+
+    <!-- ◆◆◆ 페이지네이션 ◆◆◆ -->
+    <div>
+      <ul class="pagination justify-content-center">
+        <!-- ◆ First ◆ -->
+        <li class="page-item" th:if="${todoSearchRespDTO.pageNo != 1}">
+          <a href="#" class="page-link text-dark" data-page="1">First</a></li>
+
+        <!-- ◆ Prev ◆ -->
+        <li class="page-item" th:classappend="${!todoSearchRespDTO.showPrevBlockButton} ? 'disabled'">
+          <a href="#" class="page-link text-dark" data-page="${todoSearchRespDTO.blockStartPage - 1}">Prev</a>
+        </li>
+
+        <li th:each="i : ${#numbers.sequence(todoSearchRespDTO.blockStartPage, todoSearchRespDTO.blockEndPage)}"
+            class="page-item">
+          <a th:text="${i}" href="#" th:attr="data-page=${i}" class="page-link text-dark"
+             th:classappend="${i eq todoSearchRespDTO.pageNo} ? 'active bg-secondary text-white' : ''">i</a>
+        </li>
+
+        <li th:class="page-item" th:if="${todoSearchRespDTO.showNextBlockButton}">
+          <a class="page-link text-dark"
+             th:href="@{/todo/getTodos(pageNo=${todoSearchRespDTO.blockEndPage+1}, pageSize=${todoSearchRespDTO.pageSize})}">Next</a>
+        </li>
+        <!-- ◆ Last ◆ -->
+        <li class="page-item" th:if="${todoSearchRespDTO.pageNo != todoSearchRespDTO.lastPage}">
+          <a href="#" class="page-link text-dark" data-page="${todoSearchRespDTO.lastPage}">Last</a></li>
+      </ul>
+    </div>
+  </div>
+
   </div>
 </div>
 </body>

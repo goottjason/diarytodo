@@ -16,16 +16,16 @@ public class TodoServiceImpl implements TodoService {
   private final TodoMapper todoMapper;
   @Override
   public TodoSearchRespDTO getTodos(TodoSearchReqDTO todoSearchReqDTO) {
-    log.info(todoSearchReqDTO.toString());
+
     // SQL injection 예방
-    List<String> allowSortBy = List.of("dno", "title", "duedate", "created_at", "updated_at");
+    /*List<String> allowSortBy = List.of("dno", "title", "duedate", "created_at", "updated_at");
     if (!allowSortBy.contains(todoSearchReqDTO.getSortBy())) {
       throw new IllegalArgumentException("허용되지 않은 정렬 컬럼입니다.");
     }
     String sortDirection = todoSearchReqDTO.getSortDirection();
     if (!("ASC".equalsIgnoreCase(sortDirection) || "DESC".equalsIgnoreCase(sortDirection))) {
       throw new IllegalArgumentException("정렬 방향은 ASC 또는 DESC만 가능합니다.");
-    }
+    }*/
 
     // 필터링
     switch (todoSearchReqDTO.getStatus()) {
@@ -53,15 +53,19 @@ public class TodoServiceImpl implements TodoService {
         break;
     }
 
+    // 총 개수 가져오기
     int totalTodos = todoMapper.selectTotalTodos(todoSearchReqDTO);
 
+    // todos
     List<TodoRespDTO> todos = todoMapper.selectTodos(todoSearchReqDTO);
 
-    return TodoSearchRespDTO.withPageInfo()
+    TodoSearchRespDTO todoSearchRespDTO = TodoSearchRespDTO.withPageInfo()
       .totalTodos(totalTodos)
       .todoSearchReqDTO(todoSearchReqDTO)
       .todos(todos)
       .build();
+    log.info("★Build : {}", todoSearchRespDTO);
+    return todoSearchRespDTO;
   }
 
   @Override
@@ -86,7 +90,7 @@ public class TodoServiceImpl implements TodoService {
   }
 
   @Override
-  public List<TodoRespDTO> getListForCal() {
-    return todoMapper.selectListForCal();
+  public List<TodoRespDTO> getListForCal(String writer) {
+    return todoMapper.selectListForCal(writer);
   }
 }

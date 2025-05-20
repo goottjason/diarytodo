@@ -27,7 +27,7 @@ public class AuthInterceptor implements HandlerInterceptor {
                            HttpServletResponse response,
                            Object handler) throws Exception {
 
-    log.info("====================================== Auth ◆ preHandle() 호출");
+    // log.info("====================================== Auth ◆ preHandle() 호출");
 
     HttpSession session = request.getSession();
 
@@ -93,13 +93,13 @@ public class AuthInterceptor implements HandlerInterceptor {
 
   @Override
   public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
-    log.info("====================================== Auth ◆ postHandle() 호출");
+    // log.info("====================================== Auth ◆ postHandle() 호출");
 
   }
 
   @Override
   public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
-    log.info("====================================== Auth ◆ afterCompletion() 호출");
+    // log.info("====================================== Auth ◆ afterCompletion() 호출");
 
   }
 }

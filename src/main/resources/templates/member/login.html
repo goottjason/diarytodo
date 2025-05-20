@@ -3,12 +3,13 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       xmlns:th="http://www.thymeleaf.org"
       layout:decorate="~{layout/layout.html}">
-<head>
-  <th:block layout:fragment="head">
-    <title>login.html 로그인</title>
-  </th:block>
-  <th:block layout:fragment="style"></th:block>
-</head>
+<th:block layout:fragment="head-extra">
+  <!-- 추가적인 헤드가 있다면, 추가할 수 있음 -->
+  <title>signup</title>
+  <!-- 이곳에만 페이지별 추가 스타일/스크립트 작성 -->
+  <link th:href="@{/css/member-login.css}" rel="stylesheet" />
+  <script th:src="@{/js/member-login.js}"></script>
+</th:block>
 <body>
 <div layout:fragment="content">
 

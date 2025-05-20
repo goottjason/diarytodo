@@ -15,5 +15,5 @@ public interface TodoService {
 
   TodoRespDTO getDetailInfos(int dno);
 
-  List<TodoRespDTO> getListForCal();
+  List<TodoRespDTO> getListForCal(String writer);
 }

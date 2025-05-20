@@ -1,329 +1,429 @@
-/*■■■ todo > list.html ■■■*/
-/* 전체 레이아웃: 좌측(사이드바), 중앙(메인), 우측(디테일) */
-html, body {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  overflow-x: hidden;  /* 가로 스크롤 방지 */
+/* 전체 폰트 지정 */
+* {
+  font-family:'Pretendard','Inter',sans-serif;
 }
 
-/* 모든 자식 요소들이 부모 영역을 초과하지 않도록 설정 */
-.main-content > * {
-  max-width: 100%;
-  box-sizing: border-box;
-}
-
-/* 테이블 등 넓은 요소 처리 */
-table, img, iframe {
-  max-width: 100%;
-}
-
-.todo-layout {
-  display: flex; /* flex로 좌우 배치 */
-  height: 100vh;   /* 뷰포트 전체 높이 */
-  width: 100vw;    /* 뷰포트 전체 너비 */
-  /*min-height: 80vh;*/
-  min-height: 0;   /* flex overflow 방지 */
-  box-sizing: border-box;  /* 패딩이나 테두리가 크기에 포함되도록 */
-  padding-bottom: 0;       /* 하단 여백 제거 */
-}
-/* 좌측 사이드바 스타일 */
-.sidebar {
-  width: 360px;
-  background: #fff;
-  border-radius: 8px;
-  box-shadow: 0 1px 4px rgba(44, 62, 80, 0.07);
-  border: 1px solid #f2f4f6;
-  padding: 0;
-  margin-right: 32px;
-  display: flex;
-  flex-direction: column;
-  /*align-items: stretch;*/
-  min-height: 0;
-}
-/* 우측 상세 패널 */
-.detail-panel {
-  /*width: 340px;
-  margin-left: 32px;
-  background: #fff;
-  border-radius: 8px;
-  box-shadow: 0 1px 4px rgba(44, 62, 80, 0.07);
-  border: 1px solid #f2f4f6;
-  min-height: 400px;
-  padding: 18px;*/
-  width: 360px;        /* 상세 패널 고정(필요시) */
-  background: #fff;
-  box-shadow: -1px 0 4px #eee;
-  min-height: 0;
-}
-/* 사이드바 메뉴 리스트 */
-.sidebar-menu {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-/* 사이드바 메뉴 항목 */
-.sidebar-menu-item {
+/* ===================== Header 영역 ===================== */
+/* 헤더 전체 박스 */
+.headerItembox {
+  background-color: #0f1d41;
+  color: white;
+  height: 70px;
+  padding: 20px 0;
+  text-align: center;
   display: flex;
   align-items: center;
-  padding: 13px 18px;
-  border-bottom: 1px solid #f6f6f6;
-}
-/* 사이드바 메뉴 링크(아이콘+텍스트) */
-.sidebar-menu-link {
-  flex: 1;
-  text-decoration: none;
-  color: #222;
-  font-size: 15px;
-  margin-left: 10px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-/* 사이드바 카운트(오른쪽 숫자) */
-.sidebar-count {
-  color: #b3b3b3;
-  font-size: 15px;
-}
-/* 캘린더 컨테이너 */
-.calendar-container {
-  margin: 16px 18px 0 18px;
-}
-/* 메인 콘텐츠 영역(중앙) */
-.main-content {
-  /*flex: 1;
-  display: flex;
-  flex-direction: column;*/
-  flex: 1 1 0;
-  min-width: 0;        /* flexbox overflow 방지 */
-  /*background: #fafafa;*/
-  display: flex;
-  flex-direction: column;
-  min-height: 0;
-}
-/* 상단 헤더(메뉴명, 날짜, 정렬) */
-.todo-header {
-  padding: 28px 32px 18px 32px;
-  border-radius: 6px;
-  display: flex;
-  align-items: flex-start;
   justify-content: space-between;
-  min-height: 72px;
-  box-sizing: border-box;
-  background: #fff;
-  margin-bottom: 16px;
 }
-/* 헤더: 메뉴명 */
-.todo-header-title {
-  font-size: 23px;
+/* 헤더 왼쪽 영역 */
+.headerLeft {
+  width: 200px;
+  height: 100%;
+}
+/* 헤더 오른쪽 영역 */
+.headerRight {
+  width: 350px;
+  height: 100%;
+}
+/* 헤더 중앙 영역 (현재 미사용, 주석 처리됨) */
+.headerCenter {
+  /* width: 100%; */
+  /* height: 100%; */
+}
+/* 헤더 내 리스트 아이템 */
+.headerLi {
+  display: inline-block;
+}
+
+/* ===================== 리스트 페이지 레이아웃 ===================== */
+/* 전체 아이템 박스 (flex 레이아웃) */
+.itembox {
+  display: flex;
+  min-height: 100vh; /* 전체 높이 맞추기 */
+}
+
+/* ===================== Left 메뉴 영역 ===================== */
+/* 왼쪽 사이드바 */
+.left {
+  width: 350px; /* 사이드바 고정 너비 */
+  /* min-height: 100vh; 전체 높이 */
+  /* border-right: 1px solid #e0e0e0; 경계선 */
+  /* box-sizing: border-box; */
+}
+
+/* 캘린더 영역 */
+#my-calendar {
+  width: 300px;
+  margin: 30px auto;
+}
+.jsCalendar {
+  font-family: 'Inter', 'Pretendard', 'Apple SD Gothic Neo', sans-serif;
+  margin: 50px auto;
+}
+.jsCalendar-title {
   font-weight: 700;
-  color: #222;
-  line-height: 1.4;
+  font-size: 1.6rem;
 }
-/* 헤더: 날짜 */
-.todo-header-date {
-  font-size: 16px;
-  color: #888;
-  margin-top: 2px;
-  padding-left: 50px;
-  text-align: left;
+
+/* ===================== Center(본문) 영역 ===================== */
+.center {
+  flex: 1;
+  background-color: #fff;
+  min-height: 100vh;
+  padding: 32px 24px;
+  box-sizing: border-box;
+  overflow: visible;
 }
-/* 헤더: 정렬 버튼/셀렉트 */
-.todo-header-controls {
+
+/* ===================== Right(오른쪽 패널) 영역 ===================== */
+.right {
+  width: 450px; /* 오른쪽 패널 고정 너비 */
+  min-height: 100vh;
+  border-left: 1px solid #e0e0e0; /* 경계선 */
+  box-sizing: border-box;
+  padding: 24px 16px;
+  overflow-y: auto;
+}
+
+/* ===================== 할일 체크/상태 ===================== */
+#secondLine, #finishCheck, #duedateCheck {
   display: flex;
-  align-items: center;
-  gap: 18px;
 }
-/* 정렬 버튼 스타일 */
-.todo-header-sort-btn {
-  background: #b1b1b1;
-  color: #fff;
-  border: none;
-  border-radius: 6px;
-  padding: 2px 10px;
-  font-size: 15px;
-  cursor: pointer;
-  margin-right: 6px;
+#finishCheck {
+  width: 300px;
 }
-/* 정렬 셀렉트박스 */
-.todo-header-select {
-  width: 130px;
-  font-size: 12px;
-  padding: 3px 8px;
-  border: 1px solid #b7c1c7;
-  border-radius: 5px;
-  background: #fff;
-  color: #222;
-  outline: none;
-  cursor: pointer;
+.checkon {
+  color: red;
 }
-/* 할일 입력 영역 */
-.todo-input-section {
-  margin-bottom: 24px;
-  background: #fff;
-  border-radius: 6px;
-  padding: 24px 32px 20px 32px;
-  box-shadow: 0 1px 4px rgba(44, 62, 80, 0.07);
+td.completed .titleSpan, li.completed .duedateDiv {
+  text-decoration: line-through;
+  color: gray;
 }
-/* 할일 입력 줄 */
-.todo-input-row {
-  margin-bottom: 8px;
+li.completed .titleDiv, li.completed .duedateDiv {
+  text-decoration: line-through;
+  color: gray;
 }
-/* 할일 입력창 */
-.todo-input {
-  width: 100%;
-  padding: 10px;
-  font-size: 16px;
-  border: 1px solid #e0e0e0;
-  border-radius: 6px;
-  outline: none;
-}
-/* 할일 입력 하단(아이콘, 추가버튼) */
-.todo-footer {
+
+/* ===================== 기타 레이아웃 ===================== */
+.testDiv {
   display: flex;
-  align-items: center;
+  flex-direction: column;
+}
+
+/* ===================== 숨김 처리 영역 ===================== */
+#updateTimeView, #pwdmod, #newUserpwdArea {
+  display: None;
+}
+
+/* ===================== 인포메이션 바 ===================== */
+.header-box {
+  display: flex;
   justify-content: space-between;
-  margin-top: 8px;
-}
-/* 할일 입력 아이콘들 */
-.todo-actions {
-  display: flex;
   align-items: center;
-  gap: 18px;
+  /* background: #fbfcf7; */
+  padding: 16px 24px 0 24px;
+  border-bottom: 1px solid #f4f4ec;
+  font-family: 'Pretendard', Arial, sans-serif;
 }
-/* 아이콘 스타일(파란색, 커서) */
-.action-icon {
-  color: #1e3050;
-  cursor: pointer;
-  pointer-events: auto;
-  font-size: 18px;
-}
-/* 숨겨진 날짜 입력 */
-.hidden-date-input {
-  opacity: 0;
-  width: 1px;
-  height: 1px;
-  position: absolute;
-  left: -9999px;
-  top: -9999px;
-}
-/* 날짜 힌트(선택시 안내) */
-.date-hint {
-  display: none;
-  color: #757575;
-  margin-left: 8px;
-}
-/* 추가 버튼 */
-.add-btn {
-  background: #1976d2;
-  color: #fff;
-  border: none;
-  border-radius: 6px;
-  padding: 8px 24px;
-  font-size: 16px;
-  font-weight: 500;
-  cursor: pointer;
-}
-/* 추가입력(위치, 메모) */
-.extra-inputs {
-  display: none;
-  margin-top: 12px;
-}
-/* 추가입력 그룹(위치/메모) */
-.extra-input-group {
+.header-left {
   display: flex;
   align-items: center;
   gap: 12px;
-  margin-bottom: 6px;
 }
-/* 추가입력 라벨 */
-.extra-input-label {
-  min-width: 40px;
+.icon {
+  font-size: 20px;
+}
+.title {
+  font-size: 18px;
+  font-weight: bold;
+}
+.menu {
+  font-size: 20px;
+  color: #b1b1a8;
+  margin: 0 8px;
+  cursor: pointer;
+}
+.view-type, .tab {
   font-size: 15px;
-  color: #444;
+  color: #888;
+  margin-left: 8px;
+  cursor: pointer;
 }
-/* 추가입력 인풋 */
-.extra-input {
-  width: 160px;
-  padding: 5px 8px;
-  border: 1px solid #e0e0e0;
-  border-radius: 5px;
+.tab.active {
+  color: #222;
+  border-bottom: 2px solid #222;
+  font-weight: bold;
+  padding-bottom: 2px;
+}
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+.option {
+  color: #888;
   font-size: 15px;
+  cursor: pointer;
 }
-/* 할일 목록 영역 */
-.todo-list-container {
-  margin-top: 16px;
+.header-sub {
+  /* background: #fbfcf7; */
+  padding: 0 24px 8px 56px;
+  font-size: 13px;
+  color: #b1b1a8;
+  border-bottom: 1px solid #f4f4ec;
 }
 
-/* 모달 오버레이(배경) */
-.modal-overlay {
+/* ===================== 할일 추가 바 ===================== */
+.todo-box {
+  /* background: #fcfcf7; */
+  border: 1px solid #f4f4ec;
+  border-radius: 6px;
+  width: 100%;
+  /* max-width: 700px; */
+  margin: 12px auto;
+  box-sizing: border-box;
+  padding: 8px 0 0 0;
+}
+.todo-input-row {
+  display: flex;
+  align-items: center;
+  padding: 0 16px 0 16px;
+  border-bottom: 1px solid #f4f4ec;
+  height: 48px;
+}
+.circle {
+  display: inline-block;
+  width: 22px;
+  height: 22px;
+  border: 2px solid #4b87c6;
+  border-radius: 50%;
+  margin-right: 10px;
+  background: #fff;
+}
+.regTitleInput, .todo-input {
+  border: none;
+  background: transparent;
+  font-size: 18px;
+  color: #4b87c6;
+  outline: none;
+  width: 100%;
+}
+.todo-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  /* background: #fafaf6; */
+  border-radius: 0 0 6px 6px;
+}
+.todo-icons {
+  display: flex;
+  gap: 12px;
+}
+.icon {
+  font-size: 18px;
+  cursor: pointer;
+  color: #b1b1a8;
+}
+.add-btn {
+  background: #fff;
+  border: 1px solid #e0e0d8;
+  border-radius: 4px;
+  padding: 4px 16px;
+  font-size: 15px;
+  color: #888;
+  cursor: pointer;
+}
+
+/* ===================== 모달 및 인라인 수정 스타일 ===================== */
+.modal {
   display: none;
   position: fixed;
   left: 0;
   top: 0;
   width: 100vw;
   height: 100vh;
-  background: rgba(0, 0, 0, 0.3);
-  z-index: 9999;
+  background: rgba(0, 0, 0, 0.1);
+  z-index: 1000;
 }
-/* 모달 컨텐츠(중앙 박스) */
 .modal-content {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
   background: #fff;
-  border-radius: 10px;
-  box-shadow: 0 4px 24px #0002;
-  padding: 32px 32px 24px 32px;
-  min-width: 340px;
-  max-width: 90vw;
-  text-align: center;
+  border-radius: 8px;
+  padding: 16px 24px;
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.15);
+  min-width: 180px;
+  max-width: 30vw;
+  position: absolute;
 }
-/* 모달 행 */
-.modal-row {
-  margin-bottom: 18px;
+.close {
+  position: absolute;
+  right: 12px;
+  top: 8px;
+  font-size: 20px;
+  cursor: pointer;
+}
+.edit-input-title, .edit-input-duedate {
+  border: none;
+  background: transparent;
+  font-size: inherit;
+  /* width: 100px; */
+  outline: none;
+  padding: 0;
+}
+.titleSpan {
+  /* 손가락 모양으로 포인터 */
+  cursor: pointer;
+}
+
+/* ===================== 상세 테이블 영역 ===================== */
+.detailDiv table {
+  border-collapse: separate !important;
+  border-spacing: 0 26px !important;  /* 행 간격 조정 */
+}
+.detailDiv td {
+  padding: 4px 3px;
+  vertical-align: middle;
+}
+.detailDiv input,
+.detailDiv textarea,
+.ditailDiv {
+  border: none;
+  outline: none;
+  background: #faf9f8;
+  border-radius: 6px;
+  /* padding: 8px 12px; */
+  font-size: 15px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/*================ todo-table ====================*/
+.table-box {
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px #eee;
+  padding: 16px;
+}
+
+.todo-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.table-header-row {
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.th-checkbox {
+  text-align: center;
+  padding: 8px 0;
+}
+.th-center {
+  text-align: center;
+  padding: 8px 12px;
+}
+
+.td-center {
+  text-align: center;
+  padding: 8px 12px;
+}
+
+.titleTd {
+  text-align: left;
+  padding: 8px 12px;
+  cursor: pointer;
+  background: #fff;
+  transition: background 0.2s;
+}
+
+.titleTd.completed .titleSpan {
+  text-decoration: line-through;
+  color: #b3b3b3;
+}
+
+.duedateTd {
+  text-align: center;
+  padding: 8px 12px;
+  cursor: pointer;
+  background: #fff;
+  transition: background 0.2s;
+}
+
+.edit-input-title,
+.edit-input-duedate {
+  display: none;
+  border: none;
+  background: transparent;
+  width: 100%;
+}
+
+.finished-icon-span {
+  color: #4b87c6;
+}
+
+.starIcon,
+.finishedIcon {
+  color: #1e3050;
+}
+
+.table-btn {
+  border: 1px solid #b1b1a8;
+  border-radius: 4px;
+  padding: 1px 6px;
+  background: #fff;
+  color: #777b7c;
+  margin-right: 2px;
+  cursor: pointer;
+  font-size: 12px;
+  transition: background 0.2s, color 0.2s;
+}
+
+.table-btn.del {
+  border: 1px solid #e57373;
+  color: #e57373;
+  margin-right: 0;
+}
+
+.table-footer {
+  margin-top: 20px;
   text-align: left;
 }
-/* 모달 라벨 */
-.modal-row label {
-  font-weight: 500;
-  margin-right: 16px;
-}
-/* 모달 날짜입력 */
-.modal-date-input {
-  padding: 4px 8px;
-  border-radius: 4px;
-  border: 1px solid #ccc;
-}
-/* 모달 안내문 */
-.modal-tip {
-  font-size: 14px;
-}
-/* 모달 버튼 영역 */
-.modal-actions {
-  margin-top: 28px;
-}
-/* 모달 제출 버튼 */
-.modal-submit-btn {
-  background: #1976d2;
-  color: #fff;
-  border: none;
-  border-radius: 6px;
-  padding: 8px 24px;
-  font-size: 16px;
-  font-weight: 500;
-  margin-right: 10px;
-  cursor: pointer;
-}
-/* 모달 취소 버튼 */
-.modal-cancel-btn {
+
+.footer-btn {
   background: #fff;
-  color: #1976d2;
-  border: 1.5px solid #1976d2;
   border-radius: 6px;
-  padding: 8px 24px;
-  font-size: 16px;
+  padding: 8px 18px;
+  font-size: 15px;
   font-weight: 500;
   cursor: pointer;
+  margin-right: 8px;
+  transition: background 0.2s, border 0.2s, color 0.2s;
+}
+
+.footer-btn.edit {
+  color: #1976d2;
+  border: 2px solid #1976d2;
+}
+
+.footer-btn.delete {
+  color: #e53935;
+  border: 2px solid #e53935;
+  margin-right: 0;
+}
+
+.footer-btn-hover-edit,
+.footer-btn.edit:hover {
+  background: #1976d2 !important;
+  color: #fff !important;
+}
+
+.footer-btn-hover-delete,
+.footer-btn.delete:hover {
+  background: #e53935 !important;
+  color: #fff !important;
+}
+
+.hovered-row {
+  background: #E1E1E1 !important;
 }
