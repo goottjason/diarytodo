@@ -14,7 +14,7 @@
       </colgroup>
       <thead>
       <tr>
-        <th><input type="checkbox" id="selectAllCheckbox"/></th>
+        <th><input type="checkbox" id="select-all-checkbox"/></th>
         <th>완료</th>
         <th>제목</th>
         <th>기한</th>
@@ -26,18 +26,18 @@
       <tr th:each="todo : ${todos}">
         <!-- 체크박스 -->
         <td>
-          <input type="checkbox" class="rowCheckbox" th:data-dno="${todo.dno}" />
+          <input type="checkbox" class="row-checkbox" th:data-dno="${todo.dno}" />
         </td>
         <!-- finished -->
         <td>
           <span style="color:#4b87c6;">
             <i th:id="'dfinishedIcon-' + ${todo.dno}"
-               th:class="'finishedIcon fa-regular ' + (${todo.isFinished == 1} ? 'fa-circle-check' : 'fa-circle')"
+               th:class="'finished-icon fa-regular ' + (${todo.isFinished == 1} ? 'fa-circle-check' : 'fa-circle')"
                th:data-dno="${todo.dno}" style="color:#1e3050"></i>
           </span>
         </td>
         <!-- title -->
-        <td th:id="'dtitleTd-' + ${todo.dno}"
+        <td th:id="'title-cell-' + ${todo.dno}"
             th:class="'titleTd' + (${todo.isFinished == 1} ? ' completed' : '')"
             style="cursor:pointer"
             onmouseover="this.style.background='#E1E1E1';"

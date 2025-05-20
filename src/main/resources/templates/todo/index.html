@@ -17,54 +17,54 @@
 
   <!-- ■ 전체 레이아웃 ■ -->
   <div class="todo-layout">
-    <input type="hidden" th:value="${session.loginMember.loginId}" id="login-id" />
+    <input type="hidden" id="login-id" th:value="${session.loginMember.loginId}"  />
     <!-- 좌측: 사이드바 -->
     <aside class="sidebar">
       <ul class="sidebar-menu" th:object="${todoCount}">
         <!-- 오늘 To-Do 메뉴 -->
         <li class="sidebar-menu-item">
-          <a href="#" class="sidebar-menu-link" onclick="selectWhere('todayList');">
-            <i class="fa-solid fa-calendar-plus"></i>
+          <a href="#" class="sidebar-menu-link" onclick="modifyStatus('todayList');">
+            <i class="fa-calendar-plus fa-solid"></i>
             <span>오늘 To-Do</span>
           </a>
           <span id="count-today" class="sidebar-count" th:text="*{todayListCnt}"></span>
         </li>
         <!-- 모든 To-Do 메뉴 -->
         <li class="sidebar-menu-item">
-          <a href="#" class="sidebar-menu-link" onclick="selectWhere('allList');">
-            <i class="fa-solid fa-box"></i>
+          <a href="#" class="sidebar-menu-link" onclick="modifyStatus('allList');">
+            <i class="fa-box fa-solid"></i>
             <span>모든 To-Do</span>
           </a>
           <span id="count-all" class="sidebar-count" th:text="*{allListCnt}"></span>
         </li>
         <!-- 미완료 메뉴 -->
         <li class="sidebar-menu-item">
-          <a href="#" class="sidebar-menu-link" onclick="selectWhere('unfinishedList');">
-            <i class="fa-regular fa-circle"></i>
+          <a href="#" class="sidebar-menu-link" onclick="modifyStatus('unfinishedList');">
+            <i class="fa-circle fa-regular"></i>
             <span>미완료된 To-Do</span>
           </a>
           <span id="count-unfinished" class="sidebar-count" th:text="*{unfinishedListCnt}"></span>
         </li>
         <!-- 중요 메뉴 -->
         <li class="sidebar-menu-item">
-          <a href="#" class="sidebar-menu-link" onclick="selectWhere('importantList');">
-            <i class="fa-solid fa-star"></i>
+          <a href="#" class="sidebar-menu-link" onclick="modifyStatus('importantList');">
+            <i class="fa-star fa-solid"></i>
             <span>중요한 To-Do</span>
           </a>
           <span id="count-important" class="sidebar-count" th:text="*{importantListCnt}"></span>
         </li>
         <!-- 기한 있는 메뉴 -->
         <li class="sidebar-menu-item">
-          <a href="#" class="sidebar-menu-link" onclick="selectWhere('hasDuedateList');">
-            <i class="fa-solid fa-timeline"></i>
+          <a href="#" class="sidebar-menu-link" onclick="modifyStatus('hasDuedateList');">
+            <i class="fa-timeline fa-solid"></i>
             <span>기한이 있는 To-Do</span>
           </a>
           <span id="count-has-duedate" class="sidebar-count" th:text="*{hasDuedateListCnt}"></span>
         </li>
         <!-- 기한 없는 메뉴 -->
         <li class="sidebar-menu-item">
-          <a href="#" class="sidebar-menu-link" onclick="selectWhere('noDuedateList');">
-            <i class="fa-solid fa-bars-staggered"></i>
+          <a href="#" class="sidebar-menu-link" onclick="modifyStatus('noDuedateList');">
+            <i class="fa-bars-staggered fa-solid"></i>
             <span>기한이 없는 To-Do</span>
           </a>
           <span id="count-no-duedate" class="sidebar-count" th:text="*{noDuedateListCnt}"></span>
@@ -77,6 +77,8 @@
         <input type="hidden" id="selected-date" readonly>
       </div>
     </aside>
+
+
     <!-- 중앙: 메인 콘텐츠 -->
     <main class="main-content">
       <!-- 상단 헤더 -->

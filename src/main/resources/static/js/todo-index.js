@@ -4,7 +4,9 @@ $(document).ready(function() {
   // 페이지 로드시 리스트/카운트 초기화
   initialList();
   // showTodoLeft();
-
+/*
+  getListForCal();
+*/
   // 오늘 날짜 표시
   let today = new Date().toLocaleDateString();
   $("#header-date").html(today);
@@ -21,8 +23,9 @@ $(document).ready(function() {
   updateCalHighlights();
   // 캘린더 리프레시
   function updateCalHighlights() {
-    let highlightedDates = listDuedate();
-    highlightSpecialDatesOnCal(highlightedDates);
+    let highlightedDates = getListForCal();
+    console.log(highlightedDates);
+    // highlightSpecialDatesOnCal(highlightedDates);
     myCalendar.refresh();
   }
 
@@ -333,18 +336,22 @@ function doList() {
 
 
 // 마감일 있는 날짜 리스트
-function listDuedate() {
-  let result = ajaxFunc("/todolist/listDuedate", null, "text");
-  let info = jQuery('<div>').html(result);
+function getListForCal() {
+  callAjax('/todo/getListForCal', 'POST', null, 'json', function(json) {
+    console.log(json);
+    return json;
+  });
+
+  /*let info = jQuery('<div>').html(result);
   spans = info.find(".duedateByTodo");
   let tempList = new Array();
   spans.each(function() {
     tempList.push($(this).html());
   });
-  return tempList;
+  return tempList;*/
 }
 // 메뉴 클릭시 상태 변경
-function selectWhere(status) {
+function modifyStatus(status) {
   sessionStorage.setItem("status", status);
   $("#header-title").html(sessionStorage.getItem("status"));
   doList();

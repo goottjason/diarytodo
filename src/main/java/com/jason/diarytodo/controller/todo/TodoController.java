@@ -6,6 +6,7 @@ import com.jason.diarytodo.service.todo.TodoService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -70,5 +72,16 @@ public class TodoController {
     TodoRespDTO todoRespDTO = todoService.getDetailInfos(dno);
     model.addAttribute("todoRespDTO", todoRespDTO);
     return "todo/todo-right :: todoRight";
+  }
+  @PostMapping("/todo/getListForCal")
+  public ResponseEntity<List> getListForCal() {
+    List<TodoRespDTO> todoRespDTOS = todoService.getListForCal();
+    log.info("todoRespDTOS: {}", todoRespDTOS);
+    List<LocalDate> listForCal = new ArrayList<>();
+    for (TodoRespDTO todoRespDTO : todoRespDTOS) {
+      listForCal.add(todoRespDTO.getDuedate());
+    }
+    log.info("listForCal: {}", listForCal);
+    return ResponseEntity.ok().body(listForCal);
   }
 }

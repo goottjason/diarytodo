@@ -2,6 +2,8 @@ package com.jason.diarytodo.service.todo;
 
 import com.jason.diarytodo.domain.todo.*;
 
+import java.util.List;
+
 public interface TodoService {
   TodoSearchRespDTO getTodos(TodoSearchReqDTO todoSearchReqDTO);
 
@@ -12,4 +14,6 @@ public interface TodoService {
   int addTodo(TodoReqDTO todoReqDTO);
 
   TodoRespDTO getDetailInfos(int dno);
+
+  List<TodoRespDTO> getListForCal();
 }

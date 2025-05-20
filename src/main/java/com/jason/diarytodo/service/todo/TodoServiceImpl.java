@@ -84,4 +84,9 @@ public class TodoServiceImpl implements TodoService {
   public TodoRespDTO getDetailInfos(int dno) {
     return todoMapper.selectTodoByDno(dno);
   }
+
+  @Override
+  public List<TodoRespDTO> getListForCal() {
+    return todoMapper.selectListForCal();
+  }
 }
