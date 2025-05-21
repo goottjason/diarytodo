@@ -29,6 +29,14 @@ public class TodoSearchReqDTO {
   private String sortBy;           // 정렬 컬럼명 (ex: "duedate", "priority")
   private String sortDirection;    // "asc" or "desc"
 
+  /*public String getTitle() {
+    if(keyword != null) {
+      return keyword;
+    } else {
+      return title;
+    }
+  }*/
+
   public int getOffset() {
     // ex. 3페이지의 offset (3 - 1) x 15 = 30
     log.info("pageNo : {}", pageNo);

@@ -51,9 +51,10 @@ public class TodoController {
   public String getTodos(@RequestBody TodoSearchReqDTO todoSearchReqDTO, Model model, HttpSession session) {
     MemberRespDTO loginMember = (MemberRespDTO) session.getAttribute("loginMember");
     todoSearchReqDTO.setWriter(loginMember.getLoginId());
+    log.info("■■■Controller : req - {}", todoSearchReqDTO);
     TodoSearchRespDTO todoSearchRespDTO = todoService.getTodos(todoSearchReqDTO);
 
-    log.info(todoSearchRespDTO.toString());
+    log.info("■■■Controller : resp - {}", todoSearchRespDTO.toString());
     List<TodoRespDTO> todos = todoSearchRespDTO.getTodos();
     model.addAttribute("todoSearchRespDTO", todoSearchRespDTO);
     model.addAttribute("todos", todos);

@@ -67,9 +67,9 @@
         <!-- star -->
         <td class="td-center">
           <span class="finished-icon-span">
-            <i th:id="'dstar-' + ${todo.dno}" class="starIcon fa-regular fa-star"
-               th:classappend="${todo.isImportant == 1} ? ' fa-solid' : ''"
-               th:attr="data-dno=${todo.dno}"></i>
+            <i th:id="'dstar-' + ${todo.dno}"
+               th:class="${todo.isImportant} ? 'starIcon fa-solid fa-star' : 'starIcon fa-regular fa-star'"
+               th:attr="data-dno=${todo.dno}" style="cursor:pointer;"></i>
           </span>
         </td>
         <!-- mod, del -->

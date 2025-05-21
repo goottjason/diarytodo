@@ -16,6 +16,9 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TodoReqDTO {
+
+  private int dno;
+
   @NotBlank(message = "제목은 필수 입력 항목입니다.")
   @Size(max = 200, message = "제목은 200자 이내로 입력해주세요.")
   private String title;

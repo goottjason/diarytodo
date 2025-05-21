@@ -1,32 +1,32 @@
+/**
+ * 전역변수
+ */
+let today = new Date().toLocaleDateString().substring(0, 10);
+let specialDates = []; // duedate가 설정된 날짜 리스트
+
 $(function() {
 
-  // ====================================
-  // 페이지로드, 캘린더, 데이트피커
-  // ====================================
-
-  // -------- 페이지 초기화
+  /**
+   * 페이지로드, 상단에 status마다 상태 표시 및 오늘의 날짜 표시
+   */
   initialList();
-  /*countTodo();*/
+  $("#menuTitleArea").html(sessionStorage.getItem("status"));
+  $("#menuDateArea").html(today);
+  refreshCalStatus();
 
-  let today = new Date().toLocaleDateString().substring(0, 10);
-  $("#duedate, #from, #to").val(today);
-  let todayText = new Date().toLocaleDateString();
-  $("#menuDateArea").html(todayText);
-
-  // -------- 캘린더 생성 관련
-  let specialDates = [];
-  let myCalendar = jsCalendar.new("#my-calendar"); // 캘린더 생성
-
+  /**
+   * 좌측 하단 캘린더 설정
+   */
+  // 캘린더 객체 생성
+  let myCalendar = jsCalendar.new("#my-calendar");
   myCalendar.onDateClick(function(event, date){
     var value = date.toLocaleDateString('sv-SE');
     document.getElementById("selected-date").value = value;
-
-    sessionStorage.setItem("status", "calendarList");
+    // 캘린더의 특정 날짜 클릭되면 status는 calPickDuedateList, calPickDate는 특정 날짜로 설정
+    sessionStorage.setItem("status", "calPickDuedateList");
     sessionStorage.setItem("calPickDate", value);
     doList();
   });
-
-  // -------- |calBoldFunc()|
   // 볼드처리하는 함수
   function calBoldFunc() {
     myCalendar.onDateRender(function(date, element, info) {
@@ -42,8 +42,6 @@ $(function() {
       }
     });
   }
-
-  //-------- |refreshCalStatus()|
   // 리스트를 받아와서 볼드처리하여 새로고침하는 함수
   async function refreshCalStatus() {
     specialDates = await listDuedate(); // 데이터 수신 완료까지 대기
@@ -51,9 +49,9 @@ $(function() {
     myCalendar.refresh();
   }
 
-  refreshCalStatus();
-
-  // -------- 데이트피커 생성 관련
+  /**
+   * 데이트피커
+   */
   let picker = new easepick.create({
     element: "#regDateInput",
     css: ["https://cdn.jsdelivr.net/npm/@easepick/bundle@1.2.1/dist/index.css"],
@@ -68,10 +66,9 @@ $(function() {
   });
 
 
-  // ===============================
-  // 검색창
-  // ===============================
-
+  /**
+   * 검색창
+   */
   // -------- 검색어 입력하는 동안 이벤트 --------
   $("#searchWord").on("keyup", function() {
     let searchWord = $(this).val();
@@ -84,28 +81,29 @@ $(function() {
   });
 
 
-  // ===============================
-  // 정렬
-  // ===============================
-
+  /**
+   * 정렬 컨트롤
+   */
   // 정렬아이콘 클릭시 (오름차순, 내림차순)
   $("body").on("click", "#orderMethodSelect", function() {
     // 오름차순이면 true
     let isAsc = $(this).hasClass("fa-arrow-up-wide-short");
     $(this).toggleClass("fa-arrow-up-wide-short fa-arrow-down-wide-short");
-
     if(isAsc) {
       // 클릭해서 내림차순 상태로 변경
-      sessionStorage.setItem("ordermethod", "desc");
+      sessionStorage.setItem("sortDirection", "DESC");
+      console.log("DESC로변경");
     } else {
-      sessionStorage.setItem("ordermethod", "asc");
+      sessionStorage.setItem("sortDirection", "ASC");
+      console.log("ASC로변경");
     }
+    console.log(sessionStorage.getItem("sortDirection"));
     doList();
   });
 
   // 정렬방식 선택 변경시 (마감일순, 등록일순, 제목순)
   $("body").on("change", "#orderbySelect", function() {
-    sessionStorage.setItem("orderby", $("#orderbySelect").val());
+    sessionStorage.setItem("sortBy", $("#orderbySelect").val());
     doList();
   });
 
@@ -268,25 +266,12 @@ $(function() {
   // -------- 중요도 아이콘이 눌렸을 때
   $("body").on("click", ".starIcon", function() {
     let dno = $(this).data("dno");
-    let star = null;
-    //
-    let solid = $(this).hasClass("fa-solid");
-    // 채워져있으면 해제해야 함
-    if(solid) {
-      star = 0;
+    if ($(this).hasClass("fa-solid")) {
+      $(this).removeClass("fa-solid").addClass("fa-regular");
     } else {
-      star = 1;
+      $(this).removeClass("fa-regular").addClass("fa-solid");
     }
-
-    let data = { "dno": dno, "star": star };
-    let result = ajaxFunc("/todolist/updateStar", data, "text");
-    if (result == "success") {
-      // checked가 true이면, "completed" 추가하고, false면 삭제
-      $("#dstar-" + dno).toggleClass("fa-solid");
-      $("#detailstar-"+dno).toggleClass("fa-solid");
-      doList();
-      countTodo();
-    }
+    modifyTodo(dno);
   });
 
   // -------- 더보기 버튼 클릭 시 상세 보기
@@ -431,7 +416,7 @@ function initialList() {
 // -------- |countTodo()|
 // 왼쪽 사이드바에서 할일 개수 함수
 function countTodo() {
-  let today = new Date().toISOString().substring(0, 10);
+  today = new Date().toISOString().substring(0, 10);
   let data = {
     today : today
   }
@@ -528,23 +513,7 @@ function selectWhere(status) {
 // 함수: 검색창
 // ===============================
 
-// -------- |doSearch()|
-// 검색 동작시 작동하는 함수
-function doSearch(searchTypes, searchWord) {
-  let orderby = sessionStorage.getItem("orderby");
-  let ordermethod = sessionStorage.getItem("ordermethod");
 
-  let data = {
-    searchTypes: searchTypes,
-    searchWord: searchWord,
-    orderby: orderby,
-    ordermethod: ordermethod
-  };
-  let result = ajaxFunc("/todolist/selectMulti", data, null);
-  let html = jQuery('<div>').html(result);
-  let contents = html.find("div#ajaxList").html();
-  $("#todolist").html(contents);
-}
 
 
 
@@ -588,17 +557,41 @@ function doSearch(searchTypes, searchWord) {
   }
 }*/
 
+function modifyTodo(dno) {
+  let title = $("#todo-title-input").val();
+  let duedate = $("#regDateInput").val();
+  let isImportant = $(".starIcon").hasClass("fa-solid") ? true : false;
+  let location = $("#addLocationInput").val();
+  let content = $("#addMemoInput").val();
+  let loginId = $("#login-id").val();
+  let data = JSON.stringify({
+    dno: dno,
+    title: title,
+    duedate: duedate,
+    isImportant: isImportant,
+    location: location,
+    content: content,
+    writer: loginId
+  });
+  callAjax('/todo/modifyTodo', 'POST', data, 'text', function(text) {
+    if (text == "success") {
+      doList();
+      countTodo();
+    }
+  });
+}
+
 function addTodo() {
   let title = $("#todo-title-input").val();
   let duedate = $("#regDateInput").val();
-  let important = $("#regStarInput").hasClass("fa-solid") ? true : false;
+  let isImportant = $(".regStarInput").hasClass("fa-solid") ? true : false;
   let location = $("#addLocationInput").val();
   let content = $("#addMemoInput").val();
   let loginId = $("#login-id").val();
   let data = JSON.stringify({
     title: title,
     duedate: duedate,
-    important: important,
+    isImportant: isImportant,
     location: location,
     content: content,
     writer: loginId
@@ -608,6 +601,9 @@ function addTodo() {
       $("#todo-title-input").val(""); // 추가되었으니까, input 비워둠
       $("#addLocationInput").val("");
       $("#addMemoInput").val("");
+      if ($(".regStarInput").hasClass("fa-solid")) {
+        $(".regStarInput").removeClass("fa-solid").addClass("fa-regular");
+      }
       doList();
       countTodo();
     }
@@ -665,6 +661,10 @@ function updateSelectedAll(selectedArr, finished, star, duedate) {
 
 // -------- |deleteSelectedAll()|
 // 선택삭제 버튼 관련 함수
+/**
+ *
+ * @param selectedArr
+ */
 function deleteSelectedAll(selectedArr) {
   let data = JSON.stringify({
     selectedArr: selectedArr,
@@ -678,9 +678,28 @@ function deleteSelectedAll(selectedArr) {
   }
 }
 
+// -------- |doSearch()|
+// 검색 동작시 작동하는 함수
+function doSearch(searchTypes, searchWord) {
+  let orderby = sessionStorage.getItem("orderby");
+  let ordermethod = sessionStorage.getItem("ordermethod");
+
+  let data = {
+    searchTypes: searchTypes,
+    searchWord: searchWord,
+    orderby: orderby,
+    ordermethod: ordermethod
+  };
+  let result = ajaxFunc("/todolist/selectMulti", data, null);
+  let html = jQuery('<div>').html(result);
+  let contents = html.find("div#ajaxList").html();
+  $("#todolist").html(contents);
+}
+
 // -------- |doList()|
 // 테이블을 보여주는 함수
 function doList() {
+  console.log(sessionStorage.getItem("sortDirection"));
   let loginId = $("#login-id").val();
   let sortBy = sessionStorage.getItem("sortBy");
   let sortDirection = sessionStorage.getItem("sortDirection");
@@ -763,74 +782,4 @@ function ajaxFunc2(url, contentType, dataType, data) {
     },
   });
   return result;
-}
-
-
-
-function outputMsg(errorMsg, tagObj, color) {
-  // tagObj 요소의, 그 다음 요소에 출력
-  let errTag = $(tagObj);
-  $(errTag).html(errorMsg);
-  $(errTag).css("color", color);
-  $(tagObj).css("border-color", color);
-}
-
-function validCheckPwd1 (pwd1, pwd2) {
-  // 비밀번호 8~20자
-  if (pwd1.length < 8 || pwd1.length > 20) {
-    outputMsg("비밀번호는 8~20자로 입력하세요!", $("#newPwd1MsgArea"), "red");
-    return "fail";
-  } else {
-    if(pwd2 == "") {
-      outputMsg("아래에 다시 한번 입력해주세요.", $("#newPwd1MsgArea"), "orange");
-      return "success";
-    } else {
-      if(pwd1 != pwd2) {
-        outputMsg("비밀번호가 일치하지 않습니다.", $("#newPwd1MsgArea"), "red");
-        outputMsg("", $("#newPwd2MsgArea"), "red");
-        return "fail";
-      } else {
-        outputMsg("비밀번호 검증완료", $("#newPwd1MsgArea"), "green");
-        outputMsg("비밀번호가 일치합니다.", $("#newPwd2MsgArea"), "green");
-        return "success";
-      }
-    }
-  }
-}
-
-function validCheckPwd2 (pwd1, pwd2) {
-  if (pwd1.length < 8 || pwd1.length > 20) {
-    outputMsg("비밀번호는 8~20자로 입력하세요!", $("#newPwd1MsgArea"), "red");
-    return "fail";
-  }
-  if(pwd1 != pwd2) { //
-    outputMsg("비밀번호가 일치하지 않습니다.", $("#newPwd1MsgArea"), "red");
-    outputMsg("", $("#newPwd2MsgArea"), "red");
-    return "fail";
-  } else {
-    outputMsg("비밀번호 검증완료", $("#newPwd1MsgArea"), "green");
-    outputMsg("비밀번호가 일치합니다.", $("#newPwd2MsgArea"), "green");
-    return "success";
-  }
-}
-
-function validCheckUsername (username, id) {
-  if(username.length > 0) { //
-    outputMsg("사용가능", $("#"+id), "green");
-    return "success";
-  } else {
-    outputMsg("이름은 필수 입력입니다.", $("#"+id), "red");
-    return "fail";
-
-  }
-}
-
-function validCheckUseraddr(useraddr, id) {
-  if(useraddr.length > 0) { //
-    outputMsg("사용가능", $("#"+id), "green");
-    return "success";
-  } else {
-    outputMsg("주소는 필수 입력입니다.", $("#"+id), "red");
-    return "fail";
-  }
 }
