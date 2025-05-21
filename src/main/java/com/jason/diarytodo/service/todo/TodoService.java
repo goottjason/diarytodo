@@ -13,7 +13,7 @@ public interface TodoService {
 
   int addTodo(TodoReqDTO todoReqDTO);
 
-  TodoRespDTO getDetailInfos(int dno);
+  TodoRespDTO getDetailInfos(TodoReqDTO todoReqDTO);
 
   List<TodoRespDTO> getListForCal(String writer);
 }

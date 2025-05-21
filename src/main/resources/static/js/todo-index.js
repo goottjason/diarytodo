@@ -71,13 +71,14 @@ $(function() {
    */
   // -------- 검색어 입력하는 동안 이벤트 --------
   $("#searchWord").on("keyup", function() {
-    let searchWord = $(this).val();
-    if (searchWord.length != 0) {
-      doSearch("title", searchWord);
-    } else {
-//         let result = ajaxFunc("/todolist/selectMulti", null, null);
-      doList();
+    let keyword = $(this).val();
+    sessionStorage.setItem("searchType", "title");
+    sessionStorage.setItem("keyword", keyword);
+    if (keyword.length == 0) {
+      sessionStorage.setItem("searchType", null);
+      sessionStorage.setItem("keyword", null);
     }
+    doList();
   });
 
 
@@ -198,28 +199,11 @@ $(function() {
     span.hide();
   });
 
-  // -------- 테이블에서 제목영역 클릭하여 수정 후 Enter
-  $(document).on('keydown', '.edit-input-title', function(e) {
-    if (e.key === "Enter") {
-      let dno = $(this).data("dno");
-      let value = $(this).val();
-      let span = $(this).siblings('.titleSpan');
-      span.text(value).show();
-      $(this).hide();
-      titleModify(dno, value);
-      countTodo();
-    }
-  });
+  $(document).on('keydown blur', '.edit-input-title', function(e) {
+    // Enter 키인 경우에만 처리 (blur는 무조건 처리)
+    if (e.type === 'keydown' && e.key !== "Enter") return;
 
-  // -------- 테이블에서 제목영역 클릭하여 수정 후 다른 영역 클릭시
-  $(document).on('blur', '.edit-input-title', function() {
-    let dno = $(this).data("dno");
-    let value = $(this).val();
-    let span = $(this).siblings('.titleSpan');
-    span.text(value).show();
-    $(this).hide();
-    titleModify(dno, value);
-    countTodo();
+    handleTitleEdit(this);
   });
 
   // -------- 테이블에서 날짜영역 클릭시 (수정모드 전환)
@@ -231,31 +215,14 @@ $(function() {
   });
 
   // -------- 테이블에서 날짜영역 클릭하여 수정 후 Enter
-  $(document).on('keydown', '.edit-input-duedate', function(e) {
-    if (e.key === "Enter") {
-      let dno = $(this).data("dno");
-      let value = $(this).val();
-      let span = $(this).siblings('.duedateSpan');
-      span.text(value).show();
-      $(this).hide();
-      duedateModify(dno, value);
-      countTodo();
-      refreshCalStatus();
-    }
+  $(document).on('keydown blur', '.edit-input-duedate', function(e) {
+    // Enter 키 또는 blur 이벤트 발생 시 처리
+    if (e.type === 'keydown' && e.key !== "Enter") return;
+
+    handleDateEdit(this);
   });
 
-  // -------- 테이블에서 날짜영역 클릭하여 수정 후 다른 영역 클릭시
-  $(document).on('blur', '.edit-input-duedate', function() {
-    let dno = $(this).data("dno");
-    let value = $(this).val();
-    let span = $(this).siblings('.duedateSpan');
-    span.text(value).show();
-    $(this).hide();
-    duedateModify(dno, value);
-    countTodo();
-    refreshCalStatus();
-  });
-
+  // 페이지 클릭했을때
   $(document).on('click', '.page-link', function(e) {
     e.preventDefault();
     let pageNo = $(this).data('page');
@@ -266,22 +233,28 @@ $(function() {
   // -------- 중요도 아이콘이 눌렸을 때
   $("body").on("click", ".starIcon", function() {
     let dno = $(this).data("dno");
+    let isImportant = null;
     if ($(this).hasClass("fa-solid")) {
       $(this).removeClass("fa-solid").addClass("fa-regular");
+      isImportant = false;
     } else {
       $(this).removeClass("fa-regular").addClass("fa-solid");
+      isImportant = true;
     }
-    modifyTodo(dno);
+    /*dno, title, duedate, isImportant, location, content*/
+    modifyTodo(dno, null, null, isImportant, null, null);
   });
 
   // -------- 더보기 버튼 클릭 시 상세 보기
   $("body").on("click", ".moreBtn", function() {
     let dno = $(this).data("dno");
-    let data = {"dno": dno};
-    let result = ajaxFunc("/todolist/selectone", data, null);
-    let html = jQuery('<div>').html(result);
-    let contents = html.find("div#ajaxTodoDetail").html();
-    $("#todoDetail").html(contents);
+
+    let data = JSON.stringify({
+      dno: dno
+    });
+    callAjax('todo/getDetailInfos', 'POST', data, "html", function (html) {
+      $('#todoDetail').html(html);
+    });
   });
 
   // -------- 삭제 버튼 클릭 시
@@ -478,6 +451,30 @@ function callAjaxPromise(url, method, data, dataType) {
   });
 }
 
+function handleDateEdit(inputElement) {
+  const $input = $(inputElement);
+  const dno = $input.data("dno");
+  const duedate = $input.val();
+  const $span = $input.siblings('.duedateSpan');
+
+  $span.text(duedate).show();
+  $input.hide();
+
+  /*dno, title, duedate, isImportant, location, content*/
+  modifyTodo(dno, null, duedate, null, null, null);
+}
+
+function handleTitleEdit(inputElement) {
+  const $input = $(inputElement);
+  const dno = $input.data("dno");
+  const title = $input.val();
+  const $span = $input.siblings('.titleSpan');
+
+  $span.text(title).show();
+  $input.hide();
+
+  modifyTodo(dno, title, null, null, null, null  );
+}
 
 
 // ===============================
@@ -528,41 +525,7 @@ function selectWhere(status) {
 // 함수: 할일추가
 // ===============================
 
-// 할일추가 함수
-/*function register() {
-  let title = $(".regTitleInput").val();
-  let duedate = $("#regDateInput").val();
-  let star = null;
-  let isStar = $(".regStarInput").hasClass("fa-solid");
-  if ($(".regStarInput").hasClass("fa-solid")) {
-    star = 1;
-  } else {
-    star = 0;
-  }
-  let location = $("#addLocationInput").val();
-  let memo = $("#addMemoInput").val();
-
-  let data = JSON.stringify({
-    title: title,
-    duedate: duedate,
-    star:star,
-    location:location,
-    memo:memo
-  });
-  let result = ajaxFunc2('/todolist/insertTodo', 'application/json', 'text', data);
-  if (result == "success") {
-    $(".regTitleInput").val("");
-    doList();
-    countTodo();
-  }
-}*/
-
-function modifyTodo(dno) {
-  let title = $("#todo-title-input").val();
-  let duedate = $("#regDateInput").val();
-  let isImportant = $(".starIcon").hasClass("fa-solid") ? true : false;
-  let location = $("#addLocationInput").val();
-  let content = $("#addMemoInput").val();
+function modifyTodo(dno, title, duedate, isImportant, location, content) {
   let loginId = $("#login-id").val();
   let data = JSON.stringify({
     dno: dno,
@@ -705,6 +668,8 @@ function doList() {
   let sortDirection = sessionStorage.getItem("sortDirection");
   let status = sessionStorage.getItem("status");
   let pageNo = sessionStorage.getItem("pageNo");
+  let searchType = sessionStorage.getItem("searchType");
+  let keyword = sessionStorage.getItem("keyword");
 
   /!* status가 calPickDuedateList일 때만 duedate값을 전달해야함 (그 외에는 null값) *!/
   let duedate = null;
@@ -718,6 +683,8 @@ function doList() {
     status: status,
     duedate: duedate,
     writer: loginId,
+    searchType: searchType,
+    keyword: keyword,
     pageNo: pageNo
   });
 

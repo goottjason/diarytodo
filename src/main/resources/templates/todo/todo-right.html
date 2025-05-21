@@ -9,10 +9,10 @@
           <!-- finished -->
           <td style="width:20%">
             <span style="color:#4b87c6;">
-              <i th:id="'detailfinishedIcon-' + ${todo[0].dno}"
+              <i th:id="'detailfinishedIcon-' + ${todoRespDTO.dno}"
                  class="finishedIcon fa-regular"
-                 th:classappend="${todo[0].finished == 1} ? ' fa-circle-check' : ' fa-circle'"
-                 th:attr="data-dno=${todo[0].dno}"
+                 th:classappend="${todoRespDTO.isFinished} ? ' fa-circle-check' : ' fa-circle'"
+                 th:attr="data-dno=${todoRespDTO.dno}"
                  style="color:#1e3050; font-size:24px;"></i>
             </span>
           </td>
@@ -20,19 +20,19 @@
           <!-- title -->
           <td style="width:60%;background: #faf9f8;">
             <input type="text"
-                   th:id="'detailtitle-' + ${todo[0].dno}"
+                   th:id="'detailtitle-' + ${todoRespDTO.dno}"
                    class="form-control"
                    name="detailtitle"
-                   th:value="${todo[0].title}">
+                   th:value="${todoRespDTO.title}">
           </td>
 
           <!-- star -->
           <td class="detailStarDiv" style="width:20%; text-align:right; vertical-align:center;background: #faf9f8;">
             <span style="color:#4b87c6;">
-              <i th:id="'detailstar-' + ${todo[0].dno}"
+              <i th:id="'detailstar-' + ${todoRespDTO.dno}"
                  class="starIcon fa-regular fa-star"
-                 th:classappend="${todo[0].star == 1} ? ' fa-solid' : ''"
-                 th:attr="data-dno=${todo[0].dno}"
+                 th:classappend="${todoRespDTO.isImportant} ? ' fa-solid' : ''"
+                 th:attr="data-dno=${todoRespDTO.dno}"
                  style="color:#1e3050; font-size:24px;"></i>
             </span>
           </td>
@@ -42,10 +42,10 @@
           <td>기한</td>
           <td class="duedateTd" colspan="2">
             <input type="date"
-                   th:id="'detailduedate-' + ${todo[0].dno}"
+                   th:id="'detailduedate-' + ${todoRespDTO.dno}"
                    class="form-control"
                    name="detailtitle"
-                   th:value="${todo[0].duedate}">
+                   th:value="${todoRespDTO.duedate}">
           </td>
         </tr>
         <tr>
@@ -53,10 +53,10 @@
           <td>위치</td>
           <td class="locationTd" colspan="2">
             <input type="text"
-                   th:id="'detaillocation-' + ${todo[0].dno}"
+                   th:id="'detaillocation-' + ${todoRespDTO.dno}"
                    class="form-control"
                    name="detaillocation"
-                   th:value="${todo[0].location}">
+                   th:value="${todoRespDTO.location}">
           </td>
         </tr>
 
@@ -64,10 +64,10 @@
           <!-- memo -->
           <td>메모</td>
           <td class="locationTd" colspan="2">
-            <textarea th:id="'detailmemo-' + ${todo[0].dno}"
+            <textarea th:id="'detailmemo-' + ${todoRespDTO.dno}"
                       class="form-control"
                       name="detailmemo"
-                      th:text="${todo[0].memo}"></textarea>
+                      th:text="${todoRespDTO.content}"></textarea>
           </td>
         </tr>
         <tr>
@@ -75,10 +75,10 @@
           <!-- mod, del -->
           <td colspan="2">
             <button class="detailModBtn"
-                    th:attr="data-dno=${todo[0].dno}"
+                    th:attr="data-dno=${todoRespDTO.dno}"
                     style="border:1px solid #b1b1a8; border-radius:4px; padding:5px 30px; background:#fff; color:#4b87c6; margin-right:2px; cursor:pointer; font-size:12px;">수정</button>
             <button class="detailDelBtn"
-                    th:attr="data-dno=${todo[0].dno}"
+                    th:attr="data-dno=${todoRespDTO.dno}"
                     style="border:1px solid #e57373; border-radius:4px; padding:5px 30px; background:#fff; color:#e57373; cursor:pointer; font-size:12px;">삭제</button>
           </td>
         </tr>

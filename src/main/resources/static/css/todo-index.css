@@ -427,3 +427,50 @@ li.completed .titleDiv, li.completed .duedateDiv {
 .hovered-row {
   background: #E1E1E1 !important;
 }
+
+
+/* 중앙 상단에 고정, 최대폭 제한 */
+#searchBar {
+  width: 100%;
+  max-width: 600px;
+  margin: 32px auto 0 auto;
+  /* margin-top만 주고, 나머지는 auto로 중앙정렬 */
+  position: relative;
+  z-index: 2;
+}
+
+/* 내부 줄도 중앙정렬, 아이콘 위치 조정 */
+#firstLine, .search-bar {
+  position: relative;
+  width: 100%;
+}
+
+/* 검색 입력창 */
+#searchWord {
+  width: 100%;
+  padding: 8px 12px 8px 38px; /* 왼쪽 아이콘 공간 */
+  border: 1px solid #ddd;
+  border-radius: 20px;
+  color: #444;
+  font-size: 17px;
+  box-sizing: border-box;
+  outline: none;
+  background: #fff;
+  transition: border 0.2s;
+}
+#searchWord:focus {
+  border: 1.5px solid #1976d2;
+  background: #f8fafd;
+}
+
+/* 돋보기 아이콘 */
+.search-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #bfc6cc;
+  font-size: 20px;
+  cursor: pointer;
+  z-index: 1;
+}

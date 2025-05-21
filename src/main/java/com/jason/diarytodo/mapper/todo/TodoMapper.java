@@ -28,7 +28,7 @@ public interface TodoMapper {
   int insertTodo(TodoReqDTO todoReqDTO);
 
   @Select("select * from todo where dno = #{dno}")
-  TodoRespDTO selectTodoByDno(int dno);
+  TodoRespDTO selectTodoByDno(TodoReqDTO todoReqDTO);
 
   @Select("select * from todo where duedate is not null and writer = #{writer}")
   List<TodoRespDTO> selectListForCal(String writer);

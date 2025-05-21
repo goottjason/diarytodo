@@ -58,6 +58,7 @@ public class TodoSearchReqDTO {
   // 검색/필터 필드 (MySQL 컬럼명과 일치)
   private String title;            // 제목(부분일치)
   private String content;          // 내용(부분일치)
+  private String location;          // 내용(부분일치)
   private String writer;           // 작성자(정확히)
   private Boolean isFinished;      // 완료여부
   private Boolean isImportant;     // 중요여부

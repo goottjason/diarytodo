@@ -21,6 +21,7 @@
     <where>
       <if test="title != null">AND title LIKE CONCAT('%', #{title}, '%')</if>
       <if test="content != null">AND content LIKE CONCAT('%', #{content}, '%')</if>
+      <if test="location != null">AND content LIKE CONCAT('%', #{location}, '%')</if>
       <if test="isFinished != null">AND is_finished = #{isFinished}</if>
       <if test="isImportant != null">AND is_important = #{isImportant}</if>
       <if test="duedate != null">AND DATE(duedate) = DATE(#{duedate})</if>

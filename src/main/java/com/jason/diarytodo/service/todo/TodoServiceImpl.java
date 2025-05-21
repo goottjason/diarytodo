@@ -53,7 +53,17 @@ public class TodoServiceImpl implements TodoService {
         break;
     }
 
-    // 총 개수 가져오기
+    // 검색타입
+    if (todoSearchReqDTO.getKeyword() != null && todoSearchReqDTO.getSearchType() != null) {
+      switch (todoSearchReqDTO.getSearchType()) {
+        case "title" -> todoSearchReqDTO.setTitle(todoSearchReqDTO.getKeyword());
+        case "content" -> todoSearchReqDTO.setContent(todoSearchReqDTO.getKeyword());
+        case "location" -> todoSearchReqDTO.setLocation(todoSearchReqDTO.getKeyword());
+      }
+    }
+
+
+      // 총 개수 가져오기
     int totalTodos = todoMapper.selectTotalTodos(todoSearchReqDTO);
 
     // todos
@@ -85,8 +95,8 @@ public class TodoServiceImpl implements TodoService {
   }
 
   @Override
-  public TodoRespDTO getDetailInfos(int dno) {
-    return todoMapper.selectTodoByDno(dno);
+  public TodoRespDTO getDetailInfos(TodoReqDTO todoReqDTO) {
+    return todoMapper.selectTodoByDno(todoReqDTO);
   }
 
   @Override

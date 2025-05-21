@@ -105,8 +105,8 @@ public class TodoController {
   }
 
   @PostMapping("/todo/getDetailInfos")
-  public String getDetailInfos(@RequestBody int dno, Model model) {
-    TodoRespDTO todoRespDTO = todoService.getDetailInfos(dno);
+  public String getDetailInfos(@RequestBody TodoReqDTO todoReqDTO, Model model) {
+    TodoRespDTO todoRespDTO = todoService.getDetailInfos(todoReqDTO);
     model.addAttribute("todoRespDTO", todoRespDTO);
     return "todo/todo-right :: todoRight";
   }
