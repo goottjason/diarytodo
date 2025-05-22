@@ -26,67 +26,67 @@
         <ul th:object="${todoCount}" style="list-style: none; margin: 0; padding: 0;">
           <li style="display: flex; align-items: center; padding: 13px 18px; border-bottom: 1px solid #f6f6f6;">
             <a href="javascript:void(0);"
-               onclick="selectWhere('onlyTodayList');"
+               onclick="selectWhere('todayList');"
                style="flex: 1; text-decoration: none; color: #222; font-size: 15px; margin-left: 10px;">
-              <span id="onlyTodayText">
+              <span id="todayListText">
                 <i class="fa-solid fa-calendar-plus" style="padding:0 10px; width:40px"></i>
                 오늘 To-Do
               </span>
             </a>
-            <span id="todayCnt" th:text="*{todayListCnt}" style="color: #b3b3b3; font-size: 15px;"></span>
+            <span id="todayListCnt" th:text="*{todayListCnt}" style="color: #b3b3b3; font-size: 15px;"></span>
           </li>
           <li style="display: flex; align-items: center; padding: 13px 18px; border-bottom: 1px solid #f6f6f6;">
             <a href="javascript:void(0);" onclick="selectWhere('allList');"
                style="flex: 1; text-decoration: none; color: #222; font-size: 15px; margin-left: 10px;">
-              <span id="allText">
+              <span id="allListText">
                 <i class="fa-solid fa-box" style="padding:0 10px; width:40px"></i>
                 모든 To-Do
               </span>
             </a>
-            <span id="allCnt" th:text="*{allListCnt}" style="color: #b3b3b3; font-size: 15px;"></span>
+            <span id="allListCnt" th:text="*{allListCnt}" style="color: #b3b3b3; font-size: 15px;"></span>
           </li>
           <li style="display: flex; align-items: center; padding: 13px 18px; border-bottom: 1px solid #f6f6f6;">
             <a href="javascript:void(0);"
                onclick="selectWhere('unfinishedList');"
                style="flex: 1; text-decoration: none; color: #222; font-size: 15px; margin-left: 10px;">
-              <span id="unfinishedText">
+              <span id="unfinishedListText">
                 <i class="fa-regular fa-circle" style="padding:0 10px; width:40px"></i>
                 미완료된 To-Do
               </span>
             </a>
-            <span id="unfinishedCnt" th:text="*{unfinishedListCnt}" style="color: #b3b3b3; font-size: 15px;"></span>
+            <span id="unfinishedListCnt" th:text="*{unfinishedListCnt}" style="color: #b3b3b3; font-size: 15px;"></span>
           </li>
           <li style="display: flex; align-items: center; padding: 13px 18px; border-bottom: 1px solid #f6f6f6;">
-            <a href="javascript:void(0);" onclick="selectWhere('starList');"
+            <a href="javascript:void(0);" onclick="selectWhere('importantList');"
                style="flex: 1; text-decoration: none; color: #222; font-size: 15px; margin-left: 10px;">
-              <span id="starText">
+              <span id="importantListText">
                 <i class="fa-solid fa-star" style="padding:0 10px; width:40px"></i>
                 중요한 To-Do
               </span>
             </a>
-            <span id="starCnt" th:text="*{importantListCnt}" style="color: #b3b3b3; font-size: 15px;"></span>
+            <span id="importantListCnt" th:text="*{importantListCnt}" style="color: #b3b3b3; font-size: 15px;"></span>
           </li>
           <li style="display: flex; align-items: center; padding: 13px 18px; border-bottom: 1px solid #f6f6f6;">
             <a href="javascript:void(0);"
-               onclick="selectWhere('isNotNullDuedateList');"
+               onclick="selectWhere('hasDuedateList');"
                style="flex: 1; text-decoration: none; color: #222; font-size: 15px; margin-left: 10px;">
-              <span id="isNotNullDuedateText">
+              <span id="hasDuedateListText">
                 <i class="fa-solid fa-timeline" style="padding:0 10px; width:40px"></i>
                 기한이 있는 To-Do
               </span>
             </a>
-            <span id="isDuedateCnt" th:text="*{hasDuedateListCnt}" style="color: #b3b3b3; font-size: 15px;"></span>
+            <span id="hasDuedateListCnt" th:text="*{hasDuedateListCnt}" style="color: #b3b3b3; font-size: 15px;"></span>
           </li>
           <li style="display: flex; align-items: center; padding: 13px 18px;">
             <a href="javascript:void(0);"
-               onclick="selectWhere('isNullDuedateList');"
+               onclick="selectWhere('noDuedateList');"
                style="flex: 1; text-decoration: none; color: #222; font-size: 15px; margin-left: 10px;">
-              <span id="isNullDuedateText">
+              <span id="noDuedateListText">
                 <i class="fa-solid fa-bars-staggered" style="padding:0 10px; width:40px"></i>
                 기한이 없는 To-Do
               </span>
             </a>
-            <span id="isNotDuedateCnt" th:text="*{noDuedateListCnt}" style="color: #b3b3b3; font-size: 15px;"></span>
+            <span id="noDuedateListCnt" th:text="*{noDuedateListCnt}" style="color: #b3b3b3; font-size: 15px;"></span>
           </li>
         </ul>
       </div>
@@ -98,7 +98,7 @@
     </div>
 
     <!-- 중앙 메인 영역 -->
-    <div class="center">
+    <div class="center px-lg-5">
       <div id="searchBar">
         <div id="firstLine" class="search-bar">
           <input
@@ -119,7 +119,7 @@
         <div style="display: flex; align-items: flex-start; gap: 12px;">
           <div>
             <div id="menuTitleArea" style="font-size: 23px; font-weight: 700; color: #222; line-height: 1.4;"></div>
-            <div id="menuDateArea" style="font-size: 16px; color: #888; margin-top: 2px; padding: 0 0 0 50px; text-align:left">4월 21일, 월요일</div>
+            <div id="menuDateArea" style="font-size: 16px; color: #888; margin-top: 2px; text-align:left">4월 21일, 월요일</div>
           </div>
         </div>
         <!-- 우측: 정렬/등록일순/그룹 -->
@@ -182,11 +182,6 @@
       </div>
 
       <div id="todolist"></div>
-    </div>
-
-    <!-- 우측 상세 영역 -->
-    <div class="right">
-      <div id="todoDetail"></div>
     </div>
   </div>
 
@@ -261,6 +256,15 @@
           </button>
         </div>
       </form>
+    </div>
+  </div>
+
+  <!-- 모달 오버레이 및 모달창 -->
+  <div id="detailModalOverlay"
+       style="display: none; position: fixed; left: 0; top: 0; width: 100vw; height: 100vh; background: rgba(0, 0, 0, 0.3); z-index: 9999;">
+    <div id="detailModal"
+         style="position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); background: #fff; border-radius: 10px; box-shadow: 0 4px 24px #0002; padding: 32px 32px 24px 32px; min-width: 340px; max-width: 90vw; text-align: center;">
+
     </div>
   </div>
 

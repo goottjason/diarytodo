@@ -3,90 +3,62 @@
 <div th:fragment="todoRight">
   <div id="ajaxTodoDetail">
     <div class="detailDiv">
-      <table style="width:100%; border-collapse:collapse; table-layout:fixed;">
+      <table style="width:100%; border-collapse:collapse;">
         <tbody>
         <tr>
-          <!-- finished -->
-          <td style="width:20%">
-            <span style="color:#4b87c6;">
-              <i th:id="'detailfinishedIcon-' + ${todoRespDTO.dno}"
-                 class="finishedIcon fa-regular"
-                 th:classappend="${todoRespDTO.isFinished} ? ' fa-circle-check' : ' fa-circle'"
-                 th:attr="data-dno=${todoRespDTO.dno}"
-                 style="color:#1e3050; font-size:24px;"></i>
-            </span>
-          </td>
-
-          <!-- title -->
-          <td style="width:60%;background: #faf9f8;">
-            <input type="text"
-                   th:id="'detailtitle-' + ${todoRespDTO.dno}"
-                   class="form-control"
-                   name="detailtitle"
-                   th:value="${todoRespDTO.title}">
-          </td>
-
-          <!-- star -->
-          <td class="detailStarDiv" style="width:20%; text-align:right; vertical-align:center;background: #faf9f8;">
-            <span style="color:#4b87c6;">
-              <i th:id="'detailstar-' + ${todoRespDTO.dno}"
-                 class="starIcon fa-regular fa-star"
-                 th:classappend="${todoRespDTO.isImportant} ? ' fa-solid' : ''"
-                 th:attr="data-dno=${todoRespDTO.dno}"
-                 style="color:#1e3050; font-size:24px;"></i>
-            </span>
-          </td>
-        </tr>
-
-        <tr>
-          <td>기한</td>
-          <td class="duedateTd" colspan="2">
-            <input type="date"
-                   th:id="'detailduedate-' + ${todoRespDTO.dno}"
-                   class="form-control"
-                   name="detailtitle"
-                   th:value="${todoRespDTO.duedate}">
+          <td style="width:18%;">할 일</td>
+          <td style="width:82%;">
+            <input type="text" th:id="'detailtitle-' + ${todoRespDTO.dno}" class="form-control" name="detailtitle" th:value="${todoRespDTO.title}">
           </td>
         </tr>
         <tr>
-          <!-- location -->
-          <td>위치</td>
-          <td class="locationTd" colspan="2">
-            <input type="text"
-                   th:id="'detaillocation-' + ${todoRespDTO.dno}"
-                   class="form-control"
-                   name="detaillocation"
-                   th:value="${todoRespDTO.location}">
-          </td>
-        </tr>
-
-        <tr>
-          <!-- memo -->
-          <td>메모</td>
-          <td class="locationTd" colspan="2">
-            <textarea th:id="'detailmemo-' + ${todoRespDTO.dno}"
-                      class="form-control"
-                      name="detailmemo"
-                      th:text="${todoRespDTO.content}"></textarea>
+          <td>기 한</td>
+          <td>
+            <input type="date" th:id="'detailduedate-' + ${todoRespDTO.dno}" class="form-control" name="detailduedate" th:value="${todoRespDTO.duedate}">
           </td>
         </tr>
         <tr>
-          <td></td>
-          <!-- mod, del -->
-          <td colspan="2">
-            <button class="detailModBtn"
+          <td>위 치</td>
+          <td>
+            <input type="text" th:id="'detaillocation-' + ${todoRespDTO.dno}" class="form-control" name="detaillocation" th:value="${todoRespDTO.location}">
+          </td>
+        </tr>
+        <tr>
+          <td>메 모</td>
+          <td>
+            <textarea th:id="'detailmemo-' + ${todoRespDTO.dno}" class="form-control" name="detailmemo" th:text="${todoRespDTO.content}"></textarea>
+          </td>
+        </tr>
+        <tr>
+          <td colspan="2" style="text-align:center;">
+    <span style="margin-right:32px;">
+      <span style="color:#222; font-weight:500; margin-right:6px;">완료여부</span>
+      <i th:id="'detailfinishedIcon-' + ${todoRespDTO.dno}"
+         class="finishedIcon fa-regular"
+         th:classappend="${todoRespDTO.isFinished} ? ' fa-circle-check' : ' fa-circle'"
+         th:attr="data-dno=${todoRespDTO.dno}"
+         style="color:#1e3050; font-size:24px; vertical-align:middle;"></i>
+    </span>
+            <span>
+      <span style="color:#222; font-weight:500; margin-right:6px;">중요도</span>
+      <i th:id="'detailstar-' + ${todoRespDTO.dno}"
+         class="starIcon fa-regular fa-star"
+         th:classappend="${todoRespDTO.isImportant} ? ' fa-solid' : ''"
+         th:attr="data-dno=${todoRespDTO.dno}"
+         style="color:#1e3050; font-size:24px; vertical-align:middle;"></i>
+    </span>
+          </td>
+        </tr>
+        <tr>
+          <td colspan="2" style="text-align:center;">
+            <button id="detailModBtn"
                     th:attr="data-dno=${todoRespDTO.dno}"
-                    style="border:1px solid #b1b1a8; border-radius:4px; padding:5px 30px; background:#fff; color:#4b87c6; margin-right:2px; cursor:pointer; font-size:12px;">수정</button>
-            <button class="detailDelBtn"
+                    style="border:1px solid #4b87c6; border-radius:4px; padding:5px 30px; background:#fff; color:#4b87c6; cursor:pointer; font-size:15px; margin-right:20px">수정</button>
+            <button id="detailDelBtn"
                     th:attr="data-dno=${todoRespDTO.dno}"
-                    style="border:1px solid #e57373; border-radius:4px; padding:5px 30px; background:#fff; color:#e57373; cursor:pointer; font-size:12px;">삭제</button>
-          </td>
-        </tr>
-        <tr>
-          <td colspan="3">
-            <div id="updateTimeView">
-              업데이트 됨 : <span id="nowUpdateTime"></span>
-            </div>
+                    style="border:1px solid #e57373; border-radius:4px; padding:5px 30px; background:#fff; color:#e57373; cursor:pointer; font-size:15px; margin-right:20px">할일삭제</button>
+            <button class="detail-modal-close-btn"
+                    style="border:1px solid #868680; border-radius:4px; padding:5px 30px; background:#fff; color:#868680; cursor:pointer; font-size:15px;">취소</button>
           </td>
         </tr>
         </tbody>

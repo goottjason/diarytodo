@@ -10,8 +10,8 @@ $(function() {
    * 페이지로드, 상단에 status마다 상태 표시 및 오늘의 날짜 표시
    */
   initialList();
-  $("#menuTitleArea").html(sessionStorage.getItem("status"));
-  $("#menuDateArea").html(today);
+  $("#menuTitleArea").text("모든 To-Do");
+  $("#menuDateArea").html("오늘의 날짜 : " + today);
   refreshCalStatus();
 
   /**
@@ -168,26 +168,20 @@ $(function() {
     let finished = null;
     let solid = $(this).hasClass("fa-circle-check");
     let checked = null;
-
     // 채워져있으면 해제
     if(solid) {
-      finished = 0;
       checked = false;
     } else {
-      finished = 1;
       checked = true;
     }
-    let data = { "dno": dno, "finished": finished };
-    let result = ajaxFunc("/todolist/updateFinished", data, "text");
-    if (result == "success") {
-      $("#dfinishedIcon-" + dno).toggleClass("fa-circle");
-      $("#dfinishedIcon-" + dno).toggleClass("fa-circle-check");
-      $("#detailfinishedIcon-"+dno).toggleClass("fa-circle");
-      $("#detailfinishedIcon-"+dno).toggleClass("fa-circle-check");
-      $("#dtitleTd-" + dno).toggleClass("completed", checked);
-      doList();
-      countTodo();
-    }
+    $("#dfinishedIcon-" + dno).toggleClass("fa-circle");
+    $("#dfinishedIcon-" + dno).toggleClass("fa-circle-check");
+    $("#detailfinishedIcon-"+dno).toggleClass("fa-circle");
+    $("#detailfinishedIcon-"+dno).toggleClass("fa-circle-check");
+    $("#dtitleTd-" + dno).toggleClass("completed", checked);
+
+    /*dno, title, duedate, isImportant, location, content, isFinished*/
+    modifyTodo(dno, null, null, null, null, null, checked);
   });
 
   // -------- 테이블에서 제목영역 클릭시 (수정모드 전환)
@@ -242,20 +236,24 @@ $(function() {
       isImportant = true;
     }
     /*dno, title, duedate, isImportant, location, content*/
-    modifyTodo(dno, null, null, isImportant, null, null);
+    modifyTodo(dno, null, null, isImportant, null, null, null);
   });
 
   // -------- 더보기 버튼 클릭 시 상세 보기
-  $("body").on("click", ".moreBtn", function() {
-    let dno = $(this).data("dno");
 
-    let data = JSON.stringify({
-      dno: dno
-    });
+
+  $("body").on("click", ".moreBtn", function(e) {
+    e.stopPropagation();
+    let dno = $(this).data("dno");
+    let data = JSON.stringify({ dno: dno });
+
     callAjax('todo/getDetailInfos', 'POST', data, "html", function (html) {
-      $('#todoDetail').html(html);
+      $('#detailModal').html(html);
+      $('#detailModalOverlay').fadeIn(150);
     });
   });
+
+
 
   // -------- 삭제 버튼 클릭 시
   $("body").on("click", ".delBtn", function() {
@@ -334,20 +332,16 @@ $(function() {
     let dno      = $(this).data("dno");
     let title    = $("#detailtitle-" + dno).val();
     let duedate  = $("#detailduedate-" + dno).val();
-    let memo     = $("#detailmemo-" + dno).val();
+    let content     = $("#detailmemo-" + dno).val();
     let location = $("#detaillocation-" + dno).val();
-    let data = {
-      dno: dno, title: title,
-      duedate: duedate, memo: memo, location: location
-    };
-    let result = ajaxFunc("/todolist/updateDetail", data, "text");
+
+    /*dno, title, duedate, isImportant, location, content, isFinished*/
+    modifyTodo(dno, title, duedate, null, location, content, null);
+
     let nowUpdateTime = new Date().toLocaleString();
     $("#nowUpdateTime").html(nowUpdateTime);
     $("#updateTimeView").show();
 
-    doList();
-    countTodo();
-    refreshCalStatus();
   });
 
   // -------- 디테일 삭제 버튼 --------
@@ -375,6 +369,7 @@ $(function() {
 // ====================================
 // 함수: 페이지로드, 캘린더, 데이트피커
 // ====================================
+// 모달 열
 
 // -------- |initialList()|
 // session 저장 후 페이지 로딩 함수
@@ -461,7 +456,7 @@ function handleDateEdit(inputElement) {
   $input.hide();
 
   /*dno, title, duedate, isImportant, location, content*/
-  modifyTodo(dno, null, duedate, null, null, null);
+  modifyTodo(dno, null, duedate, null, null, null, null);
 }
 
 function handleTitleEdit(inputElement) {
@@ -473,7 +468,7 @@ function handleTitleEdit(inputElement) {
   $span.text(title).show();
   $input.hide();
 
-  modifyTodo(dno, title, null, null, null, null  );
+  modifyTodo(dno, title, null, null, null, null, null);
 }
 
 
@@ -484,27 +479,46 @@ function handleTitleEdit(inputElement) {
 // -------- |selectWhere()|
 // 왼쪽에서 추출할 메뉴 클릭시 세션에 상태를 저장하는 함수
 function selectWhere(status) {
-  if (status == "onlyTodayList") {
-    sessionStorage.setItem("status", "onlyTodayList");
+  sessionStorage.setItem('keyword', null);
+  sessionStorage.setItem('searchType', null);
+  sessionStorage.setItem('pageNo', 1);
+  if (status == "todayList") {
+    sessionStorage.setItem("status", "todayList");
   } else if (status == "allList") {
     sessionStorage.setItem("status", "allList");
   } else if (status == "unfinishedList") {
     sessionStorage.setItem("status", "unfinishedList");
-  } else if (status == "starList") {
-    sessionStorage.setItem("status", "starList");
-  } else if (status == "isNotNullDuedateList") {
-    sessionStorage.setItem("status", "isNotNullDuedateList");
-  } else if (status == "isNullDuedateList") {
-    sessionStorage.setItem("status", "isNullDuedateList");
-  } else if (status == "searchList") {
-    sessionStorage.setItem("status", "searchList");
-  } else if (status == "calendarList") {
-    sessionStorage.setItem("status", "calendarList");
+  } else if (status == "importantList") {
+    sessionStorage.setItem("status", "importantList");
+  } else if (status == "hasDuedateList") {
+    sessionStorage.setItem("status", "hasDuedateList");
+  } else if (status == "noDuedateList") {
+    sessionStorage.setItem("status", "noDuedateList");
+  } else if (status == "calPickDuedateList") {
+    sessionStorage.setItem("status", "calPickDuedateList");
   }
   doList();
 }
 
-
+function menuTitle() {
+  let status = sessionStorage.getItem("status");
+  if (status == 'todayList') {
+    return "오늘 To-Do";
+  } else if (status == 'unfinishedList') {
+    return "미완료된 To-Do";
+  } else if (status == 'importantList') {
+    return "중요한 To-Do";
+  } else if (status == 'hasDuedateList') {
+    return "기한이 있는 To-Do";
+  } else if (status == 'noDuedateList') {
+    return "기한이 없는 To-Do";
+  } else if (status == 'calPickDuedateList') {
+    let duedate = sessionStorage.getItem("calPickDate");
+    return duedate + " To-Do";
+  } else if (status == "allList") {
+    return "모든 To-Do";
+  }
+}
 
 // ===============================
 // 함수: 검색창
@@ -525,7 +539,7 @@ function selectWhere(status) {
 // 함수: 할일추가
 // ===============================
 
-function modifyTodo(dno, title, duedate, isImportant, location, content) {
+function modifyTodo(dno, title, duedate, isImportant, location, content, isFinished) {
   let loginId = $("#login-id").val();
   let data = JSON.stringify({
     dno: dno,
@@ -534,7 +548,8 @@ function modifyTodo(dno, title, duedate, isImportant, location, content) {
     isImportant: isImportant,
     location: location,
     content: content,
-    writer: loginId
+    writer: loginId,
+    isFinished: isFinished
   });
   callAjax('/todo/modifyTodo', 'POST', data, 'text', function(text) {
     if (text == "success") {
@@ -622,6 +637,9 @@ function updateSelectedAll(selectedArr, finished, star, duedate) {
   }
 }
 
+
+
+
 // -------- |deleteSelectedAll()|
 // 선택삭제 버튼 관련 함수
 /**
@@ -662,7 +680,6 @@ function doSearch(searchTypes, searchWord) {
 // -------- |doList()|
 // 테이블을 보여주는 함수
 function doList() {
-  console.log(sessionStorage.getItem("sortDirection"));
   let loginId = $("#login-id").val();
   let sortBy = sessionStorage.getItem("sortBy");
   let sortDirection = sessionStorage.getItem("sortDirection");
@@ -676,6 +693,8 @@ function doList() {
   if (status == "calPickDuedateList") {
     duedate = sessionStorage.getItem("calPickDate");
   }
+  console.log(menuTitle())
+  $("#menuTitleArea").text(menuTitle());
 
   let data = JSON.stringify({
     sortBy: sortBy,

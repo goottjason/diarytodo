@@ -39,8 +39,6 @@ public class TodoSearchReqDTO {
 
   public int getOffset() {
     // ex. 3페이지의 offset (3 - 1) x 15 = 30
-    log.info("pageNo : {}", pageNo);
-    log.info("getOffset{}: ", (pageNo - 1) * pageSize);
     return (pageNo - 1) * pageSize;
   }
 

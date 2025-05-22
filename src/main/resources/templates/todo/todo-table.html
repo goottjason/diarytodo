@@ -8,7 +8,7 @@
       <colgroup>
         <col style="width:5%;">
         <col style="width:8%;">
-        <col style="width:55%;">
+        <col> <!-- 제목: 가변 -->
         <col style="width:19%;">
         <col style="width:14%;">
         <col style="width:14%;">
@@ -38,14 +38,14 @@
           <span class="finished-icon-span">
             <i th:id="'dfinishedIcon-' + ${todo.dno}"
                class="finishedIcon fa-regular"
-               th:classappend="${todo.isFinished == 1} ? ' fa-circle-check' : ' fa-circle'"
+               th:classappend="${todo.isFinished} ? ' fa-circle-check' : ' fa-circle'"
                th:attr="data-dno=${todo.dno}"></i>
           </span>
         </td>
         <!-- title -->
         <td th:id="'dtitleTd-' + ${todo.dno}"
             class="titleTd"
-            th:classappend="${todo.isFinished == 1} ? ' completed' : ''"
+            th:classappend="${todo.isFinished} ? ' completed' : ''"
             onmouseover="this.classList.add('hovered-row')"
             onmouseout="this.classList.remove('hovered-row')">
           <span th:id="'dtitlebtn-' + ${todo.dno}" class="titleSpan"

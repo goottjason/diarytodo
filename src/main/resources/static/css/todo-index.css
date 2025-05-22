@@ -70,7 +70,7 @@
   flex: 1;
   background-color: #fff;
   min-height: 100vh;
-  padding: 32px 24px;
+  padding: 50px 50px;
   box-sizing: border-box;
   overflow: visible;
 }
@@ -306,9 +306,11 @@ li.completed .titleDiv, li.completed .duedateDiv {
 }
 
 .todo-table {
+  table-layout: fixed;
   width: 100%;
   border-collapse: collapse;
   table-layout: fixed;
+  min-width: 850px;
 }
 
 .table-header-row {
@@ -329,7 +331,14 @@ li.completed .titleDiv, li.completed .duedateDiv {
   padding: 8px 12px;
 }
 
-.titleTd {
+.todo-table th,
+.todo-table td {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.todo-table .titleTd {
   text-align: left;
   padding: 8px 12px;
   cursor: pointer;
@@ -474,3 +483,4 @@ li.completed .titleDiv, li.completed .duedateDiv {
   cursor: pointer;
   z-index: 1;
 }
+
