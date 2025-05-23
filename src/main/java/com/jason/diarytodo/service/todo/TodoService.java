@@ -16,4 +16,6 @@ public interface TodoService {
   TodoRespDTO getDetailInfos(TodoReqDTO todoReqDTO);
 
   List<TodoRespDTO> getListForCal(String writer);
+
+  int removeTodo(TodoReqDTO todoReqDTO);
 }

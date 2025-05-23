@@ -34,7 +34,7 @@
     <span style="margin-right:32px;">
       <span style="color:#222; font-weight:500; margin-right:6px;">완료여부</span>
       <i th:id="'detailfinishedIcon-' + ${todoRespDTO.dno}"
-         class="finishedIcon fa-regular"
+         class="detailFinishedIcon fa-regular"
          th:classappend="${todoRespDTO.isFinished} ? ' fa-circle-check' : ' fa-circle'"
          th:attr="data-dno=${todoRespDTO.dno}"
          style="color:#1e3050; font-size:24px; vertical-align:middle;"></i>
@@ -42,7 +42,7 @@
             <span>
       <span style="color:#222; font-weight:500; margin-right:6px;">중요도</span>
       <i th:id="'detailstar-' + ${todoRespDTO.dno}"
-         class="starIcon fa-regular fa-star"
+         class="detailStarIcon fa-regular fa-star"
          th:classappend="${todoRespDTO.isImportant} ? ' fa-solid' : ''"
          th:attr="data-dno=${todoRespDTO.dno}"
          style="color:#1e3050; font-size:24px; vertical-align:middle;"></i>
@@ -54,9 +54,9 @@
             <button id="detailModBtn"
                     th:attr="data-dno=${todoRespDTO.dno}"
                     style="border:1px solid #4b87c6; border-radius:4px; padding:5px 30px; background:#fff; color:#4b87c6; cursor:pointer; font-size:15px; margin-right:20px">수정</button>
-            <button id="detailDelBtn"
+            <!--<button id="detailDelBtn"
                     th:attr="data-dno=${todoRespDTO.dno}"
-                    style="border:1px solid #e57373; border-radius:4px; padding:5px 30px; background:#fff; color:#e57373; cursor:pointer; font-size:15px; margin-right:20px">할일삭제</button>
+                    style="border:1px solid #e57373; border-radius:4px; padding:5px 30px; background:#fff; color:#e57373; cursor:pointer; font-size:15px; margin-right:20px">할일삭제</button>-->
             <button class="detail-modal-close-btn"
                     style="border:1px solid #868680; border-radius:4px; padding:5px 30px; background:#fff; color:#868680; cursor:pointer; font-size:15px;">취소</button>
           </td>

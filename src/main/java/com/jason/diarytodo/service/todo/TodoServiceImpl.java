@@ -103,4 +103,9 @@ public class TodoServiceImpl implements TodoService {
   public List<TodoRespDTO> getListForCal(String writer) {
     return todoMapper.selectListForCal(writer);
   }
+
+  @Override
+  public int removeTodo(TodoReqDTO todoReqDTO) {
+    return todoMapper.deleteTodo(todoReqDTO);
+  }
 }

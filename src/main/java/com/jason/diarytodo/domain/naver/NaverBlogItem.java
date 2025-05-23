@@ -16,5 +16,4 @@ public class NaverBlogItem {
   private String bloggername;
   private String bloggerlink;
   private String postdate;
-
 }

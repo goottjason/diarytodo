@@ -1,10 +1,7 @@
 package com.jason.diarytodo.mapper.todo;
 
 import com.jason.diarytodo.domain.todo.*;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.*;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -32,4 +29,7 @@ public interface TodoMapper {
 
   @Select("select * from todo where duedate is not null and writer = #{writer}")
   List<TodoRespDTO> selectListForCal(String writer);
+
+  @Delete("delete from todo where dno = #{dno} and writer = #{writer}")
+  int deleteTodo(TodoReqDTO todoReqDTO);
 }

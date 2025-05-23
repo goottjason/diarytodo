@@ -72,7 +72,6 @@ public class TodoController {
   @ResponseBody
   public TodoStatusCountDTO todoCnt(HttpSession session) {
     MemberRespDTO loginMember = (MemberRespDTO) session.getAttribute("loginMember");
-
     return todoService.getTodoCount(loginMember.getLoginId());
   }
 
@@ -87,6 +86,9 @@ public class TodoController {
   @PostMapping("/todo/addTodo")
   @ResponseBody
   public String addTodo(@RequestBody TodoReqDTO todoReqDTO, Model model, HttpSession session) {
+    MemberRespDTO loginMember = (MemberRespDTO) session.getAttribute("loginMember");
+    todoReqDTO.setWriter(loginMember.getLoginId());
+
     int result = todoService.addTodo(todoReqDTO);
     if (result == 1) {
       return "success";
@@ -97,15 +99,30 @@ public class TodoController {
   @PostMapping("/todo/modifyTodo")
   @ResponseBody
   public String modifyTodo(@RequestBody TodoReqDTO todoReqDTO, Model model, HttpSession session) {
+    MemberRespDTO loginMember = (MemberRespDTO) session.getAttribute("loginMember");
+    todoReqDTO.setWriter(loginMember.getLoginId());
     int result = todoService.modifyTodo(todoReqDTO);
     if (result == 1) {
       return "success";
     }
     return "failure";
   }
+  @PostMapping("/todo/removeTodo")
+  @ResponseBody
+  public String removeTodo(@RequestBody TodoReqDTO todoReqDTO, Model model, HttpSession session) {
+    MemberRespDTO loginMember = (MemberRespDTO) session.getAttribute("loginMember");
+    todoReqDTO.setWriter(loginMember.getLoginId());
+    int result = todoService.removeTodo(todoReqDTO);
+    if(result == 1) {
+      return "success";
+    }
+    return "failure";
+  }
 
   @PostMapping("/todo/getDetailInfos")
-  public String getDetailInfos(@RequestBody TodoReqDTO todoReqDTO, Model model) {
+  public String getDetailInfos(@RequestBody TodoReqDTO todoReqDTO, HttpSession session, Model model) {
+    MemberRespDTO loginMember = (MemberRespDTO) session.getAttribute("loginMember");
+    todoReqDTO.setWriter(loginMember.getLoginId());
     TodoRespDTO todoRespDTO = todoService.getDetailInfos(todoReqDTO);
     model.addAttribute("todoRespDTO", todoRespDTO);
     return "todo/todo-right :: todoRight";
@@ -115,11 +132,13 @@ public class TodoController {
   @ResponseBody
   public List<LocalDate> getListForCal(HttpSession session) {
     MemberRespDTO loginMember = (MemberRespDTO) session.getAttribute("loginMember");
+    log.info("getListForCal◈◈◈◈◈ loginMember: {}", loginMember);
     List<TodoRespDTO> todoRespDTOS = todoService.getListForCal(loginMember.getLoginId());
     List<LocalDate> listForCal = new ArrayList<>();
     for (TodoRespDTO todoRespDTO : todoRespDTOS) {
       listForCal.add(todoRespDTO.getDuedate());
     }
+    log.info("◈◈◈◈◈ listforcal: {}", listForCal);
     return listForCal;
   }
 }
