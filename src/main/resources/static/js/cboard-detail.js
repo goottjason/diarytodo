@@ -71,6 +71,10 @@ $(function() {
       saveComment();
     }
   });
+
+
+
+
 });
 
 
@@ -215,13 +219,12 @@ function submitEditComment(commentId) {
   axios.patch(`/comment/${commentId}`, {
     content: modifiedContent,
   })
-    .then(function (response) {
-      console.log(response);
+    .then(function (res) {
+      console.log(res);
       getAllComments(currentPageNo);
-
     })
-    .catch(function (error) {
-      if(error.response.data.resultMessage == "FAIL") {
+    .catch(function (res) {
+      if(!res.success) {
         //alert("수정실패");
         console.log(error);
       }
@@ -238,19 +241,18 @@ function removeComment(commentId) {
     return;
   } else {
     axios.delete(`/comment/${commentId}`)
-      .then(function (response) {
-        console.log(response);
-        if(response.data.resultMessage == "SUCCESS") {
+      .then(function (res) {
+        console.log("DELETE", res);
+        if(res.data.success) {
           /*alert("댓글 삭제 완료");*/ /*알림 토스트 메서드 만들기 ★*/
           getAllComments(currentPageNo);
         }
       })
-      .catch(function (error) {
-        if(error.response.data.resultMessage == "FAIL") {
+      .catch(function (res) {
+        if(!res.data.success) {
           // alert("댓글 삭제 실패");
-          console.log(error);
+          console.log(res);
         }
-        console.log(error);
       });
   }
 }
@@ -296,25 +298,23 @@ function getAllComments(pageNo) {
     url: `/comment/all/${boardNo}/${pageNo}`, // 댓글 목록 요청 URL
     type: "GET", // GET 방식
     dataType: 'json', // 응답 데이터 타입
-    success: function (data) {
+    success: function (res) {
       // 요청 성공 시
-      console.log(data);
-      console.log(data.resultMessage);
-      if (data.resultMessage == "SUCCESS") {
-        console.log(data.data);
+      console.log("★★★★", res);
+      if (res.success) {
         // 댓글 목록 표시
-        displayAllComments(data.data);
+        displayAllComments(res.data);
         // 페이지네이션 표시
-        displayPagination(data.data.pageCBoardRespDTO);
+        displayPagination(res.data.pageCBoardRespDTO);
       }
     },
-    error: function (data) {
+    error: function (res) {
       // 요청 실패 시
-      console.log(data);
+      console.log(res);
     },
-    complete: function (data) {
+    complete: function (res) {
       // 요청 완료 시 (성공/실패와 무관)
-      console.log(data);
+      console.log(res);
     }
   });
 }
@@ -343,7 +343,7 @@ function saveComment() {
     success: function (res) {
       // 저장 성공 시
       console.log(res);
-      if (res.resultMessage == "SUCCESS") {
+      if (res.success) {
         // 입력창 비우고, 댓글 목록 새로고침
         $("#commentContent").val("");
         getAllComments(currentPageNo);
@@ -359,6 +359,5 @@ function saveComment() {
     }
   });
 }
-
 
 

@@ -1,11 +1,10 @@
 package com.jason.diarytodo.controller.cboard;
 
 
-import com.jason.diarytodo.domain.cboard.CBoardReqDTO;
-import com.jason.diarytodo.domain.cboard.CBoardRespDTO;
-import com.jason.diarytodo.domain.cboard.PageCBoardReqDTO;
-import com.jason.diarytodo.domain.cboard.PageCBoardRespDTO;
+import com.jason.diarytodo.domain.cboard.*;
+import com.jason.diarytodo.domain.common.AttachmentReqDTO;
 import com.jason.diarytodo.service.cboard.CBoardService;
+import com.jason.diarytodo.util.FileUploader;
 import com.jason.diarytodo.util.GetClientIpAddr;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -15,6 +14,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.util.List;
 
 @Controller
 @Slf4j
@@ -22,7 +25,7 @@ import org.springframework.web.bind.annotation.*;
 public class CBoardController {
 
   private final CBoardService cBoardService;
-
+  private final FileUploader fileUploader;
 
   // ================== 목록(list) 불러오기
   @GetMapping({"/cboard", "/cboard/list"})
@@ -69,15 +72,15 @@ public class CBoardController {
   // ================== 게시글 등록하기
   @GetMapping("/cboard/write")
   public String write(Model model) {
-
     // 빈 객체 생성 후 뷰로 객체를 전달
     model.addAttribute("cBoardReqDTO", new CBoardReqDTO());
-
     return "/cboard/write";
   }
 
   @PostMapping("/cboard/write")
-  public String write(@Valid @ModelAttribute("cBoardReqDTO") CBoardReqDTO cBoardReqDTO, BindingResult bindingResult) {
+  public String write(@Valid @ModelAttribute("cBoardReqDTO") CBoardReqDTO cBoardReqDTO,
+                      BindingResult bindingResult,
+                      @RequestPart(value="uploadfiles", required = false)List<MultipartFile> uploadfiles) throws IOException {
     /*
     @Valid : 각 필드를 유효성 검사하여 실패한 필드와 메시지가 BindingResult 객체에 저장됨
     @ModelAttribute : 뷰에서 컨트롤러로 입력한 데이터가 자바 객체의 각 필드에 바인딩되어 전달됨
@@ -91,6 +94,11 @@ public class CBoardController {
       템플릿엔진(타임리프)이 데이터(입력값, 에러메시지 등)을 채워넣고, 최종 HTML을 생성하여 브라우저에 전송함
        */
       return "/cboard/write";
+    }
+
+    if (uploadfiles != null && !uploadfiles.isEmpty()) {
+      List<AttachmentReqDTO> attachmentReqDTOS = fileUploader.saveFiles(uploadfiles);
+      cBoardReqDTO.setUploadfiles(attachmentReqDTOS);
     }
 
     // 글 등록

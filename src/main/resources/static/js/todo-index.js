@@ -1,6 +1,8 @@
 // 전역변수
 let today = new Date().toLocaleDateString().substring(0, 10);
+let myCalendar;
 let specialDates = []; // duedate가 설정된 날짜 리스트
+let picker;
 
 $(function() {
 
@@ -9,60 +11,10 @@ $(function() {
   $("#menuTitleArea").text("모든 To-Do");
   $("#menuDateArea").html("오늘의 날짜 : " + today);
 
-  // 캘린더 객체 생성
-  let myCalendar = jsCalendar.new("#my-calendar");
+  initCalendar();       // 캘린더 초기화 함수 호출
+  refreshCalStatus();   // 마감일 정보 불러오기 및 캘린더 표시
 
-  myCalendar.onDateClick(function(event, date){
-    var value = date.toLocaleDateString('sv-SE');
-    document.getElementById("selected-date").value = value;
-    // 캘린더의 특정 날짜 클릭되면 status는 calPickDuedateList, calPickDate는 특정 날짜로 설정
-    sessionStorage.setItem("status", "calPickDuedateList");
-    sessionStorage.setItem("calPickDate", value);
-    doList();
-  });
-
-  // refreshCalStatus();
-
-  // 리스트를 받아와서 볼드처리하여 새로고침하는 함수
-  async function refreshCalStatus() {
-    console.log("refreshCalStatus...");
-    specialDates = await listDuedate(); // 데이터 수신 완료까지 대기
-    console.log(specialDates);
-    /*myCalendar.onDateRender(function(date, element, info) {
-      let yyyy = date.getFullYear();
-      let mm = String(date.getMonth() + 1).padStart(2, '0');
-      let dd = String(date.getDate()).padStart(2, '0');
-      let value = yyyy + '-' + mm + '-' + dd;
-
-      if(specialDates.includes(value)){
-        element.style.fontWeight = 'bold';
-        element.style.color = '#0f1d41'; //'#2453E3';
-        element.style.fontSize = '16px';
-      }
-    });
-    myCalendar.refresh();*/
-  }
-
-  // 마감일이 설정된 할일의 마감일을 불러와 배열로 반환 함수 (캘린더에 사용)
-  async function listDuedate() {
-    const json = await callAjaxPromise('/todo/getListForCal', 'POST', null, 'json');
-    console.log(json);
-    return json;
-  }
-
-
-  let picker = new easepick.create({
-    element: "#regDateInput",
-    css: ["https://cdn.jsdelivr.net/npm/@easepick/bundle@1.2.1/dist/index.css"],
-    zIndex: 10,
-    setup(picker) {
-      picker.on('select', (e) => {
-        let selectedDate = picker.getDate().format('YYYY-MM-DD');
-        $('#dateViewSpan').html(`\${selectedDate}에 할일이 추가됩니다`);
-        $('#dateViewSpan').show();
-      });
-    },
-  });
+  initDatePicker();
 
   // -------- 검색어 입력하는 동안 이벤트 --------
   $("#searchWord").on("keyup", function() {
@@ -340,6 +292,52 @@ function initialList() {
   doList();
 }
 
+function initCalendar() {
+  myCalendar = jsCalendar.new("#my-calendar");
+  myCalendar.onDateClick(onCalendarDateClick);
+}
+function onCalendarDateClick(event, date) {
+  const value = date.toLocaleDateString('sv-SE');
+  $("#selected-date").val(value);
+  sessionStorage.setItem("status", "calPickDuedateList");
+  sessionStorage.setItem("calPickDate", value);
+  doList();
+}
+async function refreshCalStatus() {
+  specialDates = await listDuedate(); // 배열로 반환
+  applySpecialDatesToCalendar();
+}
+function applySpecialDatesToCalendar() {
+  myCalendar.onDateRender(function(date, element, info) {
+    const value = date.toLocaleDateString('sv-SE');
+    if (specialDates.includes(value)) {
+      element.style.fontWeight = 'bold';
+      element.style.color = '#0f1d41';
+      element.style.fontSize = '16px';
+    }
+  });
+  myCalendar.refresh();
+}
+async function listDuedate() {
+  const json = await callAjaxPromise('/todo/getListForCal', 'POST', null, 'json');
+  return json; // ["2024-05-24", ...] 형식이어야 함
+}
+
+function initDatePicker() {
+  picker = new easepick.create({
+    element: "#regDateInput",
+    css: ["https://cdn.jsdelivr.net/npm/@easepick/bundle@1.2.1/dist/index.css"],
+    zIndex: 10,
+    setup(pickerInstance) {
+      pickerInstance.on('select', onDateSelected);
+    },
+  });
+}
+function onDateSelected(e) {
+  const selectedDate = picker.getDate().format('YYYY-MM-DD');
+  $('#dateViewSpan').html(`${selectedDate}에 할일이 추가됩니다`);
+  $('#dateViewSpan').show();
+}
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // 왼쪽 메뉴 클릭시 세션에 상태를 저장하는 함수

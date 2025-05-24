@@ -31,6 +31,7 @@ public class WebConfig implements WebMvcConfigurer {
         "/member/signup",
         "/cboard",
         "/cboard/list",
+        "/cboard/detail",
         "/css/**",
         "/js/**",
         "/assets/**"

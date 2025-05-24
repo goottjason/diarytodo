@@ -3,6 +3,7 @@ package com.jason.diarytodo.mapper.cboard;
 import com.jason.diarytodo.domain.cboard.CBoardReqDTO;
 import com.jason.diarytodo.domain.cboard.CBoardRespDTO;
 import com.jason.diarytodo.domain.cboard.PageCBoardReqDTO;
+import com.jason.diarytodo.domain.common.AttachmentReqDTO;
 import com.jason.diarytodo.domain.member.MemberReqDTO;
 import org.apache.ibatis.annotations.*;
 
@@ -72,4 +73,8 @@ public interface CBoardMapper {
 
   @Delete("update cboard set deleted_flag = 1, title = '', content = '' where board_no = #{boardNo}")
   void deletePost(int boardNo);
+
+
+  @Update("INSERT INTO attachment (original_name, stored_name, stored_thumb_name, is_image, ext, size, ref_type, ref_id, base64, stored_path, stored_thumb_path) VALUES (#{originalName}, #{storedName}, #{storedThumbName}, #{isImage}, #{ext}, #{size}, #{refType}, #{refId}, #{base64}, #{storedPath}, #{storedThumbPath})")
+  void insertAttachment(AttachmentReqDTO attachmentReqDTO);
 }

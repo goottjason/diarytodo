@@ -6,6 +6,7 @@ import com.jason.diarytodo.domain.cboard.CBoardReqDTO;
 import com.jason.diarytodo.domain.cboard.CBoardRespDTO;
 import com.jason.diarytodo.domain.cboard.PageCBoardReqDTO;
 import com.jason.diarytodo.domain.cboard.PageCBoardRespDTO;
+import com.jason.diarytodo.domain.common.AttachmentReqDTO;
 import com.jason.diarytodo.mapper.cboard.CBoardMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -80,6 +81,14 @@ public class CBoardServiceImpl implements CBoardService {
     // 1. 게시글 저장
     cBoardMapper.insertNewPost(cBoardReqDTO);
     cBoardMapper.updateSetRefToBoardNo(cBoardReqDTO.getBoardNo());
+    // 2. 첨부파일 저장
+    if (cBoardReqDTO.getUploadfiles() != null && !cBoardReqDTO.getUploadfiles().isEmpty()) {
+      for (AttachmentReqDTO attachmentReqDTO : cBoardReqDTO.getUploadfiles()) {
+        attachmentReqDTO.setRefType("post");
+        attachmentReqDTO.setRefId(cBoardReqDTO.getBoardNo());
+        cBoardMapper.insertAttachment(attachmentReqDTO);
+      }
+    }
   }
 
   @Override

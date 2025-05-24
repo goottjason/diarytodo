@@ -1,8 +1,11 @@
 package com.jason.diarytodo.domain.cboard;
 
+import com.jason.diarytodo.domain.common.AttachmentReqDTO;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.*;
+
+import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -26,4 +29,6 @@ public class CBoardReqDTO {
   private int ref;
   private int step;
   private int refOrder;
+
+  private List<AttachmentReqDTO> uploadfiles;
 }
