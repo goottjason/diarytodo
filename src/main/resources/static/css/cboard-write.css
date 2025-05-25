@@ -1,14 +1,56 @@
-#drop-area.dragover {
-  background: #e8ecf7;
-  border-color: #1d2650 !important;
-  transition: background 0.2s, border-color 0.2s;
+#drop-area {
+  display: flex; /* 내부 요소들을 flexbox로 배치 (유연한 정렬 가능) */
+  flex-direction: column; /* 세로(컬럼) 방향으로 정렬 */
+  justify-content: center; /* 세로(수직) 방향에서 중앙 정렬 */
+  align-items: center; /* 가로(수평) 방향에서 중앙 정렬 */
+  min-height: 180px; /* 최소 높이 180px로 설정 (박스가 너무 작아지지 않게) */
+  position: relative; /* 내부에 절대 위치 요소가 있을 때 기준이 됨 */
+  cursor: pointer; /* 마우스 오버 시 손가락 커서로 변경 (클릭 가능하게 보임) */
+  transition: background 0.2s; /* 배경색 변화에 0.2초 애니메이션 적용 */
+  border: 1px solid #ced4da; /* 연한 회색 실선 테두리 */
+  background: #f8f9fa; /* 아주 연한 회색 배경색 */
 }
 
-.file-input-overlay {
-  opacity: 0;
-  position: absolute;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  cursor: pointer;
-  z-index: 2;
+#drop-area.drag-over {
+  background: #e8ecf7 !important; /* 드래그 중일 때 연한 파란색 배경으로 강조 */
+  border-color: #1d2650 !important; /* 드래그 중일 때 진한 파란색 테두리로 강조 */
+}
+
+.file-table {
+  width: 100%;                         /* 표의 너비를 부모 영역에 맞게 100%로 설정 */
+  border-collapse: collapse;            /* 표 셀 경계선을 겹치게 하여 테두리가 한 줄로 보이게 함 */
+  margin-top: 6px;                      /* 표 위에 6px 여백 추가 */
+  background: #fff;                     /* 표 배경을 흰색으로 설정 */
+}
+
+.file-table tr {
+  border-bottom: 1px solid #f0f0f0;     /* 각 행 아래에 연한 회색 실선 테두리 추가 */
+}
+
+.file-table td {
+  padding: 6px 8px;                     /* 셀 안쪽에 위아래 6px, 좌우 8px 여백 추가 */
+  font-size: 14px;                      /* 셀 안의 글자 크기를 14px로 지정 */
+  vertical-align: middle;               /* 셀 안의 내용을 수직 중앙 정렬 */
+}
+
+.file-icon {
+  width: 18px;                /* 아이콘(이미지)의 너비를 18픽셀로 고정 */
+  height: 18px;               /* 아이콘(이미지)의 높이를 18픽셀로 고정 */
+  vertical-align: middle;     /* 아이콘을 텍스트와 수직 중앙 정렬 */
+  margin-right: 4px;          /* 아이콘 오른쪽에 4픽셀 간격 추가 */
+}
+
+.file-remove-btn {
+  color: #d9534f;             /* 버튼 글자색을 빨간색 계열로 지정 */
+  background: none;           /* 버튼 배경색 없음 */
+  border: none;               /* 버튼 테두리 없음 */
+  cursor: pointer;            /* 마우스 오버 시 손가락 모양 커서 표시 */
+  font-size: 16px;            /* 버튼 글자 크기를 16픽셀로 지정 */
+  padding: 2px 8px;           /* 버튼 안쪽 위아래 2px, 좌우 8px 여백 */
+  border-radius: 3px;         /* 버튼 모서리를 3픽셀 둥글게 */
+  transition: background 0.15s; /* 배경색 변화 시 0.15초 부드럽게 전환 */
+}
+
+.file-remove-btn:hover {
+  background: #f8d7da;        /* 마우스 올릴 때 연한 빨간색 배경 표시 */
 }

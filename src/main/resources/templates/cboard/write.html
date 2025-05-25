@@ -16,6 +16,7 @@
 <div layout:fragment="content">
   <div class="container py-4" style="max-width: 800px;">
     <form th:action="@{/cboard/write}" method="post" th:object="${cBoardReqDTO}">
+
       <!-- 에러 메시지 -->
       <div class="text-center mb-3" style="min-height: 1.5em;">
         <span th:if="${#fields.hasErrors('title')}" th:errors="*{title}" class="text-danger"></span>
@@ -47,22 +48,63 @@
 
       <!-- 내용 -->
       <div class="mb-3">
-      <textarea th:field="*{content}"
-                class="form-control p-3"
-                rows="10"
-                style="resize: vertical; min-height: 180px;"
-                placeholder="내용을 입력하세요."></textarea>
+        <textarea th:field="*{content}"
+                  class="form-control p-3"
+                  rows="10"
+                  style="resize: vertical; min-height: 180px;"
+                  placeholder="내용을 입력하세요."></textarea>
       </div>
 
-      <!-- 파일 업로드 -->
-      <div id="drop-area"
-           class="rounded-3 p-4 text-center bg-light position-relative"
-           style="cursor:pointer; transition: background 0.2s; border:2px solid #7a7a7a;">
-        <!-- 투명 input이 drop-area 전체를 덮음 -->
-        <input type="file" id="fileElem" multiple class="file-input-overlay">
-        <p class="mb-2"><i class="bi bi-upload" style="font-size:2rem; color:#7a7a7a;"></i></p>
-        <p class="mb-1" style="color:#7a7a7a;">파일을 이곳에 드래그하거나 클릭하여 첨부하세요</p>
-        <div id="file-list" class="text-secondary small"></div>
+      <!-- ■■■ 파일 업로드 ■■■ -->
+
+      <!-- 파일 첨부 상단 컨트롤 영역 -->
+      <div class="file-upload-header d-flex align-items-center mb-2" style="gap:12px;">
+        <!--
+          d-flex: Bootstrap의 flexbox 레이아웃을 적용하여 자식 요소를 가로로 나열
+          align-items-center: Bootstrap flexbox에서 세로(수직) 중앙 정렬
+          mb-2: Bootstrap의 margin-bottom, 아래쪽에 0.5rem(8px) 여백 추가
+          style="gap:12px;": flexbox 자식 요소들 사이에 12px 간격(gap) 부여
+        -->
+        <!-- 1. 파일 첨부하기 버튼 -->
+        <button type="button" id="file-upload-btn" class="btn btn-outline-dark btn-sm">
+          파일 첨부하기
+        </button>
+        <!-- 2. 모두 삭제 버튼 -->
+        <span id="file-delete-all" class="text-danger d-none" style="cursor:pointer;">
+          <!--
+            text-danger: Bootstrap의 빨간색 텍스트(경고, 삭제 의미)
+            fw-semibold: Bootstrap의 semi-bold(중간 굵기) 폰트
+            d-none: Bootstrap의 display:none, 기본적으로 숨김 처리
+          -->
+          모두삭제
+        </span>
+        <!-- 3. n개 첨부됨 -->
+        <span id="file-upload-count" class="text-success d-none">
+          <!--
+            fw-semibold: 중간 굵기 폰트
+            d-none: 기본적으로 숨김 처리
+          -->
+          ✔ 0개 첨부됨
+        </span>
+      </div>
+
+      <!-- 드래그앤드롭 업로드 영역 -->
+      <div id="drop-area" class="rounded-3 p-4 bg-light">
+        <!--
+          rounded-3: Bootstrap의 border-radius, 모서리를 0.5rem(8px) 둥글게
+          p-4: Bootstrap의 padding, 모든 방향에 1.5rem(24px) 여백
+          bg-light: Bootstrap의 아주 연한 회색 배경(#f8f9fa)
+        -->
+        <!-- 1. 안내 문구 -->
+        <p id="drag-info" class="text-center" style="color:#7a7a7a;">
+          파일을 드래그하여 이곳에 놓으세요
+        </p>
+        <!-- 2. 파일첨부시, 표가 삽입될 영역-->
+        <div id="file-list" class="w-100">
+          <!--
+            w-100: Bootstrap의 width:100%, 부모 영역 전체 너비 사용
+          -->
+        </div>
       </div>
 
       <!-- 버튼 -->
