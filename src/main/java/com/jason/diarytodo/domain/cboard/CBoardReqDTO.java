@@ -30,5 +30,5 @@ public class CBoardReqDTO {
   private int step;
   private int refOrder;
 
-  private List<AttachmentReqDTO> uploadfiles;
+  private List<AttachmentReqDTO> attachmentList;
 }

@@ -15,7 +15,7 @@
 <!-- 전체 콘텐츠 fragment -->
 <div layout:fragment="content">
   <div class="container py-4" style="max-width: 800px;">
-    <form th:action="@{/cboard/write}" method="post" th:object="${cBoardReqDTO}">
+    <form id="cboard-write-form" th:action="@{/cboard/write}" method="post" th:object="${cBoardReqDTO}">
 
       <!-- 에러 메시지 -->
       <div class="text-center mb-3" style="min-height: 1.5em;">

@@ -7,6 +7,7 @@ import com.jason.diarytodo.domain.cboard.CBoardRespDTO;
 import com.jason.diarytodo.domain.cboard.PageCBoardReqDTO;
 import com.jason.diarytodo.domain.cboard.PageCBoardRespDTO;
 import com.jason.diarytodo.domain.common.AttachmentReqDTO;
+import com.jason.diarytodo.domain.common.AttachmentRespDTO;
 import com.jason.diarytodo.mapper.cboard.CBoardMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -72,6 +73,9 @@ public class CBoardServiceImpl implements CBoardService {
       cBoardRespDTO.setViewCount(cBoardRespDTO.getViewCount() + 1);
     }
 
+
+
+
     // 과정을 거친 후, 게시글 반환
     return cBoardMapper.selectPostByboardNo(boardNo);
   }
@@ -82,8 +86,8 @@ public class CBoardServiceImpl implements CBoardService {
     cBoardMapper.insertNewPost(cBoardReqDTO);
     cBoardMapper.updateSetRefToBoardNo(cBoardReqDTO.getBoardNo());
     // 2. 첨부파일 저장
-    if (cBoardReqDTO.getUploadfiles() != null && !cBoardReqDTO.getUploadfiles().isEmpty()) {
-      for (AttachmentReqDTO attachmentReqDTO : cBoardReqDTO.getUploadfiles()) {
+    if (cBoardReqDTO.getAttachmentList() != null && !cBoardReqDTO.getAttachmentList().isEmpty()) {
+      for (AttachmentReqDTO attachmentReqDTO : cBoardReqDTO.getAttachmentList()) {
         attachmentReqDTO.setRefType("post");
         attachmentReqDTO.setRefId(cBoardReqDTO.getBoardNo());
         cBoardMapper.insertAttachment(attachmentReqDTO);
@@ -119,5 +123,10 @@ public class CBoardServiceImpl implements CBoardService {
   @Override
   public void removePost(int boardNo) {
     cBoardMapper.deletePost(boardNo);
+  }
+
+  @Override
+  public List<AttachmentRespDTO> getAttachmentsInfo(String refType, int refId) {
+    return cBoardMapper.selectAttachmentsInfo(refType, refId);
   }
 }

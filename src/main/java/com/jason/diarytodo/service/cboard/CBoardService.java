@@ -5,7 +5,10 @@ import com.jason.diarytodo.domain.cboard.CBoardReqDTO;
 import com.jason.diarytodo.domain.cboard.CBoardRespDTO;
 import com.jason.diarytodo.domain.cboard.PageCBoardReqDTO;
 import com.jason.diarytodo.domain.cboard.PageCBoardRespDTO;
+import com.jason.diarytodo.domain.common.AttachmentRespDTO;
 import jakarta.validation.Valid;
+
+import java.util.List;
 
 public interface CBoardService {
 
@@ -22,4 +25,6 @@ public interface CBoardService {
   void modifyPost(@Valid CBoardReqDTO cBoardReqDTO);
 
   void removePost(int boardNo);
+
+  List<AttachmentRespDTO> getAttachmentsInfo(String refType, int refId);
 }

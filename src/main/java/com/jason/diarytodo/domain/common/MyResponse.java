@@ -45,7 +45,7 @@ public class MyResponse<T> {
   }
 
   // 2) 메시지만
-  public static <T> MyResponse<T> failWithMessage(String message) {
+  public static <T> MyResponse<T> fail(String message) {
     return MyResponse.<T>builder()
       .success(false)
       .message(message)

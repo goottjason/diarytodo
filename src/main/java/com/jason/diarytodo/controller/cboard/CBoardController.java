@@ -3,21 +3,29 @@ package com.jason.diarytodo.controller.cboard;
 
 import com.jason.diarytodo.domain.cboard.*;
 import com.jason.diarytodo.domain.common.AttachmentReqDTO;
+import com.jason.diarytodo.domain.common.AttachmentRespDTO;
+import com.jason.diarytodo.domain.common.MyResponse;
 import com.jason.diarytodo.service.cboard.CBoardService;
 import com.jason.diarytodo.util.FileUploader;
 import com.jason.diarytodo.util.GetClientIpAddr;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @Slf4j
@@ -46,8 +54,12 @@ public class CBoardController {
     // 조회수 로직을 거친 후 게시글 불러오기
     CBoardRespDTO cBoardRespDTO = cBoardService.getPostByBoardNoWithIp(boardNo, ipAddr);
 
-    model.addAttribute("cBoardRespDTO", cBoardRespDTO);
+    List<AttachmentRespDTO> attachmentRespDTOS = cBoardService.getAttachmentsInfo("post", boardNo);
+    log.info(cBoardRespDTO.toString());
+    log.info(attachmentRespDTOS.toString());
 
+    model.addAttribute("cBoardRespDTO", cBoardRespDTO);
+    model.addAttribute("attachmentRespDTOS", attachmentRespDTOS);
     // model.addAttribute("pageCBoardReqDTO", pageCBoardReqDTO);
 
     /* [[ 생략해도 되는 이유? ]]
@@ -78,34 +90,47 @@ public class CBoardController {
   }
 
   @PostMapping("/cboard/write")
-  public String write(@Valid @ModelAttribute("cBoardReqDTO") CBoardReqDTO cBoardReqDTO,
-                      BindingResult bindingResult,
-                      @RequestPart(value="uploadfiles", required = false)List<MultipartFile> uploadfiles) throws IOException {
-    /*
-    @Valid : 각 필드를 유효성 검사하여 실패한 필드와 메시지가 BindingResult 객체에 저장됨
-    @ModelAttribute : 뷰에서 컨트롤러로 입력한 데이터가 자바 객체의 각 필드에 바인딩되어 전달됨
-    BindingResult : @ModelAttribute 바로 뒤에 붙여야하고, 에러가 있으면 정보를 수집
-     */
+  public ResponseEntity<MyResponse<Map<String, Object>>> write(
+    @Valid @ModelAttribute("cBoardReqDTO") CBoardReqDTO cBoardReqDTO, BindingResult bindingResult,
+    @RequestPart(value="uploadfiles", required = false) List<MultipartFile> uploadfiles,
+    HttpSession session) throws IOException {
+
+    log.info("cBoardReqDTO: {}", cBoardReqDTO);
+    log.info("uploadfiles: {}", uploadfiles);
+
 
     // 에러가 있으면, 뷰를 생성하여 전송
     if(bindingResult.hasErrors()) {
-      /*
-      Spring MVC가 /templates/cboard/write.html를 찾고,
-      템플릿엔진(타임리프)이 데이터(입력값, 에러메시지 등)을 채워넣고, 최종 HTML을 생성하여 브라우저에 전송함
-       */
-      return "/cboard/write";
+      log.info("bindingResult: {}", bindingResult);
+      Map<String, String> errorMap = new HashMap<>();
+
+      for (FieldError fieldError : bindingResult.getFieldErrors()) {
+        errorMap.put(fieldError.getField(), fieldError.getDefaultMessage());
+      }
+
+      Map<String, Object> data = new HashMap<>();
+      data.put("errors", errorMap);
+
+      return ResponseEntity.ok(MyResponse.success(data));
     }
 
+    // 파일 → DTO 변환
+    List<AttachmentReqDTO> attachmentReqDTOS = new ArrayList<>();
     if (uploadfiles != null && !uploadfiles.isEmpty()) {
-      List<AttachmentReqDTO> attachmentReqDTOS = fileUploader.saveFiles(uploadfiles);
-      cBoardReqDTO.setUploadfiles(attachmentReqDTOS);
+      attachmentReqDTOS = fileUploader.saveFiles(uploadfiles);
     }
+    cBoardReqDTO.setAttachmentList(attachmentReqDTOS);
+    log.info("2. 변환된 파일 DTO: {}", attachmentReqDTOS); // 변환 결과 확인
 
     // 글 등록
     cBoardService.registerPost(cBoardReqDTO);
 
+    Map<String, Object> data = new HashMap<>();
+    data.put("redirectUrl", "/cboard/detail?boardNo=" + cBoardReqDTO.getBoardNo());
+
     // cBoardRequestDTO에 boardNo를 set되었으므로, get하여 GET요청하도록 redirect함
-    return "redirect:/cboard/detail?boardNo=" + cBoardReqDTO.getBoardNo();
+    // return "redirect:/cboard/detail?boardNo=" + cBoardReqDTO.getBoardNo();
+    return ResponseEntity.ok(MyResponse.success(data));
   }
 
   // ================== 답글 등록하기

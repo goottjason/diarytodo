@@ -1,7 +1,7 @@
 #drop-area {
   display: flex; /* 내부 요소들을 flexbox로 배치 (유연한 정렬 가능) */
   flex-direction: column; /* 세로(컬럼) 방향으로 정렬 */
-  justify-content: center; /* 세로(수직) 방향에서 중앙 정렬 */
+  justify-content: flex-start; /* 세로(수직) 방향에서 상단 정렬 */
   align-items: center; /* 가로(수평) 방향에서 중앙 정렬 */
   min-height: 180px; /* 최소 높이 180px로 설정 (박스가 너무 작아지지 않게) */
   position: relative; /* 내부에 절대 위치 요소가 있을 때 기준이 됨 */
@@ -14,6 +14,18 @@
 #drop-area.drag-over {
   background: #e8ecf7 !important; /* 드래그 중일 때 연한 파란색 배경으로 강조 */
   border-color: #1d2650 !important; /* 드래그 중일 때 진한 파란색 테두리로 강조 */
+}
+
+#drag-info {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); /* 부모의 정가운데 배치 */
+  width: 100%;
+  text-align: center;
+  color: #7a7a7a;
+  pointer-events: none; /* 드래그앤드롭 방해하지 않음 */
+  z-index: 1;
 }
 
 .file-table {

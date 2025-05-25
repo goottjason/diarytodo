@@ -17,10 +17,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.regex.Pattern;
 
 @Component
@@ -34,15 +31,19 @@ public class FileUploader {
   private String uploadUrlPath;
 
   public List<AttachmentReqDTO> saveFiles(List<MultipartFile> uploadFiles) throws IOException {
+    log.info("Uploading files: {}", uploadFiles.size());
+
     List<AttachmentReqDTO> attachmentReqDTOS = new ArrayList<>();
 
     if(uploadFiles == null || uploadFiles.size() == 0) return attachmentReqDTOS;
+
 
     // 현재 날짜로 디렉토리 생성
     String dateForCreateDir = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd"));
     String dirPath = uploadBaseDir + dateForCreateDir;
     Files.createDirectories(Paths.get(dirPath));
 
+    log.info("폴더 생성 완료");
 
     for (MultipartFile uploadFile : uploadFiles) {
       if(uploadFile.isEmpty()) continue; // 이중검토?
@@ -72,7 +73,11 @@ public class FileUploader {
       }
 
       String relativePath = storedPath.replaceFirst(Pattern.quote(uploadBaseDir), "/");
-      String relativeThumbPath = storedThumbPath.replaceFirst(Pattern.quote(uploadBaseDir), "/");
+      String relativeThumbPath = null;
+      if (storedThumbPath != null) {
+        relativeThumbPath = storedThumbPath.replaceFirst(Pattern.quote(uploadBaseDir), "/");
+      }
+
       AttachmentReqDTO attachmentReqDTO = AttachmentReqDTO.builder()
         // .fileId()
         .originalName(originalName)
