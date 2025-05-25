@@ -16,52 +16,25 @@ $(function() {
 
   initDatePicker();
 
-  // -------- 검색어 입력하는 동안 이벤트 --------
-  $("#searchWord").on("keyup", function() {
-    let keyword = $(this).val();
-    sessionStorage.setItem("searchType", "title");
-    sessionStorage.setItem("keyword", keyword);
-    if (keyword.length == 0) {
-      sessionStorage.setItem("searchType", null);
-      sessionStorage.setItem("keyword", null);
-    }
-    doList();
-  });
+  // 검색어 입력되는 동안 이벤트
+  $("body").on("keyup", "#search-keyword", onKeyUpSearhKeyword);
 
   // 정렬아이콘 클릭시 (오름차순, 내림차순)
-  $("body").on("click", "#orderMethodSelect", function() {
-    // 오름차순이면 true
-    let isAsc = $(this).hasClass("fa-arrow-up-wide-short");
-    $(this).toggleClass("fa-arrow-up-wide-short fa-arrow-down-wide-short");
-    if(isAsc) {
-      // 클릭해서 내림차순 상태로 변경
-      sessionStorage.setItem("sortDirection", "DESC");
-      console.log("DESC로변경");
-    } else {
-      sessionStorage.setItem("sortDirection", "ASC");
-      console.log("ASC로변경");
-    }
-    console.log(sessionStorage.getItem("sortDirection"));
-    doList();
-  });
+  $("body").on("click", "#sort-direction-icon", onClickSortDirectionIcon);
 
   // 정렬방식 선택 변경시 (마감일순, 등록일순, 제목순)
-  $("body").on("change", "#orderbySelect", function() {
-    sessionStorage.setItem("sortBy", $("#orderbySelect").val());
+  $("body").on("change", "#sort-by", function() {
+    sessionStorage.setItem("sortBy", $("#sort-by").val());
     doList();
   });
-
 
   // -------- 할일추가 제목창에서 Enter
   $(document).on('keydown', '.regTitleInput', function(e) {
-    if (e.key == "Enter") {
-      addTodo();
-    }
+    if (e.key == "Enter") addTodo();
   });
 
   // -------- 할일추가에서 캘린더아이콘 클릭시
   $(document).on("click", "#regDuedate", function() {
-//     	alert("!");
     $("#regDateInput").focus();
   });
 
@@ -462,6 +435,33 @@ function deleteSelectedAll(selectedArr) {
   } else {
     alert("삭제할 항목이 없습니다. 선택해주세요.");
   }
+}
+
+function onKeyUpSearhKeyword() {
+  let keyword = $(this).val();
+  sessionStorage.setItem("searchType", "title");
+  sessionStorage.setItem("keyword", keyword);
+  if (keyword.length == 0) {
+    sessionStorage.setItem("searchType", null);
+    sessionStorage.setItem("keyword", null);
+  }
+  doList();
+}
+
+function onClickSortDirectionIcon() {
+  // 오름차순이면 true
+  let isAsc = $(this).hasClass("fa-arrow-up-wide-short");
+  $(this).toggleClass("fa-arrow-up-wide-short fa-arrow-down-wide-short");
+  if(isAsc) {
+    // 클릭해서 내림차순 상태로 변경
+    sessionStorage.setItem("sortDirection", "DESC");
+    console.log("DESC로 변경");
+  } else {
+    sessionStorage.setItem("sortDirection", "ASC");
+    console.log("ASC로 변경");
+  }
+  console.log(sessionStorage.getItem("sortDirection"));
+  doList();
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

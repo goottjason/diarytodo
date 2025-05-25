@@ -1,4 +1,14 @@
 #drop-area.dragover {
-  background: #e3f2fd;
-  border-color: #0d6efd;
+  background: #e8ecf7;
+  border-color: #1d2650 !important;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.file-input-overlay {
+  opacity: 0;
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  cursor: pointer;
+  z-index: 2;
 }

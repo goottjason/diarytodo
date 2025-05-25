@@ -1,42 +1,30 @@
 $(function() {
-  var $dropArea = $('#drop-area');
   var $fileInput = $('#fileElem');
   var $fileList = $('#file-list');
 
-  // 드래그 오버
-  $dropArea.on('dragover', function(e) {
+  // 드래그 오버 (클래스 추가)
+  $(document).on('dragover', '#drop-area', function(e) {
     e.preventDefault();
     e.stopPropagation();
-    $dropArea.addClass('dragover');
+    $(this).addClass('dragover');
   });
 
-  // 드래그 아웃
-  $dropArea.on('dragleave', function(e) {
+  // 드래그 아웃 (클래스 제거)
+  $(document).on('dragleave drop', '#drop-area', function(e) {
     e.preventDefault();
     e.stopPropagation();
-    $dropArea.removeClass('dragover');
+    $(this).removeClass('dragover');
   });
 
-  // 파일 드롭
-  $dropArea.on('drop', function(e) {
+  // 파일 드롭 (파일 표시)
+  $(document).on('drop', '#drop-area', function(e) {
     e.preventDefault();
-    e.stopPropagation();
-    $dropArea.removeClass('dragover');
     var files = e.originalEvent.dataTransfer.files;
     showFiles(files);
-    // input에 동기화 (실제 업로드 시 필요)
     $fileInput[0].files = files;
   });
 
-  // 드롭영역 클릭 시 파일 선택창 열기 (버블링 차단)
-  $dropArea.on('click', function(e) {
-    if (e.target === this) { // drop-area 자체가 클릭된 경우만
-      e.stopPropagation();
-      $fileInput.click();
-    }
-  });
-
-  // 파일 선택 시
+  // 파일 선택 시 (input이 직접 클릭됨)
   $fileInput.on('change', function() {
     showFiles(this.files);
   });
