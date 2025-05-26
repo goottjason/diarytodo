@@ -2,16 +2,29 @@ package com.jason.diarytodo.config;
 
 import com.jason.diarytodo.interceptor.AuthInterceptor;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 @RequiredArgsConstructor // final로 선언된 필드들을 파라미터로 받는 생성자를 Lombok이 자동 생성
 public class WebConfig implements WebMvcConfigurer {
 
+  @Value("${file.upload-base-dir}")
+  private String uploadDir;
+
   // AuthInterceptor를 의존성 주입 받음 (생성자를 통해 주입됨)
   private final AuthInterceptor authInterceptor;
+
+
+  @Override
+  public void addResourceHandlers(ResourceHandlerRegistry registry) {
+    registry.addResourceHandler("/upload/**")
+      .addResourceLocations("file:" + uploadDir);
+  }
+
 
   @Override
   public void addInterceptors(InterceptorRegistry registry) { // 인터셉터 등록 및 관리 시 필요

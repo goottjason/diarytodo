@@ -4,8 +4,51 @@ let pageNo = 1;
 let currentPageNo = 1;
 /* let status = [[${param.status}]]; */
 
+function getFileIcon(file) {
+  console.log(file);
+  // 이미지 파일이면 미리보기 썸네일 반환
+  if (file.isImage) { // file.type이 있고, 'image/'로 시작하면(이미지 파일이면)
+    return `<img src="${file.storedThumbPath}" class="file-icon" style="object-fit:cover;border:1px solid #eee;">`;
+    // file-icon : CSS에서 정의한 파일 아이콘 공통 스타일(너비/높이 18px, 수직중앙정렬, 오른쪽 여백)
+    // object-fit : cover로 이미지가 잘리지 않고 꽉 차게 함
+  }
+  // PDF 파일이면 PDF 전용 아이콘 반환(file.type이 pdf이거나, 파일명이 .pdf로 끝나면)
+  if (file.originalName.match(/\.pdf$/i)) {
+    return `<img src="https://cdn-icons-png.flaticon.com/512/337/337946.png" class="file-icon">`;
+  }
+  // 그 외의 파일이면 일반 파일 아이콘 반환
+  return `<img src="https://cdn-icons-png.flaticon.com/512/2991/2991108.png" class="file-icon">`;
+}
+
+function renderFileTable() {
+  const $fileList = $('#file-list');
+  if (attachmentRespDTOS.length === 0) {
+    $fileList.html('');
+    return;
+  }
+  let output = `<table class="file-table"><tbody>`;
+  attachmentRespDTOS.forEach((file, idx) => { // 첨부 파일 배열을 순회하면서
+    output += `
+    <tr>
+      <td style="width:30px;">${getFileIcon(file)}</td>
+      <td style="word-break:break-all;">${file.originalName}</td>
+      <!-- word-break:break-all; : 긴 파일명도 줄바꿈되어 셀을 넘치지 않게 함 -->
+
+      <td style="width:80px; text-align:right;">
+        ${file.size >= 1024*1024
+      ? (file.size/1024/1024).toFixed(2)+'MB'
+      : (file.size/1024).toFixed(1)+'KB'}
+      </td>
+    </tr>
+  `;
+  });
+  output += `</tbody></table>`; // 표의 끝 태그 추가
+  $fileList.html(output);
+}
 
 $(function() {
+
+  renderFileTable();
 
   getAllComments(currentPageNo); // 댓글 호출 (with Page)
 

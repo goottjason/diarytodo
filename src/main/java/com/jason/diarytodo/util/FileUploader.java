@@ -51,7 +51,7 @@ public class FileUploader {
       String uuid = UUID.randomUUID().toString();
       String ext = originalName.substring(originalName.lastIndexOf(".") + 1).toLowerCase();
       String storedName = uuid + "_" + originalName;
-      String storedPath = dirPath + File.separator + storedName;
+      String storedPath = dirPath + "/" + storedName;
       uploadFile.transferTo(new File(storedPath));
 
       String base64 = null;
@@ -60,7 +60,7 @@ public class FileUploader {
       Boolean isImage = ImageMimeType.isImage(ext);
       if (isImage) {
         storedThumbName = "thumb_" + storedName;
-        storedThumbPath = dirPath + File.separator + storedThumbName;
+        storedThumbPath = dirPath + "/" + storedThumbName;
 
         BufferedImage thumbImg = Thumbnails
           .of(new File(storedPath))
@@ -72,10 +72,10 @@ public class FileUploader {
         base64 = Base64.getEncoder().encodeToString(imageToBytes);
       }
 
-      String relativePath = storedPath.replaceFirst(Pattern.quote(uploadBaseDir), "/");
+      String relativePath = storedPath.replaceFirst(Pattern.quote(uploadBaseDir), "/upload/");
       String relativeThumbPath = null;
       if (storedThumbPath != null) {
-        relativeThumbPath = storedThumbPath.replaceFirst(Pattern.quote(uploadBaseDir), "/");
+        relativeThumbPath = storedThumbPath.replaceFirst(Pattern.quote(uploadBaseDir), "/upload/");
       }
 
       AttachmentReqDTO attachmentReqDTO = AttachmentReqDTO.builder()
