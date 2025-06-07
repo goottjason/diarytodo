@@ -75,7 +75,7 @@
             <span th:if="${post.step > 0}">↳</span>
             <span th:if="${post.deletedFlag}" style="color:gray;">삭제된 글입니다</span>
             <!-- 제목 클릭시, 파라미터를 추가하여 detail GET 요청 -->
-            <a th:if="${!post.deletedFlag}" th:href="|@{/cboard/detail(boardNo=${post.boardNo})}&${pageCBoardReqDTO.pageParams}&${pageCBoardReqDTO.searchParams}|" th:text="${post.title}">제목</a>
+            <a th:if="${!post.deletedFlag}" th:href="|@{/cboard/detail(boardNo=${post.boardNo})}&${pageCBoardReqDTO.pageParams}&${pageCBoardReqDTO.searchParams}|" th:text="|${post.title} [${post.commentCount}]|">제목</a>
           </div>
         </td>
         <!-- ◆ 작성자 ◆ -->

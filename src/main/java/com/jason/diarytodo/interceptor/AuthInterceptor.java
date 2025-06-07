@@ -74,21 +74,6 @@ public class AuthInterceptor implements HandlerInterceptor {
     DestinationPath.setDestPath(request);
     response.sendRedirect("/member/login");
     return false;
-
-
-    /*// 목적지 저장
-    DestinationPath.setDestPath(request);
-
-    // 로그인 여부를 검사
-    HttpSession session = request.getSession();
-    MemberRespDTO loginMember = (MemberRespDTO) session.getAttribute("loginMember");
-
-    if(loginMember == null) {
-      log.info("로그인 하지 않은 사용자 -> 로그인 페이지로 이동");
-      response.sendRedirect("/member/login");
-      return false;
-    }
-    return true;*/
   }
 
   @Override

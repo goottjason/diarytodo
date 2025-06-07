@@ -54,6 +54,7 @@ public class CBoardController {
     // 조회수 로직을 거친 후 게시글 불러오기
     CBoardRespDTO cBoardRespDTO = cBoardService.getPostByBoardNoWithIp(boardNo, ipAddr);
 
+
     List<AttachmentRespDTO> attachmentRespDTOS = cBoardService.getAttachmentsInfo("post", boardNo);
     log.info(cBoardRespDTO.toString());
     log.info(attachmentRespDTOS.toString());
@@ -70,8 +71,6 @@ public class CBoardController {
 
     return "/cboard/detail";
   }
-
-
 
   /* write를 통해, "GET -> 뷰(Form) -> POST" 흐름을 잘 파악하자!
   1. GET요청 : 컨트롤러에서 cBoardRequestDTO 객체(빈 객체)를 모델에 담아 뷰로 전달

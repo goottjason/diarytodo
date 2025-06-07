@@ -28,11 +28,13 @@
     <div th:object="${cBoardRespDTO}">
       <table class="table">
         <input type="hidden" id="boardNo" th:value="${cBoardRespDTO.boardNo}">
-        <!--<input type="hidden" id="loginId" th:value="${loginMember.loginId}">-->
         <tbody>
         <tr>
           <th style="width: 80px;">제목</th>
-          <td th:text="*{title}" colspan="5" class="text-start">제목입니다...</td>
+          <td colspan="5" class="text-start">
+            <span th:text="*{title}"><!--제목 들어갈 공간--></span>
+            <span id="total-comment-count"><!--댓글 숫자 들어갈 공간--></span>
+          </td>
         </tr>
         <tr>
           <th style="width: 80px;">작성자</th>

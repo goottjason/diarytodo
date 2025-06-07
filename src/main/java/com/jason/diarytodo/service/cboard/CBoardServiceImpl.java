@@ -73,9 +73,6 @@ public class CBoardServiceImpl implements CBoardService {
       cBoardRespDTO.setViewCount(cBoardRespDTO.getViewCount() + 1);
     }
 
-
-
-
     // 과정을 거친 후, 게시글 반환
     return cBoardMapper.selectPostByboardNo(boardNo);
   }

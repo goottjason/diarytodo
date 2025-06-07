@@ -23,7 +23,6 @@ public class PageCBoardRespDTO<T> {
 
   public List<T> respDTOS;
 
-
   @Builder(builderMethodName = "withPageInfo") // 빌더의 이름 지정
   public PageCBoardRespDTO(PageCBoardReqDTO pageHBoardReqDTO, List<T> respDTOS, int totalPosts) {
     this.totalPosts = totalPosts;

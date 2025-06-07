@@ -31,10 +31,9 @@ public class CommentController {
     @PathVariable("pageNo") int pageNo,
     HttpSession session) {
 
-    log.info("댓글형 : {}번 글의 {} 페이지 댓글 조회... ", boardNo, pageNo);
+    log.info("댓글: {}번 글의 {} 페이지 댓글 조회... ", boardNo, pageNo);
 
     MemberRespDTO loginMember = (MemberRespDTO) session.getAttribute("loginMember");
-
     String loginIdByLoginMember = (loginMember != null) ? loginMember.getLoginId() : null;
 
     PageCBoardReqDTO pageCBoardReqDTO = PageCBoardReqDTO.builder()

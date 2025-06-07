@@ -20,4 +20,5 @@ public class CBoardRespDTO {
   private int step;
   private int refOrder;
   private boolean deletedFlag;
+  private int commentCount;
 }

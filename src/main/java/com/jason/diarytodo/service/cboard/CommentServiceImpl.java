@@ -20,7 +20,9 @@ public class CommentServiceImpl implements CommentService {
 
   @Override
   public PageCBoardRespDTO<CommentRespDTO> getAllComments(PageCBoardReqDTO pageCBoardReqDTO) {
+
     List<CommentRespDTO> commentRespDTOS = commentMapper.selectAllCommentsLimitPage(pageCBoardReqDTO);
+
     int total = commentMapper.selectCommentCount(pageCBoardReqDTO.getBoardNo());
 
     return PageCBoardRespDTO.<CommentRespDTO>withPageInfo()
@@ -32,6 +34,8 @@ public class CommentServiceImpl implements CommentService {
 
   @Override
   public int writeComment(CommentReqDTO commentReqDTO) {
+    // 게시글의 댓글수 +1 업데이트
+    commentMapper.updateCommentCountPlusFromCboard(commentReqDTO);
     return commentMapper.insertComment(commentReqDTO);
   }
 
@@ -47,6 +51,9 @@ public class CommentServiceImpl implements CommentService {
 
   @Override
   public int removeComment(Integer commentId) {
+    // 게시글의 댓글수 +1 업데이트
+    int boardNo = commentMapper.selectBoardNoByCommendId(commentId);
+    commentMapper.updateCommentCountMinusFromCboard(boardNo);
     return commentMapper.deleteComment(commentId);
   }
 }

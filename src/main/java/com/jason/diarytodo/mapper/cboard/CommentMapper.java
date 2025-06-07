@@ -31,4 +31,13 @@ public interface CommentMapper {
 
   @Delete("delete from comments where comment_id = ${commentId}")
   int deleteComment(Integer commentId);
+
+  @Update("update cboard set comment_count = comment_count + 1 where board_no = #{boardNo}")
+  void updateCommentCountPlusFromCboard(CommentReqDTO commentReqDTO);
+
+  @Update("update cboard set comment_count = comment_count - 1 where board_no = #{boardNo}")
+  void updateCommentCountMinusFromCboard(Integer boardNo);
+
+  @Select("select board_no from comments where comment_id = #{commentId}")
+  int selectBoardNoByCommendId(Integer commentId);
 }
