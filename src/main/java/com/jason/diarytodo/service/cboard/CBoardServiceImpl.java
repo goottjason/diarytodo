@@ -24,16 +24,12 @@ public class CBoardServiceImpl implements CBoardService {
 
   @Override
   public PageCBoardRespDTO<CBoardRespDTO> getPostsByPage(PageCBoardReqDTO pageCBoardReqDTO) {
+
     // 현재 총 게시글의 수를 카운트
     int totalPosts = cBoardMapper.selectTotalPostsCount(pageCBoardReqDTO);
 
     // pageNo를 토대로 만들어진 offset과 pageSize로 posts를 리스트에 담음
     List<CBoardRespDTO> cBoardRespDTOS = cBoardMapper.selectPostsByPage(pageCBoardReqDTO);
-
-    /* 요청할 당시의 pageHBoardRequestDTO의 값이 필요한 이유?
-    blockEndPage, blockStartPage, lastPage, showPrevBlockButton, showNextBlockButton의 값을 응답할 때
-    pageNo와 pageSize를 토대로 식이 구성되므로 필요함
-     */
 
     // 커스텀 빌더메서드
     return PageCBoardRespDTO.<CBoardRespDTO>withPageInfo()

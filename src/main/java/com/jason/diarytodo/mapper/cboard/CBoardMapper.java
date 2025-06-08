@@ -13,12 +13,10 @@ import java.util.List;
 @Mapper
 public interface CBoardMapper {
 
-  /*@Select("SELECT count(*) FROM cboard")*/
+  // 총 게시글 수 (검색시, 검색 후 총 게시글 수)
   int selectTotalPostsCount(PageCBoardReqDTO pageCBoardReqDTO);
 
-/*  @Select("""
-    SELECT * FROM cboard
-    ORDER BY ref DESC, ref_order ASC LIMIT #{offset}, #{pageSize}""")*/
+  //
   List<CBoardRespDTO> selectPostsByPage(PageCBoardReqDTO pageCBoardReqDTO);
 
 

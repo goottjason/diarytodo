@@ -77,7 +77,7 @@ $(function() {
 
 
 function sendBoardLike(doesLike) {
-  let who = "user01";
+  let who = $("#loginId").val();
   let boardNo = $("#boardNo").val();
   // boardNo = $("#boardNo").data("boardNo");
   console.log(who, boardNo, doesLike);
@@ -153,33 +153,32 @@ function displayAllComments(commentData) {
   let output = `<ul class="list-group">`;
   if(!commentList || commentList.length == 0 ) {
     // 댓글이 없으면 "텅" 표시
-    output+=`<li class="list-group-item">텅</li>`;
+    output+=`<li class="list-group-item text-center">이 게시글에는 댓글이 없습니다.</li>`;
   } else {
     // 댓글이 있으면 각각 li로 출력
     commentList.forEach(function (comment) {
       output += `
         <li class="list-group-item" id="comment-${comment.commentId}">
-          <!-- 아바타 이미지 -->
-          <img src="/assets/images/avatar.png" style="width:50px; height:50px; border-radius: 50px;margin-right:15px;">
-          <div class="flex-grow-1">
-            <!-- 댓글 내용 -->
-            <div class="fw-bold mb-1">${comment.content}</div>
-            <!-- 댓글 작성일 (n분전 등) -->
-            <div class="small">${proccessPostDate(comment.createdAt)}</div>
-          </div>
-          <div class="text-end">
-            <!-- 로그인 한 유저이자 작성자인 경우, 버튼 보이도록 -->
-            ${(loginIdByLoginMember == comment.commenter) ? 
-            `<div>
-              <!-- 수정/삭제 버튼(아직 동작은 안함) -->
-              <span style="cursor: pointer" 
-              onclick="editComment(${comment.commentId}, '${comment.content}');">수정</span>
-              <span style="cursor: pointer"
-              onclick="removeComment(${comment.commentId});">삭제</span>
-            </div>`:''}
-            <div class="small text-secondary">
-              <!-- 댓글 작성자 -->
-              ${comment.commenter}
+          <div class="d-flex align-items-center">
+            <!-- 아바타 이미지 -->
+            <img src="/assets/images/avatar.png" style="width:30px; height:30px; border-radius: 30px; margin-right:15px;">
+            <div class="flex-grow-1">
+              <!-- 댓글 내용 -->
+              <div class="fw-bold mb-1">${comment.content}</div>
+              <!-- 댓글 작성일 (n분전 등) -->
+              <div class="small">${proccessPostDate(comment.createdAt)}</div>
+            </div>
+            <div class="text-end">
+              <!-- 로그인 한 유저이자 작성자인 경우, 버튼 보이도록 -->
+              ${(loginIdByLoginMember == comment.commenter) ?
+                `<div>
+                <span style="cursor: pointer" onclick="editComment(${comment.commentId}, '${comment.content}');">수정</span>
+                <span style="cursor: pointer" onclick="removeComment(${comment.commentId});">삭제</span>
+              </div>`:''}
+              <div class="small text-secondary">
+                <!-- 댓글 작성자 -->
+                ${comment.commenter}
+              </div>
             </div>
           </div>
         </li>

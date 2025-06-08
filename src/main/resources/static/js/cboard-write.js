@@ -48,7 +48,6 @@ function submitFormWithFilesAxios(formElem, filesArr) {
   })
     .then(response => {
       if (response.data.success) {
-        alert(response.data.data);
         console.log(response.data);
         location.href = response.data.data.redirectUrl;
       } else {

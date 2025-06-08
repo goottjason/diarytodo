@@ -5,6 +5,17 @@
 
 <mapper namespace="com.jason.diarytodo.mapper.cboard.CBoardMapper">
 
+  <select id="selectTotalPostsCount" resultType="int">
+    SELECT count(*) FROM cboard
+    <include refid="search" />
+  </select>
+
+  <select id="selectPostsByPage" resultType="CBoardRespDTO">
+    SELECT * FROM cboard
+    <include refid="search" />
+    ORDER BY ref DESC, ref_order ASC LIMIT #{offset}, #{pageSize}
+  </select>
+
   <sql id="search">
     <where>
       <if test="types != null and types.size > 0">
@@ -25,14 +36,7 @@
     </where>
   </sql>
 
-  <select id="selectPostsByPage" resultType="CBoardRespDTO">
-  SELECT * FROM cboard
-  <include refid="search" />
-  ORDER BY ref DESC, ref_order ASC LIMIT #{offset}, #{pageSize}
-  </select>
 
-  <select id="selectTotalPostsCount" resultType="int">
-  SELECT count(*) FROM cboard
-  <include refid="search" />
-  </select>
+
+
 </mapper>

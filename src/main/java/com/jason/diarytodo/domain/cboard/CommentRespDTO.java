@@ -17,5 +17,5 @@ public class CommentRespDTO {
   private String content;           // 내용
   private LocalDateTime createdAt;  // 작성일
   private LocalDateTime updatedAt;  // 수정일
-  private Boolean deletedFlag;      // 삭제 여부
+  private LocalDateTime deletedAt;  // 수정일
 }

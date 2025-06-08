@@ -1,6 +1,5 @@
 package com.jason.diarytodo.controller.cboard;
 
-
 import com.jason.diarytodo.domain.cboard.*;
 import com.jason.diarytodo.domain.common.AttachmentReqDTO;
 import com.jason.diarytodo.domain.common.AttachmentRespDTO;
@@ -27,26 +26,47 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+// Controller 어노테이션: 스프링에서 컨트롤러로 인식
 @Controller
+// Slf4j 로그 사용
 @Slf4j
+// RequiredArgsConstructor: final 필드에 대해 생성자 자동 생성
 @RequiredArgsConstructor
 public class CBoardController {
 
+  // 게시글 관련 서비스 주입
   private final CBoardService cBoardService;
+  // 파일 업로드 유틸리티 주입
   private final FileUploader fileUploader;
 
-  // ================== 목록(list) 불러오기
+  /**
+   * GET: 요청(pageNo=1, pageSize=15, 나머지 null) -> 서비스계층에 전달 -> 응답받음
+   * @param pageCBoardReqDTO
+   * @param model
+   * @return
+   */
   @GetMapping({"/cboard", "/cboard/list"})
-  public String index(PageCBoardReqDTO pageCBoardReqDTO, Model model) {
+  public String list(PageCBoardReqDTO pageCBoardReqDTO, Model model) {
+
+    log.info("pageCBoardReqDTO: {}", pageCBoardReqDTO);
+
+    // 페이징 정보를 이용해 게시글 목록 조회
     PageCBoardRespDTO<CBoardRespDTO> pageCBoardRespDTO = cBoardService.getPostsByPage(pageCBoardReqDTO);
+
+    log.info("pageCBoardRespDTO: {}", pageCBoardRespDTO);
+
     model.addAttribute("pageCBoardRespDTO", pageCBoardRespDTO);
+
+    // 뷰 템플릿 반환
     return "/cboard/list";
   }
 
-  // ================== 게시글(detail) 불러오기
+  // GET 요청: /cboard/detail로 접근 시 게시글 상세 페이지 반환
   @GetMapping("/cboard/detail")
   public String detail(@RequestParam(value = "boardNo", required = false, defaultValue = "-1") int boardNo,
-                       PageCBoardReqDTO pageCBoardReqDTO, Model model, HttpServletRequest req) {
+                       PageCBoardReqDTO pageCBoardReqDTO,
+                       Model model,
+                       HttpServletRequest req) {
 
     // 클라이언트의 IP주소를 얻어와서 서비스단에 전달
     String ipAddr = GetClientIpAddr.getClientIp(req);
@@ -54,43 +74,41 @@ public class CBoardController {
     // 조회수 로직을 거친 후 게시글 불러오기
     CBoardRespDTO cBoardRespDTO = cBoardService.getPostByBoardNoWithIp(boardNo, ipAddr);
 
-
+    // 해당 게시글의 첨부파일 정보 조회
     List<AttachmentRespDTO> attachmentRespDTOS = cBoardService.getAttachmentsInfo("post", boardNo);
+    // 로그에 게시글 및 첨부파일 정보 출력
     log.info(cBoardRespDTO.toString());
     log.info(attachmentRespDTOS.toString());
 
+    // 모델에 게시글, 첨부파일 정보 추가
     model.addAttribute("cBoardRespDTO", cBoardRespDTO);
     model.addAttribute("attachmentRespDTOS", attachmentRespDTOS);
+
     // model.addAttribute("pageCBoardReqDTO", pageCBoardReqDTO);
 
-    /* [[ 생략해도 되는 이유? ]]
-    컨트롤러의 파라미터로 PageCBoardReqDTO pageCBoardReqDTO와 같이
-    커맨드(또는 폼) 객체를 선언하면, 스프링은 이 객체를 자동으로 생성하고,
-    요청 파라미터를 바인딩해주고, 자동으로 모델에 등록
+    /** pageCBoardReqDTO를 model에 addAttribute 안 해도 되는 이유
+     * 컨트롤러의 파라미터로커맨드(또는 폼) 객체를 선언하면, 스프링은 이 객체를 자동으로 생성
+     * 요청 파라미터를 바인딩해주고, 자동으로 모델에 등록해줌
      */
 
+    // 뷰 템플릿 반환
     return "/cboard/detail";
   }
 
-  /* write를 통해, "GET -> 뷰(Form) -> POST" 흐름을 잘 파악하자!
-  1. GET요청 : 컨트롤러에서 cBoardRequestDTO 객체(빈 객체)를 모델에 담아 뷰로 전달
-  2. 폼 렌더링시: 전달받은 객체의 필드에 폼의 입력필드 값이 연결됨
-    - 자바 객체의 필드와 폼의 입력필드가 연결되기 위해서는  입력필드 태그에 th:field="*{title}" 를 입력함으로써 연결됨
-    - id="title", name="title", value="cBoardRequestDTO 객체의 title의 값(빈 객체이므로 null)"
-  3. 폼 제출(POST) : 입력필드에 입력한 값이 객체에 자동 바인딩(자바객체에 채워짐)되어 컨트롤러에 전달됨
-   */
-
-  // ================== 게시글 등록하기
+  // GET 요청: /cboard/write로 접근 시 게시글 작성 폼 페이지 반환
   @GetMapping("/cboard/write")
   public String write(Model model) {
     // 빈 객체 생성 후 뷰로 객체를 전달
     model.addAttribute("cBoardReqDTO", new CBoardReqDTO());
+    // 뷰 템플릿 반환
     return "/cboard/write";
   }
 
+  // POST 요청: 게시글 등록 처리
   @PostMapping("/cboard/write")
   public ResponseEntity<MyResponse<Map<String, Object>>> write(
-    @Valid @ModelAttribute("cBoardReqDTO") CBoardReqDTO cBoardReqDTO, BindingResult bindingResult,
+    @Valid @ModelAttribute("cBoardReqDTO") CBoardReqDTO cBoardReqDTO,
+    BindingResult bindingResult,
     @RequestPart(value="uploadfiles", required = false) List<MultipartFile> uploadfiles,
     HttpSession session) throws IOException {
 
@@ -98,7 +116,7 @@ public class CBoardController {
     log.info("uploadfiles: {}", uploadfiles);
 
 
-    // 에러가 있으면, 뷰를 생성하여 전송
+    // 에러가 있으면, 에러 정보를 맵에 담아 반환
     if(bindingResult.hasErrors()) {
       log.info("bindingResult: {}", bindingResult);
       Map<String, String> errorMap = new HashMap<>();
@@ -132,7 +150,7 @@ public class CBoardController {
     return ResponseEntity.ok(MyResponse.success(data));
   }
 
-  // ================== 답글 등록하기
+  // GET 요청: /cboard/reply로 접근 시 답글 작성 폼 페이지 반환
   @GetMapping("/cboard/reply")
   public String reply(@RequestParam(value = "ref") int ref,
                               @RequestParam(value = "step") int step,
@@ -149,20 +167,15 @@ public class CBoardController {
     // 뷰로 객체를 전달
     model.addAttribute("cBoardReqDTO", cBoardReqDTO);
 
-    /*if (!model.containsAttribute("pageCBoardReqDTO")) {
-      model.addAttribute("pageCBoardReqDTO", pageCBoardReqDTO);
-    }*/
-
-    /*
-     Spring MVC가 /templates/cboard/reply.html를 찾고,
-     템플릿엔진(타임리프)이 최종 HTML을 생성하여 브라우저에 전송함
-     */
+    // 뷰 템플릿 반환
     return "/cboard/reply";
   }
 
   @PostMapping("/cboard/reply")
-  public String reply(@Valid @ModelAttribute("cBoardReqDTO") CBoardReqDTO cBoardReqDTO, BindingResult bindingResult,
-                              PageCBoardReqDTO pageCBoardReqDTO, Model model) {
+  public String reply(@Valid @ModelAttribute("cBoardReqDTO") CBoardReqDTO cBoardReqDTO,
+                      BindingResult bindingResult,
+                      PageCBoardReqDTO pageCBoardReqDTO,
+                      Model model) {
     log.info("cBoardReqDTO: " + cBoardReqDTO);
     if(bindingResult.hasErrors()) {
       return "/cboard/reply";
@@ -214,5 +227,10 @@ public class CBoardController {
 
     return "redirect:/cboard/list?" + "&" + pageCBoardReqDTO.getPageParams() + "&" + pageCBoardReqDTO.getSearchParams();
   }
+
+  /*@GetMapping("/cboard/like/status/{boardNo}")
+  public ResponseEntity<Map<String, Object>> getLikeStatus(@PathVariable("boardNo") int boardNo, HttpSession session) {
+
+  }*/
 
 }

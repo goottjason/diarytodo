@@ -24,9 +24,9 @@
   <!--여백을 주기 위해 container div 안에 요소들 배치-->
   <div class="container py-4">
 
-
     <div th:object="${cBoardRespDTO}">
       <table class="table">
+        <input type="hidden" id="loginId" th:value="${session.loginMember.loginId}">
         <input type="hidden" id="boardNo" th:value="${cBoardRespDTO.boardNo}">
         <tbody>
         <tr>
@@ -40,21 +40,27 @@
           <th style="width: 80px;">작성자</th>
           <td th:text="*{writer}" class="text-start" style="width: 120px;">홍길동</td>
           <th style="width: 80px;">작성일</th>
-          <td th:text="${#dates.format(cBoardRespDTO.postDate, 'yy-MM-dd HH:mm')}"
+          <td th:text="${#temporals.format(cBoardRespDTO.createdAt, 'yy-MM-dd HH:mm')}"
               class="text-start" style="width: 200px;">2025.05.10</td>
           <th style="width: 80px;">조회수</th>
           <td th:text="*{viewCount}" class="text-start">34</td>
         </tr>
         </tbody>
       </table>
-      <div th:text="*{content}" class="border rounded p-3 mb-3 text-start"
-           style="min-height: 120px; background-color: #f8f9fa;">본문내용
+      <div th:text="*{content}" class="p-3 mb-3 text-start"
+           style="min-height: 120px; background-color: #ffffff;"><!--본문내용-->
       </div>
+      <!-- 좋아요 -->
+      <div class="p-3 mb-3">
+        <i id="heart-icon" class="fa-regular fa-heart" style="cursor: pointer; color:red;"></i>
+        <span id="like-count">0</span>
+      </div>
+      <div id="like-people"></div>
 
       <!-- ■■■ 파일 업로드 ■■■ -->
 
       <!-- 드래그앤드롭 업로드 영역 -->
-      <div id="file-list" class="rounded-3 p-4 bg-light">
+      <div id="file-list" class="border rounded-3 p-4">
         <!--
           rounded-3: Bootstrap의 border-radius, 모서리를 0.5rem(8px) 둥글게
           p-4: Bootstrap의 padding, 모든 방향에 1.5rem(24px) 여백
@@ -64,19 +70,17 @@
 
     </div>
 
-    <!-- 좋아요 -->
-    <div class="mb-2">
-      <i id="heart-icon" class="fa-regular fa-heart" style="cursor: pointer; color:red;"></i>
-      <span id="like-count">0</span>
-    </div>
-    <div id="like-people"></div>
 
 
 
     <!-- 댓글 작성란 -->
-    <div class="commentInputArea py-4">
-      <input type="text" class="form-control" id="commentContent" placeholder="댓글을 입력하세요">
-      <img th:src="@{/assets/images/saveComment.png}" th:onclick="saveComment()" style="cursor: pointer; width:40px">
+    <div class="commentInputArea rounded-3 mb-2">
+      <div class="input-wrapper">
+        <input type="text" class="form-control comment-input" id="commentContent" placeholder="댓글을 입력하세요">
+        <button type="button" class="comment-submit-btn" onclick="saveComment()">
+          <span>댓글쓰기</span>
+        </button>
+      </div>
     </div>
     <div id="commentList"></div>
     <div id="comment-pagination"></div>

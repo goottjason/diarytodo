@@ -1,18 +1,69 @@
 .commentInputArea {
   margin-top: 10px;
-  padding: 10px;
   display: flex;
   flex-direction: row;
   align-items: center;
-  border:1px solid #dee2e6;
-  border-radius: 0.4rem;
+  width: 100%
 }
 
-.commentInputArea img {
-  margin-left: 5px;
-  border: 2px solid #dee2e6;
-  border-radius: 5px;
+.input-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 8px 12px;
+  background-color: #fff;
+  width: 100%
 }
+
+.comment-input {
+  flex: 1;
+  border: none;
+  outline: none;
+  padding: 8px 0;
+  font-size: 14px;
+  background: transparent;
+  width: 100%; /* 추가: 남은 공간 모두 차지 */
+  min-width: 0; /* flexbox에서 오버플로우 방지 */
+  box-sizing: border-box; /* 패딩/보더 포함 */
+}
+
+.comment-input::placeholder {
+  color: #999;
+}
+
+.comment-submit-btn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: #00458a;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 12px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.2s;
+}
+
+.comment-submit-btn:hover {
+  background: #357abd;
+}
+
+.comment-submit-btn img {
+  width: 16px;
+  height: 16px;
+}
+
+
+
+
+
+
+
+
+
 
 .file-table {
   width: 100%;                         /* 표의 너비를 부모 영역에 맞게 100%로 설정 */
@@ -36,4 +87,12 @@
   height: 18px;               /* 아이콘(이미지)의 높이를 18픽셀로 고정 */
   vertical-align: middle;     /* 아이콘을 텍스트와 수직 중앙 정렬 */
   margin-right: 4px;          /* 아이콘 오른쪽에 4픽셀 간격 추가 */
+}
+
+
+.flex-grow-1 {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }

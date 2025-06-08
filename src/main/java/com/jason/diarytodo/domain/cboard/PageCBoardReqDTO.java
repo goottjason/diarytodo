@@ -34,6 +34,8 @@ public class PageCBoardReqDTO {
 
   private String type;
   private String keyword;
+  private String orderBy;
+  private String orderDirection;
 
   @Valid
   private List<CBoardReqDTO> hBoardReqDTOS;
