@@ -40,28 +40,35 @@ public class CBoardController {
   private final FileUploader fileUploader;
 
   /**
-   * GET: 요청(pageNo=1, pageSize=15, 나머지 null) -> 서비스계층에 전달 -> 응답받음
-   * @param pageCBoardReqDTO
-   * @param model
-   * @return
+   * URL로 접근하는 순간, Spring이 reqDTO를 생성하여 그 DTO의 기본값을 기반으로 요청
+   * URL로 요청(pageNo=1, pageSize=15) or 폼으로 요청(type, keyword, orderBy, orderDirection)
+   * -> model에 respDTO를 담아 뷰템플릿(타임리프)으로 응답
+   * @param pageCBoardReqDTO 페이징 요청 정보를 담은 DTO (페이지 번호, 페이지 크기, 정렬 조건 등)
+   * @param model 모델 객체, 뷰에 데이터를 전달하기 위해 사용
+   * @return 뷰 템플릿 경로
    */
   @GetMapping({"/cboard", "/cboard/list"})
   public String list(PageCBoardReqDTO pageCBoardReqDTO, Model model) {
 
     log.info("pageCBoardReqDTO: {}", pageCBoardReqDTO);
 
-    // 페이징 정보를 이용해 게시글 목록 조회
     PageCBoardRespDTO<CBoardRespDTO> pageCBoardRespDTO = cBoardService.getPostsByPage(pageCBoardReqDTO);
 
     log.info("pageCBoardRespDTO: {}", pageCBoardRespDTO);
 
     model.addAttribute("pageCBoardRespDTO", pageCBoardRespDTO);
 
-    // 뷰 템플릿 반환
     return "/cboard/list";
   }
 
-  // GET 요청: /cboard/detail로 접근 시 게시글 상세 페이지 반환
+  /**
+   * URL로 요청(boardNo등 파라미터)
+   * @param boardNo
+   * @param pageCBoardReqDTO
+   * @param model
+   * @param req
+   * @return
+   */
   @GetMapping("/cboard/detail")
   public String detail(@RequestParam(value = "boardNo", required = false, defaultValue = "-1") int boardNo,
                        PageCBoardReqDTO pageCBoardReqDTO,

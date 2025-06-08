@@ -43,6 +43,10 @@ public class CBoardServiceImpl implements CBoardService {
   @Transactional(rollbackFor = Exception.class)
   public CBoardRespDTO getPostByBoardNoWithIp(int boardNo, String ipAddr) {
 
+    if (boardNo == -1) {
+      System.out.println("게시글 번호가 유효하지 않습니다.");
+    }
+
     // 1. 게시글 불러오기
     CBoardRespDTO cBoardRespDTO= cBoardMapper.selectPostByboardNo(boardNo);
 
